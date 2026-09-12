@@ -1,0 +1,256 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+  <style>
+    body { margin: 0; background: #141310; }
+    * { box-sizing: border-box; }
+    a { color: #E9A23B; text-decoration: none; }
+    a:hover { color: #F4BC6A; }
+    p { margin: 0; }
+    h1, h2, h3, h4 { margin: 0; text-wrap: pretty; }
+  </style>
+</helmet>
+<div style="width: 1440px; background: #141310; color: #F2EEE6; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 16px; line-height: 1.6;">
+
+  <header style="display: flex; align-items: center; justify-content: space-between; gap: 40px; padding: 20px 100px; border-bottom: 1px solid #2E2A22;">
+    <div style="display: flex; align-items: center; gap: 11px;">
+      <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true"><rect x="1.75" y="1.75" width="22.5" height="22.5" rx="7" stroke="#E9A23B" stroke-width="1.5"></rect><circle cx="13" cy="13" r="3.25" fill="#E9A23B"></circle><path d="M13 1.75V5.5" stroke="#E9A23B" stroke-width="1.5"></path></svg>
+      <span style="font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: 19px; letter-spacing: 0.09em;">SMARTECK</span>
+    </div>
+    <nav style="display: flex; align-items: center; gap: 30px; font-size: 15px;">
+      <a href="#" style="color: #A8A196;">Devices</a>
+      <a href="#" style="color: #A8A196;">How it works</a>
+      <a href="#" style="color: #A8A196;">For installers</a>
+      <a href="#" style="color: #A8A196;">Docs</a>
+    </nav>
+    <div style="display: flex; align-items: center; gap: 18px;">
+      <a href="#" style="color: #A8A196; font-size: 15px;">Sign in</a>
+      <a href="#" style="display: inline-flex; align-items: center; height: 44px; padding: 0 22px; border-radius: 10px; background: #E9A23B; color: #141310; font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; font-size: 15px;">Buy the Hub</a>
+    </div>
+  </header>
+
+  <section style="display: grid; grid-template-columns: 720px minmax(0, 1fr); gap: 88px; align-items: center; padding: 96px 100px 104px;">
+    <div style="display: flex; flex-direction: column; gap: 28px;">
+      <div style="display: flex; align-items: center; gap: 9px;">
+        <span style="width: 7px; height: 7px; border-radius: 50%; background: #35C3C6;"></span>
+        <span style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #35C3C6;">Local-first smart home</span>
+      </div>
+      <h1 style="font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: 66px; line-height: 1.02; letter-spacing: -0.03em;">Your home keeps working when the internet doesn&#39;t.</h1>
+      <p style="font-size: 19px; line-height: 1.62; color: #A8A196; max-width: 620px;">Smarteck runs every automation on a hub in your hallway &mdash; not in someone else&#39;s data centre. Sensors respond in milliseconds, your data stays on your street, and nothing stops working because a server went down.</p>
+      <div style="display: flex; align-items: center; gap: 14px; padding-top: 6px;">
+        <a href="#" style="display: inline-flex; align-items: center; height: 54px; padding: 0 28px; border-radius: 11px; background: #E9A23B; color: #141310; font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; font-size: 17px;">Buy the Hub &mdash; [PRICE]</a>
+        <a href="#" style="display: inline-flex; align-items: center; gap: 9px; height: 54px; padding: 0 24px; border-radius: 11px; border: 1px solid #3B362C; color: #F2EEE6; font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 500; font-size: 17px;">See how it works<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h13M13 7l5 5-5 5" stroke="#A8A196" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+      </div>
+      <p style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 12.5px; letter-spacing: 0.06em; color: #6F6959; padding-top: 4px;">Matter &middot; Thread &middot; Zigbee &nbsp;|&nbsp; [XX]-day returns &nbsp;|&nbsp; No subscription</p>
+    </div>
+
+    <div style="border: 1px solid #2E2A22; border-radius: 20px; background: #1C1A16; padding: 26px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 20px;">
+        <span style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #6F6959;">Hub &mdash; hallway</span>
+        <span style="display: inline-flex; align-items: center; gap: 7px; font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 11.5px; letter-spacing: 0.1em; color: #35C3C6;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #35C3C6;"></span>RUNNING</span>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: center; height: 224px; border-radius: 14px; background: radial-gradient(circle at 50% 55%, #33291A 0%, #1A1713 62%); border: 1px solid #2E2A22;">
+        <svg width="168" height="168" viewBox="0 0 168 168" fill="none" aria-hidden="true">
+          <circle cx="84" cy="84" r="74" stroke="#332F26" stroke-width="1"></circle>
+          <circle cx="84" cy="84" r="58" stroke="#3D3629" stroke-width="1"></circle>
+          <rect x="48" y="48" width="72" height="72" rx="22" fill="#141310" stroke="#E9A23B" stroke-width="1.5"></rect>
+          <circle cx="84" cy="84" r="11" fill="#E9A23B"></circle>
+          <path d="M84 48V30" stroke="#E9A23B" stroke-width="1.5" stroke-linecap="round"></path>
+          <path d="M105 63a30 30 0 0 1 0 42" stroke="#35C3C6" stroke-width="1.5" stroke-linecap="round"></path>
+          <path d="M63 105a30 30 0 0 1 0-42" stroke="#35C3C6" stroke-width="1.5" stroke-linecap="round"></path>
+        </svg>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 1px; padding-top: 20px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 0; border-bottom: 1px solid #262319;">
+          <span style="display: inline-flex; align-items: center; gap: 10px; font-size: 14.5px; color: #A8A196;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #E0644B;"></span>Internet</span>
+          <span style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 13px; color: #E0644B;">offline &middot; 14m</span>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 0; border-bottom: 1px solid #262319;">
+          <span style="display: inline-flex; align-items: center; gap: 10px; font-size: 14.5px; color: #A8A196;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #35C3C6;"></span>Automations</span>
+          <span style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 13px; color: #F2EEE6;">24 active</span>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 0;">
+          <span style="display: inline-flex; align-items: center; gap: 10px; font-size: 14.5px; color: #A8A196;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #E9A23B;"></span>Response</span>
+          <span style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 13px; color: #F2EEE6;">[XX] ms</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin: 0 100px; border-top: 1px solid #2E2A22; border-bottom: 1px solid #2E2A22;">
+    <div style="display: flex; flex-direction: column; gap: 8px; padding: 34px 36px 34px 0;">
+      <span style="font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 700; font-size: 36px; letter-spacing: -0.02em;">[X,XXX]</span>
+      <span style="font-size: 14.5px; color: #6F6959;">homes running on a Smarteck hub</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px; padding: 34px 36px; border-left: 1px solid #2E2A22;">
+      <span style="font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 700; font-size: 36px; letter-spacing: -0.02em;">[XX] ms</span>
+      <span style="font-size: 14.5px; color: #6F6959;">median sensor-to-action, measured on-device</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px; padding: 34px 0 34px 36px; border-left: 1px solid #2E2A22;">
+      <span style="font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 700; font-size: 36px; letter-spacing: -0.02em;">0</span>
+      <span style="font-size: 14.5px; color: #6F6959;">bytes of sensor data sent off your network</span>
+    </div>
+  </section>
+
+  <section style="padding: 96px 100px;">
+    <h2 style="font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 700; font-size: 44px; line-height: 1.06; letter-spacing: -0.025em; max-width: 640px;">Three steps, one afternoon.</h2>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; padding-top: 52px;">
+      <div style="display: flex; flex-direction: column; gap: 14px; padding: 28px; border: 1px solid #2E2A22; border-radius: 16px; background: #1C1A16;">
+        <span style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 12px; letter-spacing: 0.16em; color: #E9A23B;">01</span>
+        <h3 style="font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; font-size: 22px; letter-spacing: -0.01em;">Plug in the hub</h3>
+        <p style="font-size: 15.5px; color: #A8A196;">Power and ethernet, or Wi-Fi if you must. It boots into a setup page on your own network &mdash; no account, no cloud handshake.</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 14px; padding: 28px; border: 1px solid #2E2A22; border-radius: 16px; background: #1C1A16;">
+        <span style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 12px; letter-spacing: 0.16em; color: #E9A23B;">02</span>
+        <h3 style="font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; font-size: 22px; letter-spacing: -0.01em;">Pair what you own</h3>
+        <p style="font-size: 15.5px; color: #A8A196;">Matter, Thread and Zigbee devices are found automatically. Your existing bulbs, locks and sensors keep working &mdash; they just stop phoning home.</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 14px; padding: 28px; border: 1px solid #2E2A22; border-radius: 16px; background: #1C1A16;">
+        <span style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 12px; letter-spacing: 0.16em; color: #E9A23B;">03</span>
+        <h3 style="font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; font-size: 22px; letter-spacing: -0.01em;">Write the rules</h3>
+        <p style="font-size: 15.5px; color: #A8A196;">Plain if-this-then-that rules, versioned and readable. Export them as a file, keep them, move them to another hub.</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="display: grid; grid-template-columns: minmax(0, 1fr) 560px; gap: 88px; align-items: center; padding: 0 100px 96px;">
+    <div style="display: flex; flex-direction: column; gap: 22px;">
+      <span style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #6F6959;">The doubt everyone has</span>
+      <h2 style="font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 700; font-size: 44px; line-height: 1.06; letter-spacing: -0.025em;">&ldquo;What happens when the company shuts the servers off?&rdquo;</h2>
+      <p style="font-size: 18px; color: #A8A196;">Nothing. That is the whole point. Every rule you write is stored and executed on the hub you own. If Smarteck disappeared tomorrow, your lights would still come on at sunset.</p>
+      <p style="font-size: 18px; color: #A8A196;">The remote-access app is the only part that touches our servers, and it is optional &mdash; turn it off and the hub is an island that answers only to your network.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 14px;">
+      <div style="display: flex; align-items: flex-start; gap: 16px; padding: 22px 24px; border: 1px solid #2E2A22; border-radius: 14px; background: #1C1A16;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" style="flex-shrink: 0; margin-top: 2px;" aria-hidden="true"><path d="M12 3l7 3v5.5c0 4.2-2.9 7.6-7 9-4.1-1.4-7-4.8-7-9V6l7-3z" stroke="#35C3C6" stroke-width="1.5" stroke-linejoin="round"></path><path d="M9.2 12l2 2 3.6-3.8" stroke="#35C3C6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        <div style="display: flex; flex-direction: column; gap: 5px;">
+          <h4 style="font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; font-size: 17px;">Nothing leaves the house</h4>
+          <p style="font-size: 15px; color: #A8A196;">Motion, occupancy and camera events are processed on the hub. The network log is yours to read.</p>
+        </div>
+      </div>
+      <div style="display: flex; align-items: flex-start; gap: 16px; padding: 22px 24px; border: 1px solid #2E2A22; border-radius: 14px; background: #1C1A16;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" style="flex-shrink: 0; margin-top: 2px;" aria-hidden="true"><path d="M4 20V9.5L12 4l8 5.5V20" stroke="#35C3C6" stroke-width="1.5" stroke-linejoin="round"></path><path d="M9.5 20v-6h5v6" stroke="#35C3C6" stroke-width="1.5" stroke-linejoin="round"></path></svg>
+        <div style="display: flex; flex-direction: column; gap: 5px;">
+          <h4 style="font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; font-size: 17px;">No subscription, ever</h4>
+          <p style="font-size: 15px; color: #A8A196;">You buy the hardware once. Firmware and rule updates are free for the life of the hub.</p>
+        </div>
+      </div>
+      <div style="display: flex; align-items: flex-start; gap: 16px; padding: 22px 24px; border: 1px solid #2E2A22; border-radius: 14px; background: #1C1A16;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" style="flex-shrink: 0; margin-top: 2px;" aria-hidden="true"><path d="M6 9V7a6 6 0 0 1 12 0v2" stroke="#35C3C6" stroke-width="1.5" stroke-linecap="round"></path><rect x="4.5" y="9" width="15" height="11" rx="3" stroke="#35C3C6" stroke-width="1.5"></rect></svg>
+        <div style="display: flex; flex-direction: column; gap: 5px;">
+          <h4 style="font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; font-size: 17px;">Open when you outgrow us</h4>
+          <p style="font-size: 15px; color: #A8A196;">Local API, documented rule format, and a one-click export. No lock-in worth the name.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding: 0 100px 96px;">
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; padding-bottom: 40px;">
+      <h2 style="font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 700; font-size: 44px; line-height: 1.06; letter-spacing: -0.025em;">The range</h2>
+      <a href="#" style="display: inline-flex; align-items: center; gap: 8px; font-size: 15.5px;">All devices<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h13M13 7l5 5-5 5" stroke="#E9A23B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px;">
+      <div style="display: flex; flex-direction: column; gap: 0; border: 1px solid #2E2A22; border-radius: 16px; background: #1C1A16; overflow: hidden;">
+        <div style="display: flex; align-items: center; justify-content: center; height: 168px; background: #232019; border-bottom: 1px solid #2E2A22;">
+          <svg width="76" height="76" viewBox="0 0 76 76" fill="none" aria-hidden="true"><rect x="14" y="14" width="48" height="48" rx="15" stroke="#E9A23B" stroke-width="1.5"></rect><circle cx="38" cy="38" r="7" fill="#E9A23B"></circle><path d="M38 14V6" stroke="#E9A23B" stroke-width="1.5" stroke-linecap="round"></path></svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 7px; padding: 22px;">
+          <h3 style="font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; font-size: 18px;">Hub</h3>
+          <p style="font-size: 14.5px; color: #A8A196;">The brain. Runs every rule locally.</p>
+          <span style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 14px; color: #E9A23B; padding-top: 5px;">[PRICE]</span>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 0; border: 1px solid #2E2A22; border-radius: 16px; background: #1C1A16; overflow: hidden;">
+        <div style="display: flex; align-items: center; justify-content: center; height: 168px; background: #232019; border-bottom: 1px solid #2E2A22;">
+          <svg width="76" height="76" viewBox="0 0 76 76" fill="none" aria-hidden="true"><circle cx="38" cy="38" r="17" stroke="#A8A196" stroke-width="1.5"></circle><circle cx="38" cy="38" r="5.5" fill="#A8A196"></circle><path d="M38 13V7M38 69v-6M13 38H7M69 38h-6" stroke="#A8A196" stroke-width="1.5" stroke-linecap="round"></path></svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 7px; padding: 22px;">
+          <h3 style="font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; font-size: 18px;">Motion &amp; light</h3>
+          <p style="font-size: 14.5px; color: #A8A196;">Presence, lux and temperature in one puck.</p>
+          <span style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 14px; color: #E9A23B; padding-top: 5px;">[PRICE]</span>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 0; border: 1px solid #2E2A22; border-radius: 16px; background: #1C1A16; overflow: hidden;">
+        <div style="display: flex; align-items: center; justify-content: center; height: 168px; background: #232019; border-bottom: 1px solid #2E2A22;">
+          <svg width="76" height="76" viewBox="0 0 76 76" fill="none" aria-hidden="true"><rect x="19" y="13" width="38" height="50" rx="4" stroke="#A8A196" stroke-width="1.5"></rect><circle cx="48" cy="39" r="2.5" fill="#A8A196"></circle><path d="M19 13v50" stroke="#A8A196" stroke-width="1.5"></path></svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 7px; padding: 22px;">
+          <h3 style="font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; font-size: 18px;">Door &amp; window</h3>
+          <p style="font-size: 14.5px; color: #A8A196;">Open, closed, and how long it has been either.</p>
+          <span style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 14px; color: #E9A23B; padding-top: 5px;">[PRICE]</span>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 0; border: 1px solid #2E2A22; border-radius: 16px; background: #1C1A16; overflow: hidden;">
+        <div style="display: flex; align-items: center; justify-content: center; height: 168px; background: #232019; border-bottom: 1px solid #2E2A22;">
+          <svg width="76" height="76" viewBox="0 0 76 76" fill="none" aria-hidden="true"><rect x="17" y="17" width="42" height="42" rx="12" stroke="#A8A196" stroke-width="1.5"></rect><path d="M40 27l-9 13h7l-2 9 9-13h-7l2-9z" stroke="#A8A196" stroke-width="1.5" stroke-linejoin="round"></path></svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 7px; padding: 22px;">
+          <h3 style="font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; font-size: 18px;">Energy plug</h3>
+          <p style="font-size: 14.5px; color: #A8A196;">Switches anything, and meters what it costs.</p>
+          <span style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 14px; color: #E9A23B; padding-top: 5px;">[PRICE]</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="margin: 0 100px 96px; padding: 56px 64px; border: 1px solid #2E2A22; border-radius: 20px; background: #1C1A16;">
+    <p style="font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 500; font-size: 30px; line-height: 1.36; letter-spacing: -0.015em; max-width: 940px;">&ldquo;[PLACEHOLDER &mdash; drop in a real customer quote here. One sentence about the thing they were afraid of, and the fact it stopped being a problem.]&rdquo;</p>
+    <div style="display: flex; align-items: center; gap: 14px; padding-top: 32px;">
+      <div style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #3B362C; background: #232019;"></div>
+      <span style="font-size: 15px; color: #A8A196;">[NAME], [ROLE] &mdash; [CITY]</span>
+    </div>
+  </section>
+
+  <section style="display: flex; flex-direction: column; align-items: center; gap: 26px; padding: 0 100px 104px; text-align: center;">
+    <h2 style="font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: 52px; line-height: 1.04; letter-spacing: -0.03em; max-width: 760px;">Start with the hub. Add a sensor when you need one.</h2>
+    <p style="font-size: 18px; color: #A8A196; max-width: 560px;">One box, one evening, and a home that answers to you.</p>
+    <a href="#" style="display: inline-flex; align-items: center; height: 56px; padding: 0 32px; border-radius: 11px; background: #E9A23B; color: #141310; font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; font-size: 17px; margin-top: 6px;">Buy the Hub &mdash; [PRICE]</a>
+    <p style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 12.5px; letter-spacing: 0.06em; color: #6F6959;">Ships in [X] days &middot; [XX]-day returns</p>
+  </section>
+
+  <footer style="border-top: 1px solid #2E2A22; padding: 56px 100px 48px;">
+    <div style="display: grid; grid-template-columns: 1.4fr repeat(3, minmax(0, 1fr)); gap: 40px;">
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center; gap: 11px;">
+          <svg width="22" height="22" viewBox="0 0 26 26" fill="none" aria-hidden="true"><rect x="1.75" y="1.75" width="22.5" height="22.5" rx="7" stroke="#6F6959" stroke-width="1.5"></rect><circle cx="13" cy="13" r="3.25" fill="#6F6959"></circle></svg>
+          <span style="font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: 16px; letter-spacing: 0.09em; color: #A8A196;">SMARTECK</span>
+        </div>
+        <p style="font-size: 14.5px; color: #6F6959; max-width: 280px;">[COMPANY LEGAL NAME], [ADDRESS]</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 11px; font-size: 14.5px;">
+        <span style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #6F6959; padding-bottom: 4px;">Product</span>
+        <a href="#" style="color: #A8A196;">Hub</a>
+        <a href="#" style="color: #A8A196;">Sensors</a>
+        <a href="#" style="color: #A8A196;">Compatibility</a>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 11px; font-size: 14.5px;">
+        <span style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #6F6959; padding-bottom: 4px;">Build</span>
+        <a href="#" style="color: #A8A196;">Local API</a>
+        <a href="#" style="color: #A8A196;">Rule format</a>
+        <a href="#" style="color: #A8A196;">Status</a>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 11px; font-size: 14.5px;">
+        <span style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #6F6959; padding-bottom: 4px;">Company</span>
+        <a href="#" style="color: #A8A196;">About</a>
+        <a href="#" style="color: #A8A196;">Support</a>
+        <a href="#" style="color: #A8A196;">Privacy</a>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 44px; padding-top: 26px; border-top: 1px solid #262319;">
+      <span style="font-size: 13.5px; color: #6F6959;">&copy; [YEAR] [COMPANY LEGAL NAME]</span>
+      <span style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 11.5px; letter-spacing: 0.12em; color: #6F6959;">BUILT TO RUN OFFLINE</span>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+</body>
+</html>

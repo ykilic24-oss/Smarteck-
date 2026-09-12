@@ -1,0 +1,14 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1440, "h": 3900, "title": "Landing page", "print": "flow" },
+    { "file": "Dashboard.dc.html", "x": 1560, "y": 0, "w": 1440, "h": 900, "title": "Web dashboard" },
+    { "file": "MobileApp.dc.html", "x": 3120, "y": 0, "w": 390, "h": 844, "title": "Phone app" },
+    { "file": "DirectionB.dc.html", "x": 0, "y": 4020, "w": 880, "h": 560, "title": "Alt direction B" },
+    { "file": "DirectionC.dc.html", "x": 960, "y": 4020, "w": 880, "h": 560, "title": "Alt direction C" }
+  ],
+  "annotations": [
+    { "id": "assumption", "x": -340, "y": 0, "w": 290, "text": "Working assumption, not a fact: Smarteck = a local-first smart-home hub + sensors, sold direct, no subscription.\n\nAnything in [SQUARE BRACKETS] is a real fact I don't have - prices, counts, names, address. Fill them in or tell me and I will.\n\nDashboard numbers are sample data so the chart has a shape." },
+    { "id": "directions", "x": -340, "y": 4020, "w": 290, "text": "The three screens above are Direction A - Instrument panel.\n\nB and C are the roads not taken, sketched low-fi. If one of them is closer, say so and I'll rebuild the screens in it rather than nudging A toward it." }
+  ],
+  "launch": { "view": "canvas" }
+}
