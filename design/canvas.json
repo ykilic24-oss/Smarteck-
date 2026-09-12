@@ -1,14 +1,12 @@
 {
   "artboards": [
-    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1440, "h": 3900, "title": "Landing page", "print": "flow" },
-    { "file": "Dashboard.dc.html", "x": 1560, "y": 0, "w": 1440, "h": 900, "title": "Web dashboard" },
-    { "file": "MobileApp.dc.html", "x": 3120, "y": 0, "w": 390, "h": 844, "title": "Phone app" },
-    { "file": "DirectionB.dc.html", "x": 0, "y": 4020, "w": 880, "h": 560, "title": "Alt direction B" },
-    { "file": "DirectionC.dc.html", "x": 960, "y": 4020, "w": 880, "h": 560, "title": "Alt direction C" }
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1440, "h": 9200, "title": "Homepage — desktop", "print": "flow" },
+    { "file": "Mobile.dc.html", "x": 1560, "y": 0, "w": 390, "h": 844, "title": "Homepage — mobiel" },
+    { "file": "MobileMenu.dc.html", "x": 2070, "y": 0, "w": 390, "h": 844, "title": "Mobiel menu (nieuw)" }
   ],
   "annotations": [
-    { "id": "assumption", "x": -340, "y": 0, "w": 290, "text": "Working assumption, not a fact: Smarteck = a local-first smart-home hub + sensors, sold direct, no subscription.\n\nAnything in [SQUARE BRACKETS] is a real fact I don't have - prices, counts, names, address. Fill them in or tell me and I will.\n\nDashboard numbers are sample data so the chart has a shape." },
-    { "id": "directions", "x": -340, "y": 4020, "w": 290, "text": "The three screens above are Direction A - Instrument panel.\n\nB and C are the roads not taken, sketched low-fi. If one of them is closer, say so and I'll rebuild the screens in it rather than nudging A toward it." }
+    { "id": "wat", "x": -380, "y": 0, "w": 290, "text": "Dit is uw eigen homepage, nagebouwd uit smarteck-website.html — zelfde tokens, zelfde type, zelfde maten.\n\nEén verschil: ul.tight had geen CSS-regel, en de globale padding-reset duwde de bullets buiten het tekstvak. Hier hersteld." },
+    { "id": "mobiel", "x": 1560, "y": 924, "w": 900, "text": "Drie dingen die op een telefoon nu misgaan, en wat hier voorgesteld wordt:\n\n1. Onder 900px verdwijnt de navigatie volledig (nav.main {display:none}) en er komt niets voor in de plaats — er is op mobiel geen enkele weg naar een sectie. Voorstel: hamburger van 44x44 plus het menu hiernaast.\n\n2. Logo + de knop 'Vormen doorrekenen' zijn samen breder dan 326px content — die regel breekt op een telefoon. Voorstel: kort de knop in de balk in tot 'Doorrekenen'; de volledige tekst staat in het menu en in de hero.\n\n3. De twee heroknoppen staan inline met margin-left:10px en vallen rafelig af. Voorstel: onder elkaar, volle breedte." }
   ],
   "launch": { "view": "canvas" }
 }

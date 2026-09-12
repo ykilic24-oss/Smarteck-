@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+  <style>
+    :root{
+      --navy:#112B3B; --navy-2:#12314A; --koper:#BE612E; --koper-lt:#E8A882;
+      --aqua:#1D8F91; --aqua-lt:#96CCCC; --kalk:#F5F3EF; --kalk-2:#EAE6DE;
+      --zink:#5F6E78; --zink-lt:#AEB8BE;
+      --display:'Space Grotesk','Arial Narrow',Arial,sans-serif;
+      --body:'IBM Plex Sans',Arial,Helvetica,sans-serif;
+      --mono:'IBM Plex Mono',Consolas,'Courier New',monospace;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--kalk);color:var(--navy);font-family:var(--body);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased}
+    img{max-width:100%;display:block}
+    a{color:var(--koper);text-decoration:none}
+    a:hover{text-decoration:underline}
+    h1{font-family:var(--display);font-weight:700;line-height:1.1;letter-spacing:-0.025em}
+    p{max-width:66ch}
+    .lbl{font-family:var(--mono);font-size:11.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--zink)}
+    .lbl.a{color:var(--aqua-lt)}
+    .btn{display:inline-block;background:var(--koper);color:#fff;font-weight:600;font-size:15px;padding:12px 20px;border:none;font-family:var(--body)}
+    .btn.ghost{background:transparent;border:1px solid var(--zink);color:#fff}
+    .stat{background:var(--navy-2);border:1px solid #1E4560;padding:26px}
+    .stat .n{font-family:var(--display);font-weight:700;font-size:56px;color:var(--koper-lt);letter-spacing:-0.035em;line-height:1;margin:12px 0 10px}
+    .stat p{font-size:14.5px;color:var(--zink-lt);max-width:32ch}
+  </style>
+</helmet>
+<div style="width:390px;height:844px;overflow:hidden;background:#112B3B;">
+
+  <div style="height:52px;"></div>
+
+  <header style="background:#112B3B;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 20px;">
+      <img src="smarteck-logo.png" alt="Smarteck" style="height:24px;width:auto;display:block">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span class="btn" style="padding:11px 16px;font-size:14.5px;white-space:nowrap;">Doorrekenen</span>
+        <span style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid #5F6E78;flex-shrink:0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.5 7h17M3.5 12h17M3.5 17h17" stroke="#AEB8BE" stroke-width="1.8" stroke-linecap="round"></path></svg>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <section style="background:#112B3B;color:#AEB8BE;padding:44px 20px 40px;">
+    <h1 style="color:#fff;font-size:40px;letter-spacing:-0.035em;line-height:1.02;margin-bottom:22px;">Het net is vol.<br>Het systeem niet.</h1>
+    <p style="font-size:17px;line-height:1.55;margin-bottom:26px;">Smarteck is gedelegeerd energieontwikkelaar voor slimme ge&iuml;ntegreerde energiesystemen. Wij laten gebiedsontwikkelingen en bedrijventerreinen groeien binnen de bestaande netcapaciteit &mdash; van eerste netscan tot exploitatie, met het eigendom en de regie bij u.</p>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <span class="btn" style="display:block;text-align:center;padding:14px 20px;">Laat de vormen doorrekenen</span>
+      <span class="btn ghost" style="display:block;text-align:center;padding:14px 20px;">Hoe het werkt</span>
+    </div>
+    <svg width="280" height="39" viewBox="0 0 320 60" fill="none" stroke-width="7" stroke-linecap="round" style="display:block;margin-top:32px;" aria-hidden="true">
+      <path d="M6 18 H110 C150 18 150 42 190 42 H314" stroke="#BE612E"></path>
+      <path d="M6 42 H110 C150 42 150 18 190 18 H314" stroke="#1D8F91"></path>
+    </svg>
+    <aside class="stat" style="margin-top:34px;">
+      <div class="lbl a">Landelijk potentieel</div>
+      <div class="n">3,2 GW</div>
+      <p>Het piekreductiepotentieel dat volgens landelijk potentieonderzoek in Nederlandse energiehubs besloten ligt. Niet in nieuwe kabels &mdash; in slimmer ontworpen systemen.</p>
+    </aside>
+  </section>
+
+</div>
+</x-dc>
+</body>
+</html>
