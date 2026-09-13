@@ -1,0 +1,2574 @@
+<title>Smarteck Leadtracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* ------------------------------------------------------------------
+   Smarteck Leadtracker -- dashboard
+   Tokens overgenomen uit design/README.md (de :root van de website).
+   Geen border-radius, conform het merk.
+   ------------------------------------------------------------------ */
+:root{
+  /* merktokens, ongewijzigd */
+  --navy:#112B3B; --navy-2:#12314A; --koper:#BE612E; --koper-lt:#E8A882;
+  --koper-dk:#8E4A20; --aqua:#1D8F91; --aqua-lt:#96CCCC; --kalk:#F5F3EF;
+  --kalk-2:#EAE6DE; --zink:#5F6E78; --zink-lt:#AEB8BE;
+
+  --display:'Space Grotesk','Arial Narrow',Arial,sans-serif;
+  --body:'IBM Plex Sans',Arial,Helvetica,sans-serif;
+  --mono:'IBM Plex Mono',Consolas,'Courier New',monospace;
+
+  /* vlakken en inkt -- lichte modus */
+  --ground:var(--kalk);
+  --surface:#FFFFFF;
+  --surface-2:#EFECE6;
+  --line:var(--kalk-2);
+  --line-2:#D7D0C2;
+  --ink:var(--navy);
+  --ink-2:var(--zink);
+  --ink-3:#8B97A0;
+  --accent:var(--koper);
+  --accent-ink:var(--koper-dk);   /* koper is 3,9:1 op kalk; koper-dk is 6,5:1 */
+  --aqua-ink:#15726F;
+
+  /* de donkere blokken blijven donker, ook in de lichte modus */
+  --panel:var(--navy);
+  --panel-2:var(--navy-2);
+  --panel-line:#1E4560;
+  --panel-ink:var(--zink-lt);     /* niet --zink: dat is 2,78:1 op navy */
+  --panel-num:var(--koper-lt);
+
+  /* statuspalet -- gevalideerd, zie dashboard/README.md */
+  --st-gereed:#1D8F91;
+  --st-loopt:#BE612E;
+  --st-geblok:#8C1D4E;
+  --st-niet:#E7E2D8;
+  --st-niet-line:#C9C2B4;
+  --st-nvt:#EFECE6;
+  --st-ink-on:#FFFFFF;
+
+  --focus:#1D8F91;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0B1C26;
+    --surface:var(--navy);
+    --surface-2:#16354A;
+    --line:#1E4560;
+    --line-2:#2A5B7C;
+    --ink:#FFFFFF;
+    --ink-2:var(--zink-lt);
+    --ink-3:#7D8D98;
+    --accent:var(--koper-lt);
+    --accent-ink:var(--koper-lt);
+    --aqua-ink:var(--aqua-lt);
+    --panel:var(--navy-2);
+    --panel-2:#163A57;
+    --panel-line:#26567A;
+    --panel-ink:var(--zink-lt);
+    --panel-num:var(--koper-lt);
+    --st-gereed:#4FB3B4;
+    --st-loopt:#E8A882;
+    --st-geblok:#E84E6B;
+    --st-niet:#16354A;
+    --st-niet-line:#2A5B7C;
+    --st-nvt:#13293A;
+    --st-ink-on:#0B1C26;
+    --focus:#96CCCC;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0B1C26;
+  --surface:var(--navy);
+  --surface-2:#16354A;
+  --line:#1E4560;
+  --line-2:#2A5B7C;
+  --ink:#FFFFFF;
+  --ink-2:var(--zink-lt);
+  --ink-3:#7D8D98;
+  --accent:var(--koper-lt);
+  --accent-ink:var(--koper-lt);
+  --aqua-ink:var(--aqua-lt);
+  --panel:var(--navy-2);
+  --panel-2:#163A57;
+  --panel-line:#26567A;
+  --panel-ink:var(--zink-lt);
+  --panel-num:var(--koper-lt);
+  --st-gereed:#4FB3B4;
+  --st-loopt:#E8A882;
+  --st-geblok:#E84E6B;
+  --st-niet:#16354A;
+  --st-niet-line:#2A5B7C;
+  --st-nvt:#13293A;
+  --st-ink-on:#0B1C26;
+  --focus:#96CCCC;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground);color:var(--ink);
+  font-family:var(--body);font-size:15px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.1;letter-spacing:-0.025em;margin:0}
+h2{font-size:26px;letter-spacing:-0.02em}
+h3{font-size:17px;letter-spacing:-0.01em}
+p{margin:0}
+a{color:var(--accent-ink)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+.lbl{
+  font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);
+}
+.lbl.k{color:var(--accent-ink)}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+.shell{max-width:1320px;margin:0 auto;padding-inline:24px;padding-block:0}
+
+/* ---------- kop ---------- */
+header.top{background:var(--navy);color:#fff;border-bottom:1px solid var(--panel-line)}
+header.top .bar{
+  max-width:1320px;margin:0 auto;padding:18px 24px;
+  display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+}
+header.top img{height:26px;width:auto;display:block}
+.title-block{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;flex:1 1 240px}
+.title-block h1{
+  font-family:var(--display);font-weight:700;font-size:20px;
+  letter-spacing:-0.02em;color:#fff;margin:0;
+}
+.title-block .sep{color:#2A5B7C}
+.title-block .sub{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--zink-lt)}
+.theme-btn{
+  background:transparent;border:1px solid #2A5B7C;color:#fff;
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  padding:8px 13px;cursor:pointer;
+}
+.theme-btn:hover{border-color:var(--koper-lt);color:var(--koper-lt)}
+
+/* ---------- filters ---------- */
+.filters{
+  background:var(--surface);border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:30;
+}
+.filters .row{
+  max-width:1320px;margin:0 auto;padding:14px 24px;
+  display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;
+}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.field label{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.field select,.field input{
+  font-family:var(--body);font-size:14px;color:var(--ink);
+  background:var(--ground);border:1px solid var(--line-2);
+  padding:8px 10px;min-width:150px;max-width:100%;
+}
+.field input{min-width:210px}
+.field.grow{flex:1 1 210px}
+.reset{
+  background:transparent;border:1px solid var(--line-2);color:var(--ink-2);
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  padding:9px 13px;cursor:pointer;
+}
+.reset:hover{border-color:var(--accent);color:var(--accent-ink)}
+.count{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin-left:auto;white-space:nowrap;align-self:center;padding-block:9px}
+
+/* ---------- kerncijfers ---------- */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:28px}
+.kpi{background:var(--panel);border:1px solid var(--panel-line);padding:22px 22px 20px;display:flex;flex-direction:column}
+.kpi .lbl{color:var(--aqua-lt)}
+.kpi .n{
+  font-family:var(--display);font-weight:700;font-size:40px;letter-spacing:-0.035em;
+  line-height:1;color:var(--panel-num);margin:14px 0 8px;
+  font-variant-numeric:tabular-nums;
+}
+.kpi .n .u{font-size:20px;letter-spacing:-0.01em}
+.kpi p{font-size:13px;line-height:1.45;color:var(--panel-ink);max-width:34ch}
+.kpi .split{
+  margin-top:auto;padding-top:14px;border-top:1px solid var(--panel-line);
+  display:flex;gap:16px;font-family:var(--mono);font-size:11px;color:var(--panel-ink);
+  flex-wrap:wrap;
+}
+.kpi .split b{color:#fff;font-weight:600}
+
+/* tweede rij: kleinere tellers op het lichte vlak */
+.tallies{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:16px}
+.tally{background:var(--surface);border:1px solid var(--line);padding:16px 18px}
+.tally .v{font-family:var(--display);font-weight:700;font-size:25px;letter-spacing:-0.02em;line-height:1.1;margin-top:8px;font-variant-numeric:tabular-nums}
+.tally .v.warn{color:var(--accent-ink)}
+.tally .v.stop{color:var(--st-geblok)}
+.tally .m{font-size:12.5px;color:var(--ink-2);margin-top:3px}
+
+section.block{padding-block:40px;border-top:1px solid var(--line);margin-top:40px}
+section.block:first-of-type{border-top:none;margin-top:0}
+.block-head{display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap;margin-bottom:6px}
+.block-note{font-size:13.5px;color:var(--ink-2);max-width:72ch;margin-top:8px}
+
+/* ---------- gateladder ---------- */
+.gates{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:26px}
+.gate{border-top:3px solid var(--accent);padding-top:15px;display:flex;flex-direction:column;gap:3px}
+.gate:last-child{border-top-color:var(--aqua)}
+.gate .g{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.12em;color:var(--accent-ink)}
+.gate:last-child .g{color:var(--aqua-ink)}
+.gate h3{margin-top:2px}
+.gate .desc{font-size:13px;color:var(--ink-2);max-width:30ch}
+.gate .fid{margin-top:12px}
+.meter{height:6px;background:var(--st-niet);border:1px solid var(--st-niet-line);margin-top:6px}
+.meter > i{display:block;height:100%;background:var(--accent)}
+.gate:last-child .meter > i{background:var(--aqua)}
+.gate .figs{
+  margin-top:12px;padding-top:11px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-2);
+  display:flex;flex-direction:column;gap:3px;
+}
+.gate .figs b{color:var(--ink);font-weight:600}
+
+/* ---------- legenda ---------- */
+.legend{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin-top:22px}
+.legend .item{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-2)}
+.swatch{
+  width:16px;height:16px;display:grid;place-items:center;flex:none;
+  font-family:var(--mono);font-size:10px;font-weight:600;line-height:1;
+}
+
+/* ---------- leadkaarten met stappenstrip ---------- */
+.leads{display:flex;flex-direction:column;gap:14px;margin-top:24px}
+.lead{background:var(--surface);border:1px solid var(--line)}
+.lead.vb{border-left:3px solid var(--line-2)}
+.lead-head{
+  display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) auto;
+  gap:20px;align-items:start;padding:20px 22px 16px;
+}
+.lead-id{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:5px}
+.lead h3{font-size:19px}
+.lead .proj{font-size:13.5px;color:var(--ink-2);margin-top:2px}
+.chip{
+  font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 7px;border:1px solid var(--line-2);color:var(--ink-2);white-space:nowrap;
+}
+.chip.dg{border-color:var(--accent);color:var(--accent-ink)}
+.chip.dg.hub{border-color:var(--aqua);color:var(--aqua-ink)}
+.chip.gate{background:var(--panel);border-color:var(--panel);color:#fff}
+.chip.prio-Hoog{border-color:var(--accent);color:var(--accent-ink)}
+.chip.vb{border-style:dashed}
+.meta{display:flex;flex-wrap:wrap;column-gap:22px;row-gap:4px;font-size:12.5px;color:var(--ink-2)}
+.meta span b{color:var(--ink);font-weight:500}
+.lead-fig{text-align:right;white-space:nowrap}
+.lead-fig .v{font-family:var(--display);font-weight:700;font-size:23px;letter-spacing:-0.02em;font-variant-numeric:tabular-nums}
+.lead-fig .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-top:2px}
+
+.progress{padding:0 22px 4px;display:flex;align-items:center;gap:14px}
+.progress .bar{flex:1;height:8px;background:var(--st-niet);border:1px solid var(--st-niet-line);display:flex;gap:0}
+.progress .bar i{display:block;height:100%}
+.progress .bar i.d{background:var(--st-gereed)}
+.progress .bar i.r{background:var(--st-loopt)}
+.progress .bar i.b{background:var(--st-geblok)}
+.progress .pct{font-family:var(--mono);font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;min-width:42px;text-align:right}
+
+.stripwrap{padding:14px 22px 18px;overflow-x:auto}
+.gateband,.strip{display:grid;gap:2px;min-width:620px}
+.gateband{margin-bottom:3px}
+.gateband span{
+  font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.1em;
+  color:var(--ink-3);border-top:2px solid var(--line-2);padding-top:3px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+/* Geen `all:unset` hier: dat wint qua specificiteit van de .s-* regels
+   hieronder en laat de cellen leeg. De knop wordt met de hand gereset. */
+.strip button{
+  appearance:none;-webkit-appearance:none;margin:0;padding:0;
+  box-sizing:border-box;cursor:help;height:30px;
+  display:grid;place-items:center;
+  font-family:var(--mono);font-size:10px;font-weight:600;line-height:1;
+  border:1px solid transparent;background:transparent;color:inherit;
+}
+.strip button:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
+.swatch.s-Gereed,.strip button.s-Gereed{background:var(--st-gereed);border-color:var(--st-gereed);color:var(--st-ink-on)}
+.swatch.s-Loopt,.strip button.s-Loopt{background:var(--st-loopt);border-color:var(--st-loopt);color:var(--st-ink-on)}
+.swatch.s-Geblokkeerd,.strip button.s-Geblokkeerd{background:var(--st-geblok);border-color:var(--st-geblok);color:#fff}
+.swatch.s-Nietgestart,.strip button.s-Nietgestart{background:var(--st-niet);border-color:var(--st-niet-line);color:var(--ink-3)}
+.swatch.s-Nvt,.strip button.s-Nvt{background:var(--st-nvt);border-color:var(--line);color:var(--ink-3)}
+.swatch{border:1px solid transparent}
+.stepnr{
+  display:grid;gap:2px;min-width:620px;margin-top:3px;
+  font-family:var(--mono);font-size:9px;color:var(--ink-3);text-align:center;
+  font-variant-numeric:tabular-nums;
+}
+
+.lead-foot{
+  border-top:1px solid var(--line);padding:13px 22px;
+  display:flex;gap:24px;align-items:center;flex-wrap:wrap;
+}
+.nextstep{font-size:13.5px;color:var(--ink-2);flex:1 1 260px;min-width:0}
+.nextstep b{color:var(--ink);font-weight:600}
+.nextstep .deadline{font-family:var(--mono);font-size:11.5px;color:var(--accent-ink)}
+.more{
+  background:transparent;border:1px solid var(--line-2);color:var(--ink-2);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  padding:8px 13px;cursor:pointer;
+}
+.more:hover{border-color:var(--accent);color:var(--accent-ink)}
+
+/* ---------- detail ---------- */
+.detail{border-top:1px solid var(--line);background:var(--surface-2);padding:22px}
+.detail .cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.detail h4{
+  font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);margin:0 0 10px;
+  padding-bottom:7px;border-bottom:1px solid var(--line-2);
+}
+.rec{padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}
+.rec:last-child{border-bottom:none}
+.rec .t{font-weight:600;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.rec .d{color:var(--ink-2);font-size:12.5px;margin-top:2px}
+.rec .id{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:.08em}
+.pill{
+  font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+  padding:2px 6px;border:1px solid currentColor;white-space:nowrap;
+}
+.pill.ok{color:var(--aqua-ink)}
+.pill.open{color:var(--accent-ink)}
+.pill.nda{color:var(--st-geblok)}
+.empty{font-size:13px;color:var(--ink-3);font-style:italic;padding:9px 0}
+
+/* ---------- werkstromen ---------- */
+.ws-table{display:flex;flex-direction:column;gap:9px;margin-top:24px}
+.ws-row{display:grid;grid-template-columns:minmax(120px,180px) 1fr minmax(96px,auto);gap:16px;align-items:center}
+.ws-row .nm{font-size:13.5px;color:var(--ink)}
+.ws-bar{display:flex;gap:2px;height:22px;background:transparent}
+.ws-bar i{display:block;min-width:2px}
+.ws-row .tot{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);text-align:right;font-variant-numeric:tabular-nums}
+
+/* ---------- acties ---------- */
+.tablewrap{overflow-x:auto;margin-top:22px;border:1px solid var(--line);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:680px;font-size:13.5px}
+th{
+  text-align:left;font-family:var(--mono);font-size:10.5px;font-weight:600;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);
+  padding:12px 16px;border-bottom:1px solid var(--line-2);white-space:nowrap;
+}
+td{padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.due{font-family:var(--mono);font-size:12.5px;font-variant-numeric:tabular-nums}
+.due.past{color:var(--st-geblok);font-weight:600}
+.due.soon{color:var(--accent-ink);font-weight:600}
+
+/* ---------- signalen ---------- */
+.signals{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-top:24px}
+.signal{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);padding:16px 18px}
+.signal.hard{border-left-color:var(--st-geblok)}
+.signal .h{font-weight:600;font-size:14px;margin-bottom:4px}
+.signal p{font-size:13px;color:var(--ink-2);max-width:60ch}
+.signal .ref{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--ink-3);margin-top:7px;display:block}
+
+/* ---------- tooltip ---------- */
+#tip{
+  position:fixed;z-index:90;pointer-events:none;max-width:290px;
+  background:var(--navy);color:#fff;border:1px solid var(--panel-line);
+  padding:11px 13px;font-size:12.5px;line-height:1.45;
+  box-shadow:0 6px 22px rgba(17,43,59,.3);
+}
+#tip .tt{font-weight:600;margin-bottom:3px;display:block}
+#tip .tm{font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--zink-lt);display:block}
+#tip .ts{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+#tip .ts i{width:9px;height:9px;display:block}
+
+/* ---------- voet ---------- */
+footer.site{background:var(--navy);color:var(--zink-lt);margin-top:52px;padding:34px 0 28px;font-size:13.5px}
+footer.site .shell{display:flex;gap:26px;justify-content:space-between;flex-wrap:wrap}
+footer.site p{max-width:62ch}
+footer.site a{color:var(--koper-lt)}
+footer.site .fmeta{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--zink-lt);   /* niet --zink: dat haalt op navy 2,78:1 niet */
+  display:flex;flex-direction:column;gap:5px;text-align:right;
+}
+
+@media (max-width:1000px){
+  .kpis,.tallies{grid-template-columns:repeat(2,1fr)}
+  .gates{grid-template-columns:repeat(2,1fr)}
+  .detail .cols{grid-template-columns:1fr}
+  .lead-head{grid-template-columns:1fr;gap:12px}
+  .lead-fig{text-align:left}
+}
+@media (max-width:640px){
+  .shell{padding-inline:16px}
+  header.top .bar,.filters .row{padding-inline:16px}
+  .kpis,.tallies,.gates{grid-template-columns:1fr}
+  .ws-row{grid-template-columns:1fr;gap:5px}
+  .ws-row .tot{text-align:left}
+  .count{margin-left:0}
+  h2{font-size:22px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none !important;transition:none !important}
+}
+</style>
+
+<header class="top">
+  <div class="bar">
+    <img id="logo" alt="Smarteck" src="data:image/png;base64,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">
+    <div class="title-block">
+      <h1>Leadtracker</h1>
+      <span class="sep">/</span>
+      <span class="sub">Vastgoedontwikkelaars en energiehubs</span>
+    </div>
+    <button class="theme-btn" id="theme" type="button">Donker</button>
+  </div>
+</header>
+
+<div class="filters">
+  <div class="row">
+    <div class="field grow">
+      <label for="f-zoek">Zoeken</label>
+      <input id="f-zoek" type="search" placeholder="Organisatie, project, plaats of stap" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="f-doelgroep">Doelgroep</label>
+      <select id="f-doelgroep"></select>
+    </div>
+    <div class="field">
+      <label for="f-status">Leadstatus</label>
+      <select id="f-status"></select>
+    </div>
+    <div class="field">
+      <label for="f-gate">Gate</label>
+      <select id="f-gate"></select>
+    </div>
+    <div class="field">
+      <label for="f-eigenaar">Eigenaar</label>
+      <select id="f-eigenaar"></select>
+    </div>
+    <button class="reset" id="f-reset" type="button">Wissen</button>
+    <span class="count" id="f-count"></span>
+  </div>
+</div>
+
+<main class="shell">
+
+  <section class="block">
+    <div class="kpis" id="kpis"></div>
+    <div class="tallies" id="tallies"></div>
+  </section>
+
+  <section class="block">
+    <div class="block-head">
+      <h2>Gateladder</h2>
+      <span class="lbl">Kans op FID per bereikte gate &mdash; blad Aannames</span>
+    </div>
+    <p class="block-note">Elke lead staat op &eacute;&eacute;n gate. De kans op FID hoort bij de gate die
+      bereikt is, niet bij de lead; de gewogen fee hieronder is de verwachte fee maal die kans.</p>
+    <div class="gates" id="gates"></div>
+  </section>
+
+  <section class="block">
+    <div class="block-head">
+      <h2>Voortgang per lead</h2>
+      <span class="lbl">Een cel is &eacute;&eacute;n ontwikkelstap</span>
+    </div>
+    <p class="block-note">De strip loopt van stap 1 tot en met de laatste stap van het spoor:
+      twintig stappen voor vastgoedontwikkelaars, negentien voor energiehubs. De band erboven
+      geeft de gate waar de stap onder valt. Beweeg over een cel voor de stap en de toelichting.</p>
+    <div class="legend" id="legend"></div>
+    <div class="leads" id="leads"></div>
+  </section>
+
+  <section class="block">
+    <div class="block-head">
+      <h2>Werkstromen</h2>
+      <span class="lbl">Alle stappen van de zichtbare leads</span>
+    </div>
+    <p class="block-note">Waar het werk zit, en waar het stilstaat. Zeven werkstromen lopen door
+      beide sporen heen; commercieel en juridisch openen, governance sluit af.</p>
+    <div class="ws-table" id="ws"></div>
+  </section>
+
+  <section class="block">
+    <div class="block-head">
+      <h2>Wat er openstaat</h2>
+      <span class="lbl">Volgende acties, contracten en bronnen</span>
+    </div>
+    <div class="tablewrap">
+      <table id="acties">
+        <thead>
+          <tr>
+            <th scope="col">Deadline</th>
+            <th scope="col">Lead</th>
+            <th scope="col">Wat</th>
+            <th scope="col">Soort</th>
+            <th scope="col">Bij wie</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="block-head">
+      <h2>Signalen uit de databron</h2>
+      <span class="lbl">Automatisch afgeleid</span>
+    </div>
+    <p class="block-note">Deze regels komen uit de spelregels van de Leeswijzer en uit de
+      onderlinge samenhang van de bladen. Ze verdwijnen zodra de databron klopt.</p>
+    <div class="signals" id="signals"></div>
+  </section>
+
+</main>
+
+<footer class="site">
+  <div class="shell">
+    <p>Databron is het werkboek, niet dit dashboard. Werk bij in Excel, draai
+      <span class="num">build_data.py</span> opnieuw en dit scherm volgt. ID&rsquo;s en kolomnamen
+      niet wijzigen &mdash; de koppeling loopt op kolomnaam.</p>
+    <div class="fmeta">
+      <span id="src-file"></span>
+      <span id="src-date"></span>
+      <span>Smarteck &mdash; gedelegeerd energieontwikkelaar</span>
+    </div>
+  </div>
+</footer>
+
+<div id="tip" hidden></div>
+
+<script>
+/* DATA-START */
+const DATA = {
+ "Leads": [
+  {
+   "LeadID": "LEAD-001",
+   "Doelgroep": "Vastgoedontwikkelaar",
+   "Organisatie": "Ventura City",
+   "Projectnaam": "Ventura City energiesysteem",
+   "Plaats": "",
+   "Provincie": "",
+   "Herkomst van de lead": "Eigen netwerk",
+   "Aangebracht door": "Yusuf",
+   "Datum eerste contact": "2026-04-02",
+   "Leadstatus": "Opdracht",
+   "Ontwikkelfase": "Feasibility",
+   "Huidige gate": "M2",
+   "Omvang (woningen of MW)": "1200 woningen",
+   "Verwachte CAPEX (EUR)": 12000000,
+   "Verwachte Smarteck-fee (EUR)": 555000,
+   "Slaagkans": 0.4,
+   "Gewogen fee (EUR)": 332400,
+   "Eigenaar": "Yusuf",
+   "Prioriteit": "Hoog",
+   "Volgende actie": "Positionpaper afstemmen met Bas Maingay",
+   "Deadline volgende actie": "2026-09-26",
+   "Opmerkingen": "VOORBEELDRIJ - verwijderen bij ingebruikname. DWA blijft technisch adviseur.",
+   "Structureel vermeden piek (kW)": 900
+  },
+  {
+   "LeadID": "LEAD-002",
+   "Doelgroep": "Energiehub",
+   "Organisatie": "Bedrijventerrein Boekelermeer",
+   "Projectnaam": "Hubuitbreiding schakelstation",
+   "Plaats": "Alkmaar",
+   "Provincie": "Noord-Holland",
+   "Herkomst van de lead": "Kennisplatform Energiehubs",
+   "Aangebracht door": "Yusuf",
+   "Datum eerste contact": "2026-08-14",
+   "Leadstatus": "In kwalificatie",
+   "Ontwikkelfase": "Origination",
+   "Huidige gate": "M1",
+   "Omvang (woningen of MW)": "8 MW",
+   "Verwachte CAPEX (EUR)": 4500000,
+   "Verwachte Smarteck-fee (EUR)": 250000,
+   "Slaagkans": 0.2,
+   "Gewogen fee (EUR)": 70000,
+   "Eigenaar": "Yusuf",
+   "Prioriteit": "Midden",
+   "Volgende actie": "Werkbezoek aanvragen",
+   "Deadline volgende actie": "2026-10-03",
+   "Opmerkingen": "Volwassen referentiecase; privaat net plus groeps-CSC.",
+   "Structureel vermeden piek (kW)": 550
+  }
+ ],
+ "Contactpersonen": [
+  {
+   "ContactID": "CON-001",
+   "LeadID": "LEAD-001",
+   "Naam": "Bas Maingay",
+   "Organisatie": "Ventura City",
+   "Functie": "",
+   "Rol in besluitvorming": "Beslisser",
+   "E-mail": "",
+   "Telefoon": "",
+   "Relatie-eigenaar": "Yusuf",
+   "Laatste contact": "2026-09-04",
+   "Opmerkingen": "VOORBEELDRIJ"
+  },
+  {
+   "ContactID": "CON-002",
+   "LeadID": "LEAD-001",
+   "Naam": "Charlotte Rietdijk",
+   "Organisatie": "Ventura City",
+   "Functie": "",
+   "Rol in besluitvorming": "Beinvloeder",
+   "E-mail": "",
+   "Telefoon": "",
+   "Relatie-eigenaar": "Yusuf",
+   "Laatste contact": "2026-09-04",
+   "Opmerkingen": ""
+  }
+ ],
+ "Overeenkomsten": [
+  {
+   "OvereenkomstID": "OVK-001",
+   "LeadID": "LEAD-001",
+   "Type": "NDA",
+   "Titel": "NDA Ventura City",
+   "Status": "Getekend",
+   "Datum verzonden": "2026-04-02",
+   "Datum getekend": "2026-04-08",
+   "Ingangsdatum": "2026-04-08",
+   "Einddatum": "2029-04-08",
+   "Looptijd (mnd)": 36,
+   "Contractwaarde (EUR)": 0,
+   "Ondertekenaar Smarteck": "Yusuf",
+   "Ondertekenaar wederpartij": "",
+   "Documentlocatie": "",
+   "Actie vereist": "Nee",
+   "Opmerkingen": "VOORBEELDRIJ"
+  },
+  {
+   "OvereenkomstID": "OVK-002",
+   "LeadID": "LEAD-001",
+   "Type": "MoU",
+   "Titel": "MoU v0.6 Ventura City",
+   "Status": "In onderhandeling",
+   "Datum verzonden": "2026-08-28",
+   "Datum getekend": "",
+   "Ingangsdatum": "",
+   "Einddatum": "",
+   "Looptijd (mnd)": "",
+   "Contractwaarde (EUR)": 0,
+   "Ondertekenaar Smarteck": "Yusuf",
+   "Ondertekenaar wederpartij": "",
+   "Documentlocatie": "",
+   "Actie vereist": "Ja",
+   "Opmerkingen": "Artikelverwijzingen afgestemd met positionpaper."
+  }
+ ],
+ "Bronnen": [
+  {
+   "BronID": "BRN-001",
+   "LeadID": "LEAD-001",
+   "Brontype": "Energievisie",
+   "Titel of bestandsnaam": "Energievisie Ventura City",
+   "Aangeleverd door": "Bas Maingay",
+   "Datum ontvangen": "2026-04-15",
+   "Formaat": "PDF",
+   "Status": "In analyse",
+   "Bruikbaarheid": "Bewerking nodig",
+   "Vertrouwelijk": "Ja",
+   "Onder NDA": "Ja",
+   "Bestandslocatie": "",
+   "Gebruikt voor stap": "VO-03",
+   "Beoordeeld door": "Yusuf",
+   "Opmerkingen": "VOORBEELDRIJ - piekreductiecijfers in merkmateriaal blijven placeholder tot dit is verwerkt."
+  },
+  {
+   "BronID": "BRN-002",
+   "LeadID": "LEAD-002",
+   "Brontype": "Aansluitgegevens en contractvermogens",
+   "Titel of bestandsnaam": "EAN-lijst deelnemers Boekelermeer",
+   "Aangeleverd door": "",
+   "Datum ontvangen": "",
+   "Formaat": "Excel of CSV",
+   "Status": "Opgevraagd",
+   "Bruikbaarheid": "Nog niet beoordeeld",
+   "Vertrouwelijk": "Ja",
+   "Onder NDA": "Nee",
+   "Bestandslocatie": "",
+   "Gebruikt voor stap": "EH-04",
+   "Beoordeeld door": "Yusuf",
+   "Opmerkingen": ""
+  }
+ ],
+ "Voortgang": [
+  {
+   "VoortgangID": "VTG-001",
+   "LeadID": "LEAD-001",
+   "StapID": "VO-01",
+   "Stapnr": 1,
+   "Stap": "Lead gekwalificeerd",
+   "Workstream": "Commercieel",
+   "Status": "Gereed",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 9999,
+   "Sleutel": "LEAD-001|01",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-002",
+   "LeadID": "LEAD-001",
+   "StapID": "VO-02",
+   "Stapnr": 2,
+   "Stap": "NDA getekend",
+   "Workstream": "Juridisch",
+   "Status": "Gereed",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 9999,
+   "Sleutel": "LEAD-001|02",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-003",
+   "LeadID": "LEAD-001",
+   "StapID": "VO-03",
+   "Stapnr": 3,
+   "Stap": "Bronnen opgevraagd en ontvangen",
+   "Workstream": "Commercieel",
+   "Status": "Loopt",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 3,
+   "Sleutel": "LEAD-001|03",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-004",
+   "LeadID": "LEAD-001",
+   "StapID": "VO-04",
+   "Stapnr": 4,
+   "Stap": "Quickscan netcapaciteit en congestiestatus",
+   "Workstream": "Net en congestie",
+   "Status": "Gereed",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 9999,
+   "Sleutel": "LEAD-001|04",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-005",
+   "LeadID": "LEAD-001",
+   "StapID": "VO-05",
+   "Stapnr": 5,
+   "Stap": "Vraagprofiel elektriciteit en warmte",
+   "Workstream": "Techniek",
+   "Status": "Loopt",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 5,
+   "Sleutel": "LEAD-001|05",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-006",
+   "LeadID": "LEAD-001",
+   "StapID": "VO-06",
+   "Stapnr": 6,
+   "Stap": "Piek- en gelijktijdigheidsanalyse",
+   "Workstream": "Techniek",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 6,
+   "Sleutel": "LEAD-001|06",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-007",
+   "LeadID": "LEAD-001",
+   "StapID": "VO-07",
+   "Stapnr": 7,
+   "Stap": "Eerste gesprek netbeheerder",
+   "Workstream": "Net en congestie",
+   "Status": "Gereed",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 9999,
+   "Sleutel": "LEAD-001|07",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-008",
+   "LeadID": "LEAD-001",
+   "StapID": "VO-08",
+   "Stapnr": 8,
+   "Stap": "Routekeuze-scan vier routes",
+   "Workstream": "Commercieel",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 8,
+   "Sleutel": "LEAD-001|08",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-009",
+   "LeadID": "LEAD-001",
+   "StapID": "VO-09",
+   "Stapnr": 9,
+   "Stap": "Propositie uitgebracht",
+   "Workstream": "Commercieel",
+   "Status": "Gereed",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 9999,
+   "Sleutel": "LEAD-001|09",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-010",
+   "LeadID": "LEAD-001",
+   "StapID": "VO-10",
+   "Stapnr": 10,
+   "Stap": "Opdrachtbevestiging Engine 1",
+   "Workstream": "Juridisch",
+   "Status": "Gereed",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 9999,
+   "Sleutel": "LEAD-001|10",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-011",
+   "LeadID": "LEAD-001",
+   "StapID": "VO-11",
+   "Stapnr": 11,
+   "Stap": "Systeemconcept twee stromen",
+   "Workstream": "Techniek",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 11,
+   "Sleutel": "LEAD-001|11",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-012",
+   "LeadID": "LEAD-001",
+   "StapID": "VO-12",
+   "Stapnr": 12,
+   "Stap": "Businesscase eerste orde",
+   "Workstream": "Financieel",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 12,
+   "Sleutel": "LEAD-001|12",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-013",
+   "LeadID": "LEAD-001",
+   "StapID": "VO-13",
+   "Stapnr": 13,
+   "Stap": "Contractstructuur GTO of groeps-CSC",
+   "Workstream": "Juridisch",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 13,
+   "Sleutel": "LEAD-001|13",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-014",
+   "LeadID": "LEAD-001",
+   "StapID": "VO-14",
+   "Stapnr": 14,
+   "Stap": "Samenwerkings- of intentieovereenkomst",
+   "Workstream": "Juridisch",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 14,
+   "Sleutel": "LEAD-001|14",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-015",
+   "LeadID": "LEAD-001",
+   "StapID": "VO-15",
+   "Stapnr": 15,
+   "Stap": "Definitief systeemontwerp",
+   "Workstream": "Techniek",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 15,
+   "Sleutel": "LEAD-001|15",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-016",
+   "LeadID": "LEAD-001",
+   "StapID": "VO-16",
+   "Stapnr": 16,
+   "Stap": "Vergunningen en ruimtelijke inpassing",
+   "Workstream": "Vergunningen",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 16,
+   "Sleutel": "LEAD-001|16",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-017",
+   "LeadID": "LEAD-001",
+   "StapID": "VO-17",
+   "Stapnr": 17,
+   "Stap": "Technologie-agnostische uitvraag",
+   "Workstream": "Commercieel",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 17,
+   "Sleutel": "LEAD-001|17",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-018",
+   "LeadID": "LEAD-001",
+   "StapID": "VO-18",
+   "Stapnr": 18,
+   "Stap": "EPC-selectie en netcontractering",
+   "Workstream": "Net en congestie",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 18,
+   "Sleutel": "LEAD-001|18",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-019",
+   "LeadID": "LEAD-001",
+   "StapID": "VO-19",
+   "Stapnr": 19,
+   "Stap": "Investeringsbesluit en Ready-to-Build",
+   "Workstream": "Governance",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 19,
+   "Sleutel": "LEAD-001|19",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-020",
+   "LeadID": "LEAD-001",
+   "StapID": "VO-20",
+   "Stapnr": 20,
+   "Stap": "Assetmanagement-overeenkomst",
+   "Workstream": "Governance",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 20,
+   "Sleutel": "LEAD-001|20",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-021",
+   "LeadID": "LEAD-002",
+   "StapID": "EH-01",
+   "Stapnr": 1,
+   "Stap": "Hub-initiatief gekwalificeerd",
+   "Workstream": "Commercieel",
+   "Status": "Gereed",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 9999,
+   "Sleutel": "LEAD-002|01",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-022",
+   "LeadID": "LEAD-002",
+   "StapID": "EH-02",
+   "Stapnr": 2,
+   "Stap": "Kartrekker en deelnemers in beeld",
+   "Workstream": "Commercieel",
+   "Status": "Loopt",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 2,
+   "Sleutel": "LEAD-002|02",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-023",
+   "LeadID": "LEAD-002",
+   "StapID": "EH-03",
+   "Stapnr": 3,
+   "Stap": "NDA of deelnemersverklaring",
+   "Workstream": "Juridisch",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 3,
+   "Sleutel": "LEAD-002|03",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-024",
+   "LeadID": "LEAD-002",
+   "StapID": "EH-04",
+   "Stapnr": 4,
+   "Stap": "Aansluit- en verbruiksdata ontvangen",
+   "Workstream": "Commercieel",
+   "Status": "Loopt",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 4,
+   "Sleutel": "LEAD-002|04",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-025",
+   "LeadID": "LEAD-002",
+   "StapID": "EH-05",
+   "Stapnr": 5,
+   "Stap": "Congestiestatus en wachtrijpositie",
+   "Workstream": "Net en congestie",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 5,
+   "Sleutel": "LEAD-002|05",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-026",
+   "LeadID": "LEAD-002",
+   "StapID": "EH-06",
+   "Stapnr": 6,
+   "Stap": "Collectief vraag- en aanbodprofiel",
+   "Workstream": "Techniek",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 6,
+   "Sleutel": "LEAD-002|06",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-027",
+   "LeadID": "LEAD-002",
+   "StapID": "EH-07",
+   "Stapnr": 7,
+   "Stap": "Gelijktijdigheid en flexpotentie",
+   "Workstream": "Techniek",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 7,
+   "Sleutel": "LEAD-002|07",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-028",
+   "LeadID": "LEAD-002",
+   "StapID": "EH-08",
+   "Stapnr": 8,
+   "Stap": "Hubconcept en technische configuratie",
+   "Workstream": "Techniek",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 8,
+   "Sleutel": "LEAD-002|08",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-029",
+   "LeadID": "LEAD-002",
+   "StapID": "EH-09",
+   "Stapnr": 9,
+   "Stap": "Juridische structuur GTO of groeps-CSC",
+   "Workstream": "Juridisch",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 9,
+   "Sleutel": "LEAD-002|09",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-030",
+   "LeadID": "LEAD-002",
+   "StapID": "EH-10",
+   "Stapnr": 10,
+   "Stap": "Verdeelsleutel en governance",
+   "Workstream": "Governance",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 10,
+   "Sleutel": "LEAD-002|10",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-031",
+   "LeadID": "LEAD-002",
+   "StapID": "EH-11",
+   "Stapnr": 11,
+   "Stap": "Collectieve businesscase",
+   "Workstream": "Financieel",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 11,
+   "Sleutel": "LEAD-002|11",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-032",
+   "LeadID": "LEAD-002",
+   "StapID": "EH-12",
+   "Stapnr": 12,
+   "Stap": "Subsidie- en regelingencheck",
+   "Workstream": "Financieel",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 12,
+   "Sleutel": "LEAD-002|12",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-033",
+   "LeadID": "LEAD-002",
+   "StapID": "EH-13",
+   "Stapnr": 13,
+   "Stap": "Propositie uitgebracht",
+   "Workstream": "Commercieel",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 13,
+   "Sleutel": "LEAD-002|13",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-034",
+   "LeadID": "LEAD-002",
+   "StapID": "EH-14",
+   "Stapnr": 14,
+   "Stap": "Intentieverklaringen deelnemers",
+   "Workstream": "Juridisch",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 14,
+   "Sleutel": "LEAD-002|14",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-035",
+   "LeadID": "LEAD-002",
+   "StapID": "EH-15",
+   "Stapnr": 15,
+   "Stap": "Samenwerkingsovereenkomst hub",
+   "Workstream": "Juridisch",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 15,
+   "Sleutel": "LEAD-002|15",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-036",
+   "LeadID": "LEAD-002",
+   "StapID": "EH-16",
+   "Stapnr": 16,
+   "Stap": "Contractering netbeheerder",
+   "Workstream": "Net en congestie",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 16,
+   "Sleutel": "LEAD-002|16",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-037",
+   "LeadID": "LEAD-002",
+   "StapID": "EH-17",
+   "Stapnr": 17,
+   "Stap": "Ontwerp en technologie-agnostische uitvraag",
+   "Workstream": "Techniek",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 17,
+   "Sleutel": "LEAD-002|17",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-038",
+   "LeadID": "LEAD-002",
+   "StapID": "EH-18",
+   "Stapnr": 18,
+   "Stap": "Realisatiebesluit en FID",
+   "Workstream": "Governance",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 18,
+   "Sleutel": "LEAD-002|18",
+   "Opmerkingen": ""
+  },
+  {
+   "VoortgangID": "VTG-039",
+   "LeadID": "LEAD-002",
+   "StapID": "EH-19",
+   "Stapnr": 19,
+   "Stap": "Exploitatie- en beheerovereenkomst",
+   "Workstream": "Governance",
+   "Status": "Niet gestart",
+   "Startdatum": "",
+   "Gepland gereed": "",
+   "Werkelijk gereed": "",
+   "Verantwoordelijke": "Yusuf",
+   "Openstaand nr": 19,
+   "Sleutel": "LEAD-002|19",
+   "Opmerkingen": ""
+  }
+ ],
+ "Ontwikkelstappen": [
+  {
+   "StapID": "VO-01",
+   "Doelgroep": "Vastgoedontwikkelaar",
+   "Nr": 1,
+   "Stap": "Lead gekwalificeerd",
+   "Workstream": "Commercieel",
+   "Gate": "M1",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Gebiedsontwikkeling, fase en besluitvormingsmoment vastgesteld"
+  },
+  {
+   "StapID": "VO-02",
+   "Doelgroep": "Vastgoedontwikkelaar",
+   "Nr": 2,
+   "Stap": "NDA getekend",
+   "Workstream": "Juridisch",
+   "Gate": "M1",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Voorwaarde voor het opvragen van bronnen"
+  },
+  {
+   "StapID": "VO-03",
+   "Doelgroep": "Vastgoedontwikkelaar",
+   "Nr": 3,
+   "Stap": "Bronnen opgevraagd en ontvangen",
+   "Workstream": "Commercieel",
+   "Gate": "M1",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Energievisie, stedenbouwkundig plan, programma van eisen"
+  },
+  {
+   "StapID": "VO-04",
+   "Doelgroep": "Vastgoedontwikkelaar",
+   "Nr": 4,
+   "Stap": "Quickscan netcapaciteit en congestiestatus",
+   "Workstream": "Net en congestie",
+   "Gate": "M1",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Capaciteitskaart netbeheerder, wachtrijpositie, transportbeperking"
+  },
+  {
+   "StapID": "VO-05",
+   "Doelgroep": "Vastgoedontwikkelaar",
+   "Nr": 5,
+   "Stap": "Vraagprofiel elektriciteit en warmte",
+   "Workstream": "Techniek",
+   "Gate": "M1",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Twee stromen in een profiel; basis voor het hele ontwerp"
+  },
+  {
+   "StapID": "VO-06",
+   "Doelgroep": "Vastgoedontwikkelaar",
+   "Nr": 6,
+   "Stap": "Piek- en gelijktijdigheidsanalyse",
+   "Workstream": "Techniek",
+   "Gate": "M1",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Onderbouwt de piekreductie die wij aan de netbeheerder beloven"
+  },
+  {
+   "StapID": "VO-07",
+   "Doelgroep": "Vastgoedontwikkelaar",
+   "Nr": 7,
+   "Stap": "Eerste gesprek netbeheerder",
+   "Workstream": "Net en congestie",
+   "Gate": "M1",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Wegnemen en spiegelen als openingsvraag"
+  },
+  {
+   "StapID": "VO-08",
+   "Doelgroep": "Vastgoedontwikkelaar",
+   "Nr": 8,
+   "Stap": "Routekeuze-scan vier routes",
+   "Workstream": "Commercieel",
+   "Gate": "M1",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Betaald beslisinstrument; eigendom, balansimpact, regieverlies"
+  },
+  {
+   "StapID": "VO-09",
+   "Doelgroep": "Vastgoedontwikkelaar",
+   "Nr": 9,
+   "Stap": "Propositie uitgebracht",
+   "Workstream": "Commercieel",
+   "Gate": "M1",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Engine 1 of gedelegeerde ontwikkeling"
+  },
+  {
+   "StapID": "VO-10",
+   "Doelgroep": "Vastgoedontwikkelaar",
+   "Nr": 10,
+   "Stap": "Opdrachtbevestiging Engine 1",
+   "Workstream": "Juridisch",
+   "Gate": "M1",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Eerste facturabele opdracht"
+  },
+  {
+   "StapID": "VO-11",
+   "Doelgroep": "Vastgoedontwikkelaar",
+   "Nr": 11,
+   "Stap": "Systeemconcept twee stromen",
+   "Workstream": "Techniek",
+   "Gate": "M2",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Warmte is het middel, netbalans het doel"
+  },
+  {
+   "StapID": "VO-12",
+   "Doelgroep": "Vastgoedontwikkelaar",
+   "Nr": 12,
+   "Stap": "Businesscase eerste orde",
+   "Workstream": "Financieel",
+   "Gate": "M2",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Bankable maken; onrendabele top expliciet"
+  },
+  {
+   "StapID": "VO-13",
+   "Doelgroep": "Vastgoedontwikkelaar",
+   "Nr": 13,
+   "Stap": "Contractstructuur GTO of groeps-CSC",
+   "Workstream": "Juridisch",
+   "Gate": "M2",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Structuurkeuze voor aansluiting en levering"
+  },
+  {
+   "StapID": "VO-14",
+   "Doelgroep": "Vastgoedontwikkelaar",
+   "Nr": 14,
+   "Stap": "Samenwerkings- of intentieovereenkomst",
+   "Workstream": "Juridisch",
+   "Gate": "M2",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "MoU met artikelverwijzingen; mandaat vastgelegd"
+  },
+  {
+   "StapID": "VO-15",
+   "Doelgroep": "Vastgoedontwikkelaar",
+   "Nr": 15,
+   "Stap": "Definitief systeemontwerp",
+   "Workstream": "Techniek",
+   "Gate": "M3",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Inclusief redundantie en regelstrategie"
+  },
+  {
+   "StapID": "VO-16",
+   "Doelgroep": "Vastgoedontwikkelaar",
+   "Nr": 16,
+   "Stap": "Vergunningen en ruimtelijke inpassing",
+   "Workstream": "Vergunningen",
+   "Gate": "M3",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Wcw-afbakening tijdig toetsen"
+  },
+  {
+   "StapID": "VO-17",
+   "Doelgroep": "Vastgoedontwikkelaar",
+   "Nr": 17,
+   "Stap": "Technologie-agnostische uitvraag",
+   "Workstream": "Commercieel",
+   "Gate": "M3",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Onze sterkste claim: geen EPC-belang"
+  },
+  {
+   "StapID": "VO-18",
+   "Doelgroep": "Vastgoedontwikkelaar",
+   "Nr": 18,
+   "Stap": "EPC-selectie en netcontractering",
+   "Workstream": "Net en congestie",
+   "Gate": "M4",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "ATO of GTO definitief"
+  },
+  {
+   "StapID": "VO-19",
+   "Doelgroep": "Vastgoedontwikkelaar",
+   "Nr": 19,
+   "Stap": "Investeringsbesluit en Ready-to-Build",
+   "Workstream": "Governance",
+   "Gate": "M4",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "FID door de eigenaar van de asset"
+  },
+  {
+   "StapID": "VO-20",
+   "Doelgroep": "Vastgoedontwikkelaar",
+   "Nr": 20,
+   "Stap": "Assetmanagement-overeenkomst",
+   "Workstream": "Governance",
+   "Gate": "M4",
+   "Verplicht": "Nee",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Meerjarige fee na oplevering"
+  },
+  {
+   "StapID": "EH-01",
+   "Doelgroep": "Energiehub",
+   "Nr": 1,
+   "Stap": "Hub-initiatief gekwalificeerd",
+   "Workstream": "Commercieel",
+   "Gate": "M1",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Initiatievenradar, provinciale agenda of eigen netwerk"
+  },
+  {
+   "StapID": "EH-02",
+   "Doelgroep": "Energiehub",
+   "Nr": 2,
+   "Stap": "Kartrekker en deelnemers in beeld",
+   "Workstream": "Commercieel",
+   "Gate": "M1",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Zonder kartrekker geen hub"
+  },
+  {
+   "StapID": "EH-03",
+   "Doelgroep": "Energiehub",
+   "Nr": 3,
+   "Stap": "NDA of deelnemersverklaring",
+   "Workstream": "Juridisch",
+   "Gate": "M1",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Per deelnemer of collectief via de vereniging"
+  },
+  {
+   "StapID": "EH-04",
+   "Doelgroep": "Energiehub",
+   "Nr": 4,
+   "Stap": "Aansluit- en verbruiksdata ontvangen",
+   "Workstream": "Commercieel",
+   "Gate": "M1",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "EAN-lijst, contractvermogens, kwartierwaarden"
+  },
+  {
+   "StapID": "EH-05",
+   "Doelgroep": "Energiehub",
+   "Nr": 5,
+   "Stap": "Congestiestatus en wachtrijpositie",
+   "Workstream": "Net en congestie",
+   "Gate": "M1",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Per aansluiting; bepaalt de urgentie bij de deelnemers"
+  },
+  {
+   "StapID": "EH-06",
+   "Doelgroep": "Energiehub",
+   "Nr": 6,
+   "Stap": "Collectief vraag- en aanbodprofiel",
+   "Workstream": "Techniek",
+   "Gate": "M1",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Geaggregeerd profiel inclusief warmte"
+  },
+  {
+   "StapID": "EH-07",
+   "Doelgroep": "Energiehub",
+   "Nr": 7,
+   "Stap": "Gelijktijdigheid en flexpotentie",
+   "Workstream": "Techniek",
+   "Gate": "M2",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "De kern van de hubwaarde"
+  },
+  {
+   "StapID": "EH-08",
+   "Doelgroep": "Energiehub",
+   "Nr": 8,
+   "Stap": "Hubconcept en technische configuratie",
+   "Workstream": "Techniek",
+   "Gate": "M2",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Opwek, opslag, conversie, regeling"
+  },
+  {
+   "StapID": "EH-09",
+   "Doelgroep": "Energiehub",
+   "Nr": 9,
+   "Stap": "Juridische structuur GTO of groeps-CSC",
+   "Workstream": "Juridisch",
+   "Gate": "M2",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Inclusief rolverdeling BRP, BSP en CSP"
+  },
+  {
+   "StapID": "EH-10",
+   "Doelgroep": "Energiehub",
+   "Nr": 10,
+   "Stap": "Verdeelsleutel en governance",
+   "Workstream": "Governance",
+   "Gate": "M2",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Verdeling van kosten, capaciteit en zeggenschap"
+  },
+  {
+   "StapID": "EH-11",
+   "Doelgroep": "Energiehub",
+   "Nr": 11,
+   "Stap": "Collectieve businesscase",
+   "Workstream": "Financieel",
+   "Gate": "M2",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Per deelnemer en voor het collectief"
+  },
+  {
+   "StapID": "EH-12",
+   "Doelgroep": "Energiehub",
+   "Nr": 12,
+   "Stap": "Subsidie- en regelingencheck",
+   "Workstream": "Financieel",
+   "Gate": "M2",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "SDE++, Flex-e, provinciale regelingen"
+  },
+  {
+   "StapID": "EH-13",
+   "Doelgroep": "Energiehub",
+   "Nr": 13,
+   "Stap": "Propositie uitgebracht",
+   "Workstream": "Commercieel",
+   "Gate": "M1",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Aan de kartrekker of aan het collectief"
+  },
+  {
+   "StapID": "EH-14",
+   "Doelgroep": "Energiehub",
+   "Nr": 14,
+   "Stap": "Intentieverklaringen deelnemers",
+   "Workstream": "Juridisch",
+   "Gate": "M2",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Kritieke massa vastleggen voor de businesscase"
+  },
+  {
+   "StapID": "EH-15",
+   "Doelgroep": "Energiehub",
+   "Nr": 15,
+   "Stap": "Samenwerkingsovereenkomst hub",
+   "Workstream": "Juridisch",
+   "Gate": "M3",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Van intentie naar verplichting"
+  },
+  {
+   "StapID": "EH-16",
+   "Doelgroep": "Energiehub",
+   "Nr": 16,
+   "Stap": "Contractering netbeheerder",
+   "Workstream": "Net en congestie",
+   "Gate": "M3",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "GTO of groepstransportovereenkomst"
+  },
+  {
+   "StapID": "EH-17",
+   "Doelgroep": "Energiehub",
+   "Nr": 17,
+   "Stap": "Ontwerp en technologie-agnostische uitvraag",
+   "Workstream": "Techniek",
+   "Gate": "M3",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Uitvraag namens het collectief"
+  },
+  {
+   "StapID": "EH-18",
+   "Doelgroep": "Energiehub",
+   "Nr": 18,
+   "Stap": "Realisatiebesluit en FID",
+   "Workstream": "Governance",
+   "Gate": "M4",
+   "Verplicht": "Ja",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Besluit door de eigenaren van de assets"
+  },
+  {
+   "StapID": "EH-19",
+   "Doelgroep": "Energiehub",
+   "Nr": 19,
+   "Stap": "Exploitatie- en beheerovereenkomst",
+   "Workstream": "Governance",
+   "Gate": "M4",
+   "Verplicht": "Nee",
+   "Doorlooptijd (weken)": "",
+   "Toelichting": "Assetmanagement en O&M"
+  }
+ ],
+ "Aannames": {
+  "Staffel ontwikkelfee (marginale schijven)": [
+   "Blauwe cijfers op geel zijn invoer. Wijzig hier en het tabblad Leads volgt."
+  ],
+  "Schijf 1 tot en met (EUR)": [
+   5000000,
+   0.05
+  ],
+  "Schijf 2 tot en met (EUR)": [
+   15000000,
+   0.04
+  ],
+  "Schijf 3 tot en met (EUR)": [
+   40000000,
+   0.03
+  ],
+  "Tarief boven schijf 3": [
+   0.02
+  ],
+  "Ondergrens ontwikkelfee M2 t/m M4 (EUR)": [
+   100000
+  ],
+  "Initiatiefee M1 (vast, EUR)": [
+   25000
+  ],
+  "Aandeel M2": [
+   0.3
+  ],
+  "Aandeel M3": [
+   0.3
+  ],
+  "Aandeel M4": [
+   0.4
+  ],
+  "M1 bereikt": [
+   0.2
+  ],
+  "M2 bereikt": [
+   0.4
+  ],
+  "M3 bereikt": [
+   0.65
+  ],
+  "M4 bereikt": [
+   0.9
+  ]
+ },
+ "_bron": {
+  "bestand": "Smarteck_Leadtracker_Databron.xlsx",
+  "gelezen_op": "2026-09-13"
+ }
+};
+/* DATA-END */
+</script>
+<script>
+(function(){
+  "use strict";
+
+  const $  = (s, r) => (r || document).querySelector(s);
+  const el = (tag, cls, txt) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (txt !== undefined && txt !== null) n.textContent = txt;
+    return n;
+  };
+
+  const nlInt  = new Intl.NumberFormat("nl-NL", {maximumFractionDigits:0});
+  const nlTwo  = new Intl.NumberFormat("nl-NL", {minimumFractionDigits:2, maximumFractionDigits:2});
+  const euro   = v => "€ " + nlInt.format(Math.round(v || 0));
+  const pct    = v => nlInt.format(Math.round((v || 0) * 100)) + "%";
+  const num    = v => (typeof v === "number" ? v : parseFloat(String(v).replace(",", ".")) || 0);
+
+  const VANDAAG = "2026-09-13";   /* peildatum van deze uitdraai */
+
+  /* ---- statuspalet ---------------------------------------------------
+     Gevalideerd op onderscheid, ook bij kleurenblindheid. Elke status
+     draagt naast de kleur een eigen teken, zodat kleur nooit de enige
+     drager van betekenis is.                                          */
+  const STATUS = {
+    "Gereed":            {cls:"s-Gereed",      glyph:"✓", varName:"--st-gereed"},
+    "Loopt":             {cls:"s-Loopt",       glyph:"▸", varName:"--st-loopt"},
+    "Geblokkeerd":       {cls:"s-Geblokkeerd", glyph:"✕", varName:"--st-geblok"},
+    "Niet gestart":      {cls:"s-Nietgestart", glyph:"",       varName:"--st-niet"},
+    "Niet van toepassing":{cls:"s-Nvt",        glyph:"–", varName:"--st-nvt"}
+  };
+  const statusOf = s => STATUS[s] || STATUS["Niet gestart"];
+  const VOLGORDE = ["Gereed","Loopt","Geblokkeerd","Niet gestart","Niet van toepassing"];
+
+  /* ---- databron normaliseren ---------------------------------------- */
+  const rows = k => Array.isArray(DATA[k]) ? DATA[k] : [];
+  const aanname = k => {
+    const v = (DATA.Aannames || {})[k];
+    return Array.isArray(v) ? num(v[v.length - 1]) : 0;
+  };
+
+  const stapBib = new Map();                       /* StapID -> stapdefinitie */
+  rows("Ontwikkelstappen").forEach(s => stapBib.set(s.StapID, s));
+
+  const isVoorbeeld = r => /VOORBEELDRIJ/i.test(String(r.Opmerkingen || ""));
+
+  const LEADS = rows("Leads").map(l => {
+    const id = l.LeadID;
+    const stappen = rows("Voortgang")
+      .filter(v => v.LeadID === id)
+      .map(v => {
+        const def = stapBib.get(v.StapID) || {};
+        return {
+          stapID: v.StapID,
+          nr: num(v.Stapnr) || num(def.Nr),
+          naam: v.Stap || def.Stap || v.StapID,
+          workstream: v.Workstream || def.Workstream || "Overig",
+          gate: def.Gate || "",
+          verplicht: def.Verplicht !== "Nee",
+          toelichting: def.Toelichting || "",
+          status: STATUS[v.Status] ? v.Status : "Niet gestart",
+          wie: v.Verantwoordelijke || "",
+          opmerking: v.Opmerkingen || ""
+        };
+      })
+      .sort((a, b) => a.nr - b.nr);
+
+    const tel = st => stappen.filter(s => s.status === st).length;
+    const gereed = tel("Gereed"), loopt = tel("Loopt"), geblok = tel("Geblokkeerd");
+    const volgende = stappen.find(s => s.status === "Loopt")
+                  || stappen.find(s => s.status === "Niet gestart")
+                  || null;
+
+    const contracten = rows("Overeenkomsten").filter(o => o.LeadID === id);
+    const bronnen    = rows("Bronnen").filter(b => b.LeadID === id);
+    const contacten  = rows("Contactpersonen").filter(c => c.LeadID === id);
+
+    return {
+      id,
+      doelgroep: l.Doelgroep || "",
+      hub: /hub/i.test(l.Doelgroep || ""),
+      organisatie: l.Organisatie || id,
+      project: l.Projectnaam || "",
+      plaats: [l.Plaats, l.Provincie].filter(Boolean).join(", "),
+      herkomst: l["Herkomst van de lead"] || "",
+      eersteContact: l["Datum eerste contact"] || "",
+      leadstatus: l.Leadstatus || "",
+      fase: l.Ontwikkelfase || "",
+      gate: l["Huidige gate"] || "",
+      omvang: l["Omvang (woningen of MW)"] || "",
+      capex: num(l["Verwachte CAPEX (EUR)"]),
+      fee: num(l["Verwachte Smarteck-fee (EUR)"]),
+      slaagkans: num(l.Slaagkans),
+      gewogen: num(l["Gewogen fee (EUR)"]),
+      piek: num(l["Structureel vermeden piek (kW)"]),
+      eigenaar: l.Eigenaar || "",
+      prioriteit: l.Prioriteit || "",
+      actie: l["Volgende actie"] || "",
+      deadline: l["Deadline volgende actie"] || "",
+      opmerkingen: l.Opmerkingen || "",
+      voorbeeld: isVoorbeeld(l),
+      stappen, gereed, loopt, geblok,
+      totaal: stappen.length,
+      pctGereed: stappen.length ? gereed / stappen.length : 0,
+      volgende,
+      contracten, bronnen, contacten,
+      getekend: contracten.filter(o => o.Status === "Getekend").length,
+      openContract: contracten.filter(o => !["Getekend","Verlopen","Beeindigd","Ingetrokken"].includes(o.Status)).length,
+      bronOntvangen: bronnen.filter(b => ["Ontvangen","In analyse","Verwerkt"].includes(b.Status)).length,
+      bronTeVerwerken: bronnen.filter(b => ["Ontvangen","In analyse","Onvolledig","Opgevraagd"].includes(b.Status)).length
+    };
+  });
+
+  /* ---- filters ------------------------------------------------------- */
+  const F = {zoek:"", doelgroep:"", status:"", gate:"", eigenaar:""};
+
+  function vulSelect(sel, label, waarden){
+    sel.replaceChildren();
+    sel.appendChild(new Option(label, ""));
+    [...new Set(waarden.filter(Boolean))].sort().forEach(v => sel.appendChild(new Option(v, v)));
+  }
+
+  function zichtbaar(){
+    const q = F.zoek.trim().toLowerCase();
+    return LEADS.filter(l => {
+      if (F.doelgroep && l.doelgroep !== F.doelgroep) return false;
+      if (F.status    && l.leadstatus !== F.status)   return false;
+      if (F.gate      && l.gate !== F.gate)           return false;
+      if (F.eigenaar  && l.eigenaar !== F.eigenaar)   return false;
+      if (!q) return true;
+      const hooi = [l.organisatie, l.project, l.plaats, l.herkomst, l.actie, l.opmerkingen, l.id,
+                    ...l.stappen.map(s => s.naam)].join(" ").toLowerCase();
+      return hooi.includes(q);
+    });
+  }
+
+  /* ---- kerncijfers ---------------------------------------------------- */
+  function tekenKpis(sel){
+    const gewogen = sel.reduce((a,l) => a + l.gewogen, 0);
+    const fee     = sel.reduce((a,l) => a + l.fee, 0);
+    const capex   = sel.reduce((a,l) => a + l.capex, 0);
+    const piekKW  = sel.reduce((a,l) => a + l.piek, 0);
+    const vastgoed = sel.filter(l => !l.hub).length;
+    const hubs     = sel.filter(l => l.hub).length;
+    /* 3,2 GW is het landelijke piekreductiepotentieel uit het
+       potentieonderzoek energiehubs -- dezelfde bron als op de website. */
+    const landelijkKW = 3200000;
+    const aandeel = piekKW / landelijkKW * 100;
+
+    const tegels = [
+      {lbl:"Gewogen pijplijn", n:euro(gewogen), p:"Verwachte fee maal de kans op FID die bij de bereikte gate hoort.",
+       split:[["Verwachte fee", euro(fee)], ["CAPEX", euro(capex)]]},
+      {lbl:"Structureel vermeden piek", n:nlTwo.format(piekKW/1000), u:" MW",
+       p:"Wat deze pijplijn van de netbeheerder afhaalt — niet in nieuwe kabels, in slimmer ontworpen systemen.",
+       split:[["Van 3,2 GW landelijk", nlTwo.format(aandeel) + "%"]]},
+      {lbl:"Leads in beeld", n:nlInt.format(sel.length),
+       p:"Twee sporen, één systeem: gebiedsontwikkeling en bedrijventerrein.",
+       split:[["Vastgoed", String(vastgoed)], ["Hub", String(hubs)]]},
+      {lbl:"Ontwikkelstappen gereed", n:nlInt.format(sel.reduce((a,l)=>a+l.gereed,0)),
+       u:" / " + nlInt.format(sel.reduce((a,l)=>a+l.totaal,0)),
+       p:"Afgevinkte stappen over alle zichtbare leads, uit het blad Voortgang.",
+       split:[["Loopt", String(sel.reduce((a,l)=>a+l.loopt,0))],
+              ["Geblokkeerd", String(sel.reduce((a,l)=>a+l.geblok,0))]]}
+    ];
+
+    const host = $("#kpis");
+    host.replaceChildren();
+    tegels.forEach(t => {
+      const c = el("div","kpi");
+      c.appendChild(el("div","lbl", t.lbl));
+      const n = el("div","n", t.n);
+      if (t.u) n.appendChild(el("span","u", t.u));
+      c.appendChild(n);
+      c.appendChild(el("p", null, t.p));
+      const sp = el("div","split");
+      t.split.forEach(([k,v]) => {
+        const s = el("span", null, k + " ");
+        s.appendChild(el("b", null, v));
+        sp.appendChild(s);
+      });
+      c.appendChild(sp);
+      host.appendChild(c);
+    });
+
+    const alleBronnen    = sel.flatMap(l => l.bronnen);
+    const alleContracten = sel.flatMap(l => l.contracten);
+    const ndaOpen = alleBronnen.filter(b => b["Onder NDA"] === "Ja" && b.Status !== "Verwerkt").length;
+    const tellers = [
+      {k:"Overeenkomsten open", v:sel.reduce((a,l)=>a+l.openContract,0), m:"van " + alleContracten.length + " vastgelegd", warn:true},
+      {k:"Bronnen te verwerken", v:sel.reduce((a,l)=>a+l.bronTeVerwerken,0), m:"van " + alleBronnen.length + " geregistreerd", warn:true},
+      {k:"Onder NDA, nog niet verwerkt", v:ndaOpen, m:"vertrouwelijk materiaal in behandeling", stop:ndaOpen>0},
+      {k:"Contactpersonen", v:sel.flatMap(l=>l.contacten).length, m:"beslissers, gatekeepers en kartrekkers"}
+    ];
+    const th = $("#tallies");
+    th.replaceChildren();
+    tellers.forEach(t => {
+      const c = el("div","tally");
+      c.appendChild(el("div","lbl", t.k));
+      c.appendChild(el("div","v" + (t.stop ? " stop" : t.warn && t.v > 0 ? " warn" : ""), nlInt.format(t.v)));
+      c.appendChild(el("div","m", t.m));
+      th.appendChild(c);
+    });
+  }
+
+  /* ---- gateladder ----------------------------------------------------- */
+  const GATES = [
+    {g:"M1", naam:"Origination",    desc:"Gekwalificeerd, bronnen binnen, propositie uit."},
+    {g:"M2", naam:"Feasibility",    desc:"Concept, businesscase en structuur staan."},
+    {g:"M3", naam:"Development",    desc:"Ontwerp definitief, vergunningen en uitvraag."},
+    {g:"M4", naam:"Ready-to-Build", desc:"Netcontractering en investeringsbesluit."}
+  ];
+
+  function tekenGates(sel){
+    const host = $("#gates");
+    host.replaceChildren();
+    GATES.forEach(gt => {
+      const kans = aanname(gt.g + " bereikt");
+      const hier = sel.filter(l => l.gate === gt.g);
+      const c = el("div","gate");
+      c.appendChild(el("div","g", gt.g));
+      c.appendChild(el("h3", null, gt.naam));
+      c.appendChild(el("p","desc", gt.desc));
+
+      const fid = el("div","fid");
+      fid.appendChild(el("div","lbl","Kans op FID · " + pct(kans)));
+      const m = el("div","meter");
+      const i = el("i");
+      i.style.width = (kans * 100) + "%";
+      m.appendChild(i);
+      fid.appendChild(m);
+      c.appendChild(fid);
+
+      const figs = el("div","figs");
+      [["Leads op deze gate", nlInt.format(hier.length)],
+       ["Gewogen fee", euro(hier.reduce((a,l)=>a+l.gewogen,0))]
+      ].forEach(([k,v]) => {
+        const r = el("span", null, k + ": ");
+        r.appendChild(el("b", null, v));
+        figs.appendChild(r);
+      });
+      c.appendChild(figs);
+      host.appendChild(c);
+    });
+  }
+
+  /* ---- legenda -------------------------------------------------------- */
+  function tekenLegenda(){
+    const host = $("#legend");
+    host.replaceChildren();
+    VOLGORDE.forEach(st => {
+      const s = statusOf(st);
+      const item = el("span","item");
+      const sw = el("span","swatch " + s.cls, s.glyph);
+      item.appendChild(sw);
+      item.appendChild(el("span", null, st));
+      host.appendChild(item);
+    });
+  }
+
+  /* ---- leadkaart ------------------------------------------------------ */
+  function gateBanden(stappen){
+    /* Aaneengesloten reeksen van dezelfde gate. Springt de gate terug --
+       zoals EH-13, die op M1 staat tussen M2-stappen -- dan levert dat
+       een eigen segment op in plaats van een stilzwijgende hergroepering. */
+    const banden = [];
+    stappen.forEach(s => {
+      const laatste = banden[banden.length - 1];
+      if (laatste && laatste.gate === s.gate) laatste.n += 1;
+      else banden.push({gate:s.gate || "—", n:1});
+    });
+    return banden;
+  }
+
+  function tekenLead(l){
+    const card = el("article","lead" + (l.voorbeeld ? " vb" : ""));
+
+    /* kop */
+    const head = el("div","lead-head");
+    const links = el("div");
+    const idrow = el("div","lead-id");
+    idrow.appendChild(el("span","chip dg" + (l.hub ? " hub" : ""), l.hub ? "Energiehub" : "Vastgoed"));
+    idrow.appendChild(el("span","chip gate", l.gate || "—"));
+    idrow.appendChild(el("span","chip", l.leadstatus));
+    if (l.prioriteit) idrow.appendChild(el("span","chip prio-" + l.prioriteit, "Prioriteit " + l.prioriteit.toLowerCase()));
+    if (l.voorbeeld) idrow.appendChild(el("span","chip vb","Voorbeeldrij"));
+    links.appendChild(idrow);
+    links.appendChild(el("h3", null, l.organisatie));
+    if (l.project) links.appendChild(el("p","proj", l.project));
+    head.appendChild(links);
+
+    const meta = el("div","meta");
+    [["Fase", l.fase], ["Omvang", l.omvang], ["Plaats", l.plaats],
+     ["Herkomst", l.herkomst], ["Eigenaar", l.eigenaar], ["Eerste contact", l.eersteContact]
+    ].filter(([,v]) => v).forEach(([k,v]) => {
+      const s = el("span", null, k + " ");
+      s.appendChild(el("b", null, v));
+      meta.appendChild(s);
+    });
+    head.appendChild(meta);
+
+    const fig = el("div","lead-fig");
+    fig.appendChild(el("div","v", euro(l.gewogen)));
+    fig.appendChild(el("div","k","Gewogen fee"));
+    fig.appendChild(el("div","v", euro(l.fee)));
+    fig.appendChild(el("div","k","Verwachte fee · kans " + pct(l.slaagkans)));
+    head.appendChild(fig);
+    card.appendChild(head);
+
+    /* voortgangsbalk */
+    const prog = el("div","progress");
+    const bar = el("div","bar");
+    bar.setAttribute("role","img");
+    bar.setAttribute("aria-label",
+      l.gereed + " van " + l.totaal + " stappen gereed, " + l.loopt + " lopend, " + l.geblok + " geblokkeerd");
+    [["d", l.gereed], ["r", l.loopt], ["b", l.geblok]].forEach(([c, n]) => {
+      if (!n) return;
+      const i = el("i", c);
+      i.style.width = (n / l.totaal * 100) + "%";
+      bar.appendChild(i);
+    });
+    prog.appendChild(bar);
+    prog.appendChild(el("span","pct", pct(l.pctGereed)));
+    card.appendChild(prog);
+
+    /* stappenstrip */
+    const wrap = el("div","stripwrap");
+    const cols = "repeat(" + l.totaal + ",minmax(0,1fr))";
+
+    const band = el("div","gateband");
+    band.style.gridTemplateColumns = cols;
+    gateBanden(l.stappen).forEach(b => {
+      const s = el("span", null, b.gate);
+      s.style.gridColumn = "span " + b.n;
+      band.appendChild(s);
+    });
+    wrap.appendChild(band);
+
+    const strip = el("div","strip");
+    strip.style.gridTemplateColumns = cols;
+    l.stappen.forEach(s => {
+      const st = statusOf(s.status);
+      const b = el("button", st.cls, st.glyph);
+      b.type = "button";
+      b.setAttribute("aria-label", "Stap " + s.nr + ": " + s.naam + " — " + s.status);
+      b.dataset.tip = JSON.stringify({
+        boven: s.stapID + " · " + s.workstream + (s.gate ? " · " + s.gate : "") + (s.verplicht ? "" : " · optioneel"),
+        titel: s.nr + ". " + s.naam,
+        tekst: s.toelichting,
+        status: s.status
+      });
+      strip.appendChild(b);
+    });
+    wrap.appendChild(strip);
+
+    const nrs = el("div","stepnr");
+    nrs.style.gridTemplateColumns = cols;
+    nrs.setAttribute("aria-hidden","true");
+    l.stappen.forEach(s => nrs.appendChild(el("span", null, s.nr % 5 === 0 || s.nr === 1 ? String(s.nr) : "")));
+    wrap.appendChild(nrs);
+    card.appendChild(wrap);
+
+    /* voet */
+    const foot = el("div","lead-foot");
+    const ns = el("div","nextstep");
+    if (l.volgende){
+      ns.appendChild(document.createTextNode("Volgende stap: "));
+      ns.appendChild(el("b", null, l.volgende.nr + ". " + l.volgende.naam));
+      ns.appendChild(document.createTextNode(" · " + l.volgende.workstream));
+    } else {
+      ns.appendChild(el("b", null, "Alle stappen afgerond"));
+    }
+    if (l.actie){
+      ns.appendChild(el("br"));
+      ns.appendChild(document.createTextNode("Actie: " + l.actie + " "));
+      if (l.deadline) ns.appendChild(el("span","deadline", "· " + l.deadline));
+    }
+    foot.appendChild(ns);
+
+    const tellers = el("div","meta");
+    [["Overeenkomsten", l.getekend + " getekend, " + l.openContract + " open"],
+     ["Bronnen", l.bronOntvangen + " binnen, " + l.bronTeVerwerken + " te verwerken"],
+     ["Contactpersonen", String(l.contacten.length)]
+    ].forEach(([k,v]) => {
+      const s = el("span", null, k + " ");
+      s.appendChild(el("b", null, v));
+      tellers.appendChild(s);
+    });
+    foot.appendChild(tellers);
+
+    const btn = el("button","more","Details");
+    btn.type = "button";
+    btn.setAttribute("aria-expanded","false");
+    foot.appendChild(btn);
+    card.appendChild(foot);
+
+    const detail = tekenDetail(l);
+    detail.hidden = true;
+    btn.addEventListener("click", () => {
+      detail.hidden = !detail.hidden;
+      btn.setAttribute("aria-expanded", String(!detail.hidden));
+      btn.textContent = detail.hidden ? "Details" : "Sluiten";
+    });
+    card.appendChild(detail);
+    return card;
+  }
+
+  /* ---- detailpaneel --------------------------------------------------- */
+  function kolom(titel, records, leeg){
+    const c = el("div");
+    c.appendChild(el("h4", null, titel));
+    if (!records.length){ c.appendChild(el("p","empty", leeg)); return c; }
+    records.forEach(r => c.appendChild(r));
+    return c;
+  }
+
+  const CONTRACT_KLAAR = ["Getekend","Verlopen","Beeindigd","Ingetrokken"];
+
+  function tekenDetail(l){
+    const d = el("div","detail");
+    const cols = el("div","cols");
+
+    cols.appendChild(kolom("Contactpersonen", l.contacten.map(c => {
+      const r = el("div","rec");
+      const t = el("div","t");
+      t.appendChild(el("span", null, c.Naam));
+      if (c["Rol in besluitvorming"]) t.appendChild(el("span","pill", c["Rol in besluitvorming"]));
+      r.appendChild(t);
+      const regels = [c.Functie, c.Organisatie, c["E-mail"], c.Telefoon].filter(Boolean).join(" · ");
+      if (regels) r.appendChild(el("div","d", regels));
+      if (c["Laatste contact"]) r.appendChild(el("div","d","Laatst gesproken " + c["Laatste contact"] + (c["Relatie-eigenaar"] ? " · " + c["Relatie-eigenaar"] : "")));
+      r.appendChild(el("div","id", c.ContactID));
+      return r;
+    }), "Nog geen contactpersonen vastgelegd."));
+
+    cols.appendChild(kolom("Overeenkomsten", l.contracten.map(o => {
+      const klaar = CONTRACT_KLAAR.includes(o.Status);
+      const r = el("div","rec");
+      const t = el("div","t");
+      t.appendChild(el("span", null, o.Titel || o.Type));
+      t.appendChild(el("span","pill " + (o.Status === "Getekend" ? "ok" : klaar ? "" : "open"), o.Status));
+      r.appendChild(t);
+      const regels = [o.Type,
+        o["Datum getekend"] ? "getekend " + o["Datum getekend"] : (o["Datum verzonden"] ? "verzonden " + o["Datum verzonden"] : ""),
+        o.Einddatum ? "loopt tot " + o.Einddatum : "",
+        num(o["Contractwaarde (EUR)"]) ? euro(num(o["Contractwaarde (EUR)"])) : ""
+      ].filter(Boolean).join(" · ");
+      if (regels) r.appendChild(el("div","d", regels));
+      if (o["Actie vereist"] === "Ja") r.appendChild(el("div","d","Actie vereist" + (o.Opmerkingen ? ": " + o.Opmerkingen : "")));
+      r.appendChild(el("div","id", o.OvereenkomstID));
+      return r;
+    }), "Nog geen overeenkomsten vastgelegd."));
+
+    cols.appendChild(kolom("Bronnen", l.bronnen.map(b => {
+      const r = el("div","rec");
+      const t = el("div","t");
+      t.appendChild(el("span", null, b["Titel of bestandsnaam"] || b.Brontype));
+      t.appendChild(el("span","pill " + (b.Status === "Verwerkt" ? "ok" : "open"), b.Status));
+      if (b["Onder NDA"] === "Ja") t.appendChild(el("span","pill nda","Onder NDA"));
+      r.appendChild(t);
+      const regels = [b.Brontype, b.Formaat, b.Bruikbaarheid,
+        b["Datum ontvangen"] ? "ontvangen " + b["Datum ontvangen"] : "",
+        b["Gebruikt voor stap"] ? "voor " + b["Gebruikt voor stap"] : ""
+      ].filter(Boolean).join(" · ");
+      if (regels) r.appendChild(el("div","d", regels));
+      r.appendChild(el("div","id", b.BronID));
+      return r;
+    }), "Nog geen bronnen ontvangen."));
+
+    d.appendChild(cols);
+
+    /* lopende en geblokkeerde stappen voluit */
+    const open = l.stappen.filter(s => s.status === "Loopt" || s.status === "Geblokkeerd");
+    if (open.length){
+      const sec = el("div");
+      sec.style.marginTop = "22px";
+      sec.appendChild(el("h4", null, "Stappen die nu lopen of vastzitten"));
+      open.forEach(s => {
+        const r = el("div","rec");
+        const t = el("div","t");
+        t.appendChild(el("span", null, s.nr + ". " + s.naam));
+        t.appendChild(el("span","pill " + (s.status === "Geblokkeerd" ? "nda" : "open"), s.status));
+        t.appendChild(el("span","pill", s.workstream));
+        r.appendChild(t);
+        if (s.toelichting) r.appendChild(el("div","d", s.toelichting));
+        r.appendChild(el("div","id", s.stapID + (s.wie ? " · " + s.wie : "")));
+        sec.appendChild(r);
+      });
+      d.appendChild(sec);
+    }
+
+    if (l.opmerkingen){
+      const p = el("p","block-note", l.opmerkingen);
+      p.style.marginTop = "20px";
+      d.appendChild(p);
+    }
+    return d;
+  }
+
+  /* ---- werkstromen ----------------------------------------------------- */
+  function tekenWerkstromen(sel){
+    const per = new Map();
+    sel.flatMap(l => l.stappen).forEach(s => {
+      if (!per.has(s.workstream)) per.set(s.workstream, {});
+      const b = per.get(s.workstream);
+      b[s.status] = (b[s.status] || 0) + 1;
+    });
+    const host = $("#ws");
+    host.replaceChildren();
+    if (!per.size){ host.appendChild(el("p","empty","Geen stappen in de selectie.")); return; }
+
+    const max = Math.max(...[...per.values()].map(b => Object.values(b).reduce((a,n)=>a+n,0)));
+    [...per.entries()]
+      .sort((a,b) => Object.values(b[1]).reduce((x,n)=>x+n,0) - Object.values(a[1]).reduce((x,n)=>x+n,0))
+      .forEach(([naam, blok]) => {
+        const totaal = Object.values(blok).reduce((a,n)=>a+n,0);
+        const row = el("div","ws-row");
+        row.appendChild(el("div","nm", naam));
+        const bar = el("div","ws-bar");
+        bar.style.width = (totaal / max * 100) + "%";
+        VOLGORDE.forEach(st => {
+          const n = blok[st] || 0;
+          if (!n) return;
+          const i = el("i");
+          i.style.flex = n + " 1 0";
+          i.style.background = "var(" + statusOf(st).varName + ")";
+          if (st === "Niet gestart" || st === "Niet van toepassing")
+            i.style.boxShadow = "inset 0 0 0 1px var(--st-niet-line)";
+          i.dataset.tip = JSON.stringify({boven:naam, titel:n + " × " + st, tekst:"", status:st});
+          bar.appendChild(i);
+        });
+        row.appendChild(bar);
+        const gereed = blok["Gereed"] || 0;
+        row.appendChild(el("div","tot", gereed + "/" + totaal + " gereed"));
+        host.appendChild(row);
+      });
+  }
+
+  /* ---- acties ---------------------------------------------------------- */
+  function tekenActies(sel){
+    const items = [];
+    sel.forEach(l => {
+      if (l.actie) items.push({d:l.deadline, lead:l, wat:l.actie, soort:"Volgende actie", wie:l.eigenaar});
+      l.contracten.filter(o => o["Actie vereist"] === "Ja" || !CONTRACT_KLAAR.includes(o.Status))
+        .forEach(o => items.push({
+          d:"", lead:l, wat:(o.Titel || o.Type) + " — " + o.Status,
+          soort:"Overeenkomst", wie:o["Ondertekenaar Smarteck"] || l.eigenaar}));
+      l.bronnen.filter(b => b.Status !== "Verwerkt")
+        .forEach(b => items.push({
+          d:"", lead:l, wat:(b["Titel of bestandsnaam"] || b.Brontype) + " — " + b.Status,
+          soort:b["Onder NDA"] === "Ja" ? "Bron (NDA)" : "Bron",
+          wie:b["Beoordeeld door"] || l.eigenaar}));
+      l.stappen.filter(s => s.status === "Geblokkeerd")
+        .forEach(s => items.push({d:"", lead:l, wat:s.nr + ". " + s.naam, soort:"Geblokkeerde stap", wie:s.wie || l.eigenaar}));
+    });
+    items.sort((a,b) => (a.d ? 0 : 1) - (b.d ? 0 : 1) || String(a.d).localeCompare(String(b.d)));
+
+    const tb = $("#acties tbody");
+    tb.replaceChildren();
+    if (!items.length){
+      const tr = el("tr");
+      const td = el("td", null, "Niets openstaand in deze selectie.");
+      td.colSpan = 5;
+      tr.appendChild(td);
+      tb.appendChild(tr);
+      return;
+    }
+    items.forEach(it => {
+      const tr = el("tr");
+      const td1 = el("td","num");
+      if (it.d){
+        const over = it.d < VANDAAG;
+        const dagen = (new Date(it.d) - new Date(VANDAAG)) / 864e5;
+        td1.appendChild(el("span","due" + (over ? " past" : dagen <= 21 ? " soon" : ""), it.d));
+      } else td1.appendChild(el("span","due","—"));
+      tr.appendChild(td1);
+      const td2 = el("td");
+      td2.appendChild(el("b", null, it.lead.organisatie));
+      td2.appendChild(el("div","id", it.lead.id));
+      tr.appendChild(td2);
+      tr.appendChild(el("td", null, it.wat));
+      const td4 = el("td");
+      td4.appendChild(el("span","pill" + (it.soort === "Geblokkeerde stap" ? " nda" : ""), it.soort));
+      tr.appendChild(td4);
+      tr.appendChild(el("td", null, it.wie || "—"));
+      tb.appendChild(tr);
+    });
+  }
+
+  /* ---- signalen -------------------------------------------------------- */
+  function tekenSignalen(){
+    const sig = [];
+
+    const vb = LEADS.filter(l => l.voorbeeld);
+    if (vb.length) sig.push({hard:false, h:"Voorbeeldrijen staan er nog in",
+      p:"De Leeswijzer vraagt de voorbeeldregels te verwijderen bij ingebruikname. Zolang ze meetellen "
+        + "kleuren ze de pijplijn: " + vb.map(l => l.organisatie).join(", ") + ".",
+      ref:vb.map(l => l.id).join(" · ")});
+
+    /* gates horen oplopend te zijn binnen een spoor */
+    const sprongen = [];
+    LEADS.forEach(l => {
+      let hoogst = 0;
+      l.stappen.forEach(s => {
+        const n = parseInt(String(s.gate).replace("M",""), 10);
+        if (!n) return;
+        if (n < hoogst) sprongen.push(s.stapID + " (" + s.gate + ", stap " + s.nr + ")");
+        hoogst = Math.max(hoogst, n);
+      });
+    });
+    const uniek = [...new Set(sprongen)];
+    if (uniek.length) sig.push({hard:false, h:"Gate loopt terug in de stappenbibliotheek",
+      p:"Deze stappen staan op een lagere gate dan een eerdere stap in hetzelfde spoor. De gateband boven "
+        + "de strip laat dat zien als een los segment. Controleer of de gate klopt op het blad Ontwikkelstappen.",
+      ref:uniek.join(" · ")});
+
+    const zonderPlaats = LEADS.filter(l => !l.plaats);
+    if (zonderPlaats.length) sig.push({hard:false, h:"Plaats en provincie ontbreken",
+      p:"Zonder plaats is niet te bepalen welke netbeheerder en welk congestiegebied van toepassing zijn — "
+        + "de eerste vraag bij stap 4 en 5.",
+      ref:zonderPlaats.map(l => l.id).join(" · ")});
+
+    const nda = LEADS.flatMap(l => l.bronnen.filter(b => b["Onder NDA"] === "Ja" && b.Status !== "Verwerkt")
+      .map(b => ({l, b})));
+    if (nda.length) sig.push({hard:true, h:"Materiaal onder NDA nog niet verwerkt",
+      p:"Het blad Bronnen is tegelijk het bewijs van wat onder NDA valt. Deze stukken liggen er wel, maar zijn "
+        + "nog niet beoordeeld — tot die tijd blijven cijfers die eruit zouden moeten komen een aanname.",
+      ref:nda.map(x => x.b.BronID + " · " + x.l.organisatie).join("  |  ")});
+
+    const zonderStappen = LEADS.filter(l => !l.totaal);
+    if (zonderStappen.length) sig.push({hard:true, h:"Lead zonder stappenblok",
+      p:"Op het blad Voortgang staat voor deze lead geen enkele regel. Voeg per stap van de doelgroep een regel toe; "
+        + "kopieer een bestaand blok en pas het LeadID aan.",
+      ref:zonderStappen.map(l => l.id).join(" · ")});
+
+    const over = LEADS.filter(l => l.deadline && l.deadline < VANDAAG);
+    if (over.length) sig.push({hard:true, h:"Deadline verstreken",
+      p:"De deadline van de volgende actie ligt achter de peildatum van deze uitdraai (" + VANDAAG + ").",
+      ref:over.map(l => l.id + " · " + l.deadline).join(" · ")});
+
+    const host = $("#signals");
+    host.replaceChildren();
+    if (!sig.length){
+      const c = el("div","signal");
+      c.appendChild(el("div","h","Geen signalen"));
+      c.appendChild(el("p", null, "De databron voldoet aan de spelregels uit de Leeswijzer."));
+      host.appendChild(c);
+      return;
+    }
+    sig.forEach(s => {
+      const c = el("div","signal" + (s.hard ? " hard" : ""));
+      c.appendChild(el("div","h", s.h));
+      c.appendChild(el("p", null, s.p));
+      if (s.ref) c.appendChild(el("span","ref", s.ref));
+      host.appendChild(c);
+    });
+  }
+
+  /* ---- tooltip --------------------------------------------------------- */
+  const tip = $("#tip");
+
+  function toonTip(host, evt){
+    let d;
+    try { d = JSON.parse(host.dataset.tip); } catch (e) { return; }
+    tip.replaceChildren();
+    if (d.boven) tip.appendChild(el("span","tm", d.boven));
+    if (d.titel) tip.appendChild(el("span","tt", d.titel));
+    if (d.tekst) tip.appendChild(el("span", null, d.tekst));
+    if (d.status){
+      const s = el("span","ts");
+      const i = el("i");
+      i.style.background = "var(" + statusOf(d.status).varName + ")";
+      s.appendChild(i);
+      s.appendChild(el("span", null, d.status));
+      tip.appendChild(s);
+    }
+    tip.hidden = false;
+    plaatsTip(evt, host);
+  }
+
+  function plaatsTip(evt, host){
+    const r = tip.getBoundingClientRect();
+    const b = host.getBoundingClientRect();
+    const x = evt ? evt.clientX : b.left + b.width / 2;
+    const y = evt ? evt.clientY : b.top;
+    let left = x + 14, top = y + 16;
+    if (left + r.width > innerWidth - 10)  left = Math.max(10, x - r.width - 14);
+    if (top + r.height > innerHeight - 10) top = Math.max(10, y - r.height - 14);
+    tip.style.left = left + "px";
+    tip.style.top  = top + "px";
+  }
+
+  document.addEventListener("pointerover", e => {
+    const host = e.target.closest("[data-tip]");
+    if (host) toonTip(host, e);
+  });
+  document.addEventListener("pointermove", e => {
+    const host = e.target.closest("[data-tip]");
+    if (host && !tip.hidden) plaatsTip(e, host); else if (!host) tip.hidden = true;
+  });
+  document.addEventListener("pointerleave", () => { tip.hidden = true; }, true);
+  document.addEventListener("focusin", e => {
+    const host = e.target.closest("[data-tip]");
+    if (host) toonTip(host, null); else tip.hidden = true;
+  });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") tip.hidden = true; });
+  addEventListener("scroll", () => { tip.hidden = true; }, {passive:true});
+
+  /* ---- thema ----------------------------------------------------------- */
+  const themeBtn = $("#theme");
+  function huidigDonker(){
+    const stamp = document.documentElement.getAttribute("data-theme");
+    if (stamp) return stamp === "dark";
+    return matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  function zetThemaLabel(){ themeBtn.textContent = huidigDonker() ? "Licht" : "Donker"; }
+  themeBtn.addEventListener("click", () => {
+    document.documentElement.setAttribute("data-theme", huidigDonker() ? "light" : "dark");
+    zetThemaLabel();
+  });
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", zetThemaLabel);
+
+  /* ---- tekenen --------------------------------------------------------- */
+  function teken(){
+    const sel = zichtbaar();
+    $("#f-count").textContent =
+      sel.length === LEADS.length
+        ? LEADS.length + " leads"
+        : sel.length + " van " + LEADS.length + " leads";
+
+    tekenKpis(sel);
+    tekenGates(sel);
+
+    const host = $("#leads");
+    host.replaceChildren();
+    if (!sel.length){
+      host.appendChild(el("p","empty","Geen leads die aan deze filters voldoen."));
+    } else {
+      sel.slice()
+        .sort((a,b) => b.gewogen - a.gewogen || a.organisatie.localeCompare(b.organisatie))
+        .forEach(l => host.appendChild(tekenLead(l)));
+    }
+
+    tekenWerkstromen(sel);
+    tekenActies(sel);
+  }
+
+  /* ---- wiring ---------------------------------------------------------- */
+  vulSelect($("#f-doelgroep"), "Alle doelgroepen", LEADS.map(l => l.doelgroep));
+  vulSelect($("#f-status"),    "Alle statussen",   LEADS.map(l => l.leadstatus));
+  vulSelect($("#f-gate"),      "Alle gates",       LEADS.map(l => l.gate));
+  vulSelect($("#f-eigenaar"),  "Alle eigenaren",   LEADS.map(l => l.eigenaar));
+
+  const bind = (sel, key) => $(sel).addEventListener("input", e => { F[key] = e.target.value; teken(); });
+  bind("#f-zoek","zoek"); bind("#f-doelgroep","doelgroep"); bind("#f-status","status");
+  bind("#f-gate","gate");  bind("#f-eigenaar","eigenaar");
+
+  $("#f-reset").addEventListener("click", () => {
+    Object.keys(F).forEach(k => { F[k] = ""; });
+    ["#f-zoek","#f-doelgroep","#f-status","#f-gate","#f-eigenaar"].forEach(s => { $(s).value = ""; });
+    teken();
+  });
+
+  const bron = DATA._bron || {};
+  $("#src-file").textContent = bron.bestand || "Smarteck_Leadtracker_Databron.xlsx";
+  $("#src-date").textContent = bron.gelezen_op ? "Uitgelezen " + bron.gelezen_op : "";
+
+  zetThemaLabel();
+  tekenLegenda();
+  tekenSignalen();
+  teken();
+})();
+</script>
