@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
   <style>
     :root{
-      --navy:#112B3B; --navy-2:#12314A; --koper:#BE612E; --koper-lt:#E8A882; --koper-dk:#8E4A20;
+      --navy:#112B3B; --navy-2:#12314A; --koper:#BE612E; --koper-lt:#E8A882; --koper-dk:#8E4A20; --koper-dkr:#6E3818;
       --aqua:#1D8F91; --aqua-lt:#96CCCC; --kalk:#F5F3EF; --kalk-2:#EAE6DE; --wit:#FFFFFF;
       --zink:#5F6E78; --zink-lt:#AEB8BE;
       --display:'Space Grotesk','Arial Narrow',Arial,sans-serif;
@@ -21,7 +21,7 @@
     *{box-sizing:border-box;margin:0;padding:0}
     body{background:var(--kalk);color:var(--navy);font-family:var(--body);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased}
     img{max-width:100%;display:block}
-    a{color:var(--koper);text-decoration:none}
+    a{color:var(--koper-dk);text-decoration:none}
     a:hover{text-decoration:underline}
     .wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad)}
     h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.1;letter-spacing:-0.025em}
@@ -29,14 +29,14 @@
     h3{font-size:21px;letter-spacing:-0.01em;margin-bottom:.4em}
     p{max-width:66ch}
     .lbl{font-family:var(--mono);font-size:11.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--zink)}
-    .lbl.k{color:var(--koper)} .lbl.a{color:var(--aqua-lt)}
+    .lbl.k{color:var(--koper-dk)} .lbl.a{color:var(--aqua-lt)}
 
     header.site{background:var(--navy)}
     header.site .bar{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:16px var(--pad);max-width:var(--maxw);margin:0 auto}
     .brand{display:flex;align-items:center;gap:11px;color:#fff}
     nav.main{display:flex;gap:22px;flex-wrap:wrap}
     nav.main a{color:var(--zink-lt);font-size:14.5px;text-decoration:none}
-    .btn{display:inline-block;background:var(--koper);color:#fff;font-weight:600;font-size:15px;padding:12px 20px;border:none;font-family:var(--body)}
+    .btn{display:inline-block;background:var(--koper-dk);color:#fff;font-weight:600;font-size:15px;padding:12px 20px;border:none;font-family:var(--body)}
     .btn.ghost{background:transparent;border:1px solid var(--zink);color:#fff}
 
     .hero{background:var(--navy);color:var(--zink-lt);padding:80px 0 88px}
@@ -51,7 +51,7 @@
     section{padding:78px 0;border-top:1px solid var(--kalk-2)}
     section.dark{background:var(--navy);color:var(--zink-lt);border-top:none}
     section.dark h2,section.dark h3{color:#fff}
-    section.koper{background:var(--koper);color:#F7DECD;border-top:none}
+    section.koper{background:var(--koper-dk);color:#F7DECD;border-top:none}
     section.koper h2,section.koper h3{color:#fff}
     .intro{font-size:20px;line-height:1.55;max-width:60ch;margin-bottom:40px}
     .grid2{display:grid;grid-template-columns:1fr 1fr;gap:28px}
@@ -69,7 +69,7 @@
 
     .role{display:grid;grid-template-columns:56px 1fr;gap:20px;padding:26px 0;border-top:1px solid var(--kalk-2)}
     .role:last-child{border-bottom:1px solid var(--kalk-2)}
-    .role .id{font-family:var(--mono);font-size:13px;letter-spacing:.12em;color:var(--koper);padding-top:4px}
+    .role .id{font-family:var(--mono);font-size:13px;letter-spacing:.12em;color:var(--koper-dk);padding-top:4px}
     .role p{font-size:15.5px;color:var(--zink);max-width:74ch}
 
     .obj{border-top:1px solid rgba(255,255,255,.28);padding:26px 0}
@@ -80,7 +80,7 @@
     .ms{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:14px}
     .ms div{border-top:3px solid var(--koper);padding-top:14px}
     .ms div:last-child{border-top-color:var(--aqua)}
-    .ms .m{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--koper);margin-bottom:6px}
+    .ms .m{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--koper-dk);margin-bottom:6px}
     .ms div:last-child .m{color:var(--aqua)}
     .ms h3{font-size:18px;margin-bottom:4px}
     .ms p{font-size:14px;color:var(--zink)}

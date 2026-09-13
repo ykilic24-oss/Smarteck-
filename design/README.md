@@ -19,19 +19,20 @@ Lifted verbatim from the site's own `:root`, not re-derived.
 Type: Space Grotesk 500/700 (display), IBM Plex Sans 400/500/600 (body),
 IBM Plex Mono 500 (labels). Body 17px / 1.65. No border radius anywhere.
 
-| Token | Value |
-| --- | --- |
-| `--navy` | `#112B3B` |
-| `--navy-2` | `#12314A` |
-| `--koper` | `#BE612E` |
-| `--koper-lt` | `#E8A882` |
-| `--koper-dk` | `#8E4A20` |
-| `--aqua` | `#1D8F91` |
-| `--aqua-lt` | `#96CCCC` |
-| `--kalk` | `#F5F3EF` |
-| `--kalk-2` | `#EAE6DE` |
-| `--zink` | `#5F6E78` |
-| `--zink-lt` | `#AEB8BE` |
+| Token | Value | Where |
+| --- | --- | --- |
+| `--navy` | `#112B3B` | |
+| `--navy-2` | `#12314A` | |
+| `--koper` | `#BE612E` | brand accent — rules, diagrams, focus ring. Never text. |
+| `--koper-lt` | `#E8A882` | on navy only |
+| `--koper-dk` | `#8E4A20` | **all copper text and copper backgrounds behind light text** |
+| `--koper-dkr` | `#6E3818` | added — button hover |
+| `--aqua` | `#1D8F91` | |
+| `--aqua-lt` | `#96CCCC` | |
+| `--kalk` | `#F5F3EF` | |
+| `--kalk-2` | `#EAE6DE` | |
+| `--zink` | `#5F6E78` | |
+| `--zink-lt` | `#AEB8BE` | |
 
 Layout: `--maxw` 1180px, `--pad` 32px.
 
@@ -54,13 +55,38 @@ Flagged, not changed — these are visible brand decisions:
   `margin-left:10px`; they want to be stacked and full-width below 900px.
 - **Contrast: `.fbot` is 2.78:1.** `--zink` on `--navy` at 11px, in the footer
   bottom bar. WCAG AA wants 4.5:1. `--zink-lt` on the same ground is 7.26:1.
-- **Contrast: the copper band is 3.30:1.** `#F7DECD` on `--koper` for the
-  "Wat er tegen ons model pleit" body copy. Plain white on that copper is only
-  4.25:1, so lightening the text is not enough — the band wants `--koper-dk`
-  (`#8E4A20`), which carries white at 6.66:1.
+- **Contrast: the aqua label is 3.90:1.** `#1D8F91` at 11.5px on a white card,
+  the "Bedrijventerreinen" eyebrow. Same shape of problem as the copper was.
 
 Passing, for reference: `--zink` on `--kalk` is 4.75:1 and on white 5.27:1;
 `--zink-lt` on `--navy` is 7.26:1.
+
+## The copper fix
+
+Every text use of `--koper` `#BE612E` failed WCAG AA, not only the copper band:
+
+| Use | Before | After |
+| --- | --- | --- |
+| Body links | 3.84:1 | 6.01:1 |
+| `.lbl.k` eyebrows | 3.84:1 | 6.01:1 |
+| `.role .id` ("Rol A") | 3.84:1 | 6.01:1 |
+| `.ms .m` ("P1") | 3.84:1 | 6.01:1 |
+| `.btn` primary, white on copper | 4.25:1 | 6.67:1 |
+| `.btn:hover` | 6.67:1 | 9.37:1 |
+| `section.koper` body copy | 3.30:1 | 5.17:1 |
+
+Lightening the text was not an option: plain white on `#BE612E` is 4.25:1,
+still short of 4.5:1. So `--koper-dk` takes over every text role and every
+copper background sitting behind light text.
+
+`--koper` is untouched where it is not text and still clears the 3:1 bar for
+non-text contrast: the 3px accent rules on cards, routes and milestones, the
+hero flow diagram, the load-profile chart stroke, the `:focus-visible` outline
+and the `input:focus` border (3.16:1). `.kpi` also still carries it — that rule
+is dead CSS, matched by nothing in the markup, and at 38–54px it would pass
+anyway.
+
+Applied to `site/index.html` and to all three artboards.
 
 ## Placeholders
 
