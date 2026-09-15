@@ -4,12 +4,14 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <style>
 /* ------------------------------------------------------------------
-   Smarteck Leadtracker -- dashboard
-   Tokens overgenomen uit design/README.md (de :root van de website).
-   Geen border-radius, conform het merk.
+   Smarteck Leadtracker
+   Tokens uit design/README.md (de :root van de website), ongewijzigd.
+   Indeling volgt het portefeuilledashboard-patroon: vaste zijbalk,
+   paginakop met filterstrook, tabrij met kerncijfers ernaast,
+   dichte tabellen en panelen met een kopbalk. Geen border-radius --
+   die komt uit het merk, niet uit het voorbeeld.
    ------------------------------------------------------------------ */
 :root{
-  /* merktokens, ongewijzigd */
   --navy:#112B3B; --navy-2:#12314A; --koper:#BE612E; --koper-lt:#E8A882;
   --koper-dk:#8E4A20; --aqua:#1D8F91; --aqua-lt:#96CCCC; --kalk:#F5F3EF;
   --kalk-2:#EAE6DE; --zink:#5F6E78; --zink-lt:#AEB8BE;
@@ -18,27 +20,31 @@
   --body:'IBM Plex Sans',Arial,Helvetica,sans-serif;
   --mono:'IBM Plex Mono',Consolas,'Courier New',monospace;
 
-  /* vlakken en inkt -- lichte modus */
   --ground:var(--kalk);
   --surface:#FFFFFF;
   --surface-2:#EFECE6;
+  --surface-3:#E4DFD5;
   --line:var(--kalk-2);
   --line-2:#D7D0C2;
   --ink:var(--navy);
   --ink-2:var(--zink);
   --ink-3:#8B97A0;
   --accent:var(--koper);
-  --accent-ink:var(--koper-dk);   /* koper is 3,9:1 op kalk; koper-dk is 6,5:1 */
+  --accent-ink:var(--koper-dk);
   --aqua-ink:#15726F;
+  --link:#1B5E86;
 
-  /* de donkere blokken blijven donker, ook in de lichte modus */
+  --rail:var(--navy);
+  --rail-ink:var(--zink-lt);
+  --rail-line:#1E4560;
+  --rail-on:#16384F;
+
   --panel:var(--navy);
   --panel-2:var(--navy-2);
   --panel-line:#1E4560;
-  --panel-ink:var(--zink-lt);     /* niet --zink: dat is 2,78:1 op navy */
+  --panel-ink:var(--zink-lt);
   --panel-num:var(--koper-lt);
 
-  /* statuspalet -- gevalideerd, zie dashboard/README.md */
   --st-gereed:#1D8F91;
   --st-loopt:#BE612E;
   --st-geblok:#8C1D4E;
@@ -47,488 +53,472 @@
   --st-nvt:#EFECE6;
   --st-ink-on:#FFFFFF;
 
+  --ok:#1D8F91;
+  --bad:#8C1D4E;
   --focus:#1D8F91;
+  --zebra:#FAF9F6;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --ground:#0B1C26;
-    --surface:var(--navy);
-    --surface-2:#16354A;
-    --line:#1E4560;
-    --line-2:#2A5B7C;
-    --ink:#FFFFFF;
-    --ink-2:var(--zink-lt);
-    --ink-3:#7D8D98;
-    --accent:var(--koper-lt);
-    --accent-ink:var(--koper-lt);
-    --aqua-ink:var(--aqua-lt);
-    --panel:var(--navy-2);
-    --panel-2:#163A57;
-    --panel-line:#26567A;
-    --panel-ink:var(--zink-lt);
-    --panel-num:var(--koper-lt);
-    --st-gereed:#4FB3B4;
-    --st-loopt:#E8A882;
-    --st-geblok:#E84E6B;
-    --st-niet:#16354A;
-    --st-niet-line:#2A5B7C;
-    --st-nvt:#13293A;
-    --st-ink-on:#0B1C26;
-    --focus:#96CCCC;
+    --ground:#0B1C26; --surface:var(--navy); --surface-2:#16354A; --surface-3:#1B3F58;
+    --line:#1E4560; --line-2:#2A5B7C; --ink:#FFFFFF; --ink-2:var(--zink-lt); --ink-3:#7D8D98;
+    --accent:var(--koper-lt); --accent-ink:var(--koper-lt); --aqua-ink:var(--aqua-lt); --link:#7FB6D6;
+    --rail:#08151D; --rail-ink:var(--zink-lt); --rail-line:#1E4560; --rail-on:#132D3E;
+    --panel:var(--navy-2); --panel-2:#163A57; --panel-line:#26567A;
+    --st-gereed:#4FB3B4; --st-loopt:#E8A882; --st-geblok:#E84E6B;
+    --st-niet:#16354A; --st-niet-line:#2A5B7C; --st-nvt:#13293A; --st-ink-on:#0B1C26;
+    --ok:#4FB3B4; --bad:#E84E6B; --focus:#96CCCC; --zebra:#0F2735;
   }
 }
 :root[data-theme="dark"]{
-  --ground:#0B1C26;
-  --surface:var(--navy);
-  --surface-2:#16354A;
-  --line:#1E4560;
-  --line-2:#2A5B7C;
-  --ink:#FFFFFF;
-  --ink-2:var(--zink-lt);
-  --ink-3:#7D8D98;
-  --accent:var(--koper-lt);
-  --accent-ink:var(--koper-lt);
-  --aqua-ink:var(--aqua-lt);
-  --panel:var(--navy-2);
-  --panel-2:#163A57;
-  --panel-line:#26567A;
-  --panel-ink:var(--zink-lt);
-  --panel-num:var(--koper-lt);
-  --st-gereed:#4FB3B4;
-  --st-loopt:#E8A882;
-  --st-geblok:#E84E6B;
-  --st-niet:#16354A;
-  --st-niet-line:#2A5B7C;
-  --st-nvt:#13293A;
-  --st-ink-on:#0B1C26;
-  --focus:#96CCCC;
+  --ground:#0B1C26; --surface:var(--navy); --surface-2:#16354A; --surface-3:#1B3F58;
+  --line:#1E4560; --line-2:#2A5B7C; --ink:#FFFFFF; --ink-2:var(--zink-lt); --ink-3:#7D8D98;
+  --accent:var(--koper-lt); --accent-ink:var(--koper-lt); --aqua-ink:var(--aqua-lt); --link:#7FB6D6;
+  --rail:#08151D; --rail-ink:var(--zink-lt); --rail-line:#1E4560; --rail-on:#132D3E;
+  --panel:var(--navy-2); --panel-2:#163A57; --panel-line:#26567A;
+  --st-gereed:#4FB3B4; --st-loopt:#E8A882; --st-geblok:#E84E6B;
+  --st-niet:#16354A; --st-niet-line:#2A5B7C; --st-nvt:#13293A; --st-ink-on:#0B1C26;
+  --ok:#4FB3B4; --bad:#E84E6B; --focus:#96CCCC; --zebra:#0F2735;
 }
 
 *{box-sizing:border-box}
-body{
-  background:var(--ground);color:var(--ink);
-  font-family:var(--body);font-size:15px;line-height:1.55;
-  -webkit-font-smoothing:antialiased;
-}
+[hidden]{display:none !important}
+body{background:var(--ground);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
 h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.1;letter-spacing:-0.025em;margin:0}
-h2{font-size:26px;letter-spacing:-0.02em}
-h3{font-size:17px;letter-spacing:-0.01em}
 p{margin:0}
-a{color:var(--accent-ink)}
+a{color:var(--link)}
 :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-
-.lbl{
-  font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--ink-3);
-}
-.lbl.k{color:var(--accent-ink)}
 .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.lbl{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
 
-.shell{max-width:1320px;margin:0 auto;padding-inline:24px;padding-block:0}
+/* ---------- raamwerk ---------- */
+.app{display:grid;grid-template-columns:216px minmax(0,1fr);min-height:100vh}
 
-/* ---------- kop ---------- */
-header.top{background:var(--navy);color:#fff;border-bottom:1px solid var(--panel-line)}
-header.top .bar{
-  max-width:1320px;margin:0 auto;padding:18px 24px;
-  display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+/* ---------- zijbalk ---------- */
+.rail{background:var(--rail);border-right:1px solid var(--rail-line);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;overflow:auto}
+.rail .brand{padding:20px 18px 18px;border-bottom:1px solid var(--rail-line)}
+.rail .brand img{height:24px;width:auto;display:block}
+.rail .brand .app-name{font-family:var(--display);font-weight:700;font-size:15px;color:#fff;letter-spacing:-0.02em;margin-top:11px}
+.rail .brand .app-sub{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--zink-lt);margin-top:3px}
+.rail nav{padding:10px 0;flex:1}
+.rail nav button{
+  display:block;width:100%;text-align:left;background:transparent;border:none;
+  border-left:3px solid transparent;color:var(--rail-ink);
+  font-family:var(--body);font-size:13.5px;padding:10px 18px;cursor:pointer;
 }
-header.top img{height:26px;width:auto;display:block}
-.title-block{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;flex:1 1 240px}
-.title-block h1{
-  font-family:var(--display);font-weight:700;font-size:20px;
-  letter-spacing:-0.02em;color:#fff;margin:0;
-}
-.title-block .sep{color:#2A5B7C}
-.title-block .sub{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--zink-lt)}
-.theme-btn{
-  background:transparent;border:1px solid #2A5B7C;color:#fff;
-  font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
-  padding:8px 13px;cursor:pointer;
-}
-.theme-btn:hover{border-color:var(--koper-lt);color:var(--koper-lt)}
+.rail nav button:hover{background:var(--rail-on);color:#fff}
+.rail nav button[aria-current="page"]{background:var(--rail-on);color:#fff;border-left-color:var(--koper)}
+.rail .railfoot{padding:16px 18px;border-top:1px solid var(--rail-line);font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--zink-lt);display:flex;flex-direction:column;gap:4px;overflow-wrap:anywhere}
 
-/* ---------- filters ---------- */
-.filters{
-  background:var(--surface);border-bottom:1px solid var(--line);
-  position:sticky;top:0;z-index:30;
-}
-.filters .row{
-  max-width:1320px;margin:0 auto;padding:14px 24px;
-  display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;
-}
-.field{display:flex;flex-direction:column;gap:5px;min-width:0}
-.field label{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
-.field select,.field input{
-  font-family:var(--body);font-size:14px;color:var(--ink);
-  background:var(--ground);border:1px solid var(--line-2);
-  padding:8px 10px;min-width:150px;max-width:100%;
-}
-.field input{min-width:210px}
-.field.grow{flex:1 1 210px}
-.reset{
-  background:transparent;border:1px solid var(--line-2);color:var(--ink-2);
-  font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
-  padding:9px 13px;cursor:pointer;
-}
-.reset:hover{border-color:var(--accent);color:var(--accent-ink)}
-.count{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin-left:auto;white-space:nowrap;align-self:center;padding-block:9px}
+/* ---------- paginakop ---------- */
+.pagehead{background:var(--surface);border-bottom:1px solid var(--line);padding:16px 22px 0}
+.headrow{display:flex;gap:26px;align-items:flex-start;flex-wrap:wrap}
+.ident{flex:0 0 auto;padding-right:26px;border-right:1px solid var(--line);min-width:180px}
+.ident h1{font-size:19px}
+.ident .sub{font-size:12.5px;color:var(--ink-2);margin-top:2px}
+.filterstrip{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;flex:1}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3)}
+.field select,.field input{font-family:var(--body);font-size:13px;color:var(--ink);background:var(--ground);border:1px solid var(--line-2);padding:6px 8px;min-width:132px;max-width:100%}
+.field input{min-width:180px}
+.btn-lite{background:transparent;border:1px solid var(--line-2);color:var(--ink-2);font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:7px 11px;cursor:pointer}
+.btn-lite:hover{border-color:var(--accent);color:var(--accent-ink)}
+.stamp{margin-left:auto;text-align:right;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);display:flex;flex-direction:column;gap:3px;align-items:flex-end}
 
-/* ---------- kerncijfers ---------- */
-.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:28px}
-.kpi{background:var(--panel);border:1px solid var(--panel-line);padding:22px 22px 20px;display:flex;flex-direction:column}
-.kpi .lbl{color:var(--aqua-lt)}
-.kpi .n{
-  font-family:var(--display);font-weight:700;font-size:40px;letter-spacing:-0.035em;
-  line-height:1;color:var(--panel-num);margin:14px 0 8px;
-  font-variant-numeric:tabular-nums;
-}
-.kpi .n .u{font-size:20px;letter-spacing:-0.01em}
-.kpi p{font-size:13px;line-height:1.45;color:var(--panel-ink);max-width:34ch}
-.kpi .split{
-  margin-top:auto;padding-top:14px;border-top:1px solid var(--panel-line);
-  display:flex;gap:16px;font-family:var(--mono);font-size:11px;color:var(--panel-ink);
-  flex-wrap:wrap;
-}
-.kpi .split b{color:#fff;font-weight:600}
+/* tabrij + kerncijfers delen een regel, zoals in het voorbeeld */
+.tabrow{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;padding:14px 0 0}
+.tab{background:var(--surface);border:1px solid var(--line-2);color:var(--ink-2);font-family:var(--body);font-weight:500;font-size:13px;padding:9px 18px;cursor:pointer;margin-bottom:-1px}
+.tab:hover{border-color:var(--accent);color:var(--accent-ink)}
+.tab[aria-selected="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+.kpistrip{margin-left:auto;display:flex;gap:10px;margin-bottom:10px}
+.kpibox{border:1px solid var(--line-2);background:var(--ground);padding:7px 15px;min-width:104px;text-align:right}
+.kpibox .k{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.kpibox .v{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:-0.02em;font-variant-numeric:tabular-nums;margin-top:1px}
 
-/* tweede rij: kleinere tellers op het lichte vlak */
-.tallies{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:16px}
-.tally{background:var(--surface);border:1px solid var(--line);padding:16px 18px}
-.tally .v{font-family:var(--display);font-weight:700;font-size:25px;letter-spacing:-0.02em;line-height:1.1;margin-top:8px;font-variant-numeric:tabular-nums}
-.tally .v.warn{color:var(--accent-ink)}
-.tally .v.stop{color:var(--st-geblok)}
-.tally .m{font-size:12.5px;color:var(--ink-2);margin-top:3px}
+/* ---------- pagina ---------- */
+.page{padding:20px 22px 44px}
+.page[hidden]{display:none !important}
+.grid{display:grid;gap:14px}
+.g-kpi{grid-template-columns:repeat(4,1fr)}
+.g-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g-main{grid-template-columns:minmax(0,1fr) 210px;align-items:start}
+.sectiontitle{font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:-0.02em;margin:26px 0 12px}
+.sectiontitle:first-child{margin-top:0}
+.note{font-size:13px;color:var(--ink-2);max-width:78ch;margin-bottom:14px}
 
-section.block{padding-block:40px;border-top:1px solid var(--line);margin-top:40px}
-section.block:first-of-type{border-top:none;margin-top:0}
-.block-head{display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap;margin-bottom:6px}
-.block-note{font-size:13.5px;color:var(--ink-2);max-width:72ch;margin-top:8px}
+/* grote kerncijfertegels */
+.stat{background:var(--panel);border:1px solid var(--panel-line);padding:18px 18px 16px;display:flex;flex-direction:column}
+.stat .k{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--aqua-lt)}
+.stat .v{font-family:var(--display);font-weight:700;font-size:33px;letter-spacing:-0.035em;line-height:1;color:var(--panel-num);margin:12px 0 7px;font-variant-numeric:tabular-nums}
+.stat .v .u{font-size:17px;letter-spacing:-0.01em}
+.stat p{font-size:12.5px;line-height:1.4;color:var(--panel-ink);max-width:34ch}
+.stat .split{margin-top:auto;padding-top:11px;border-top:1px solid var(--panel-line);display:flex;gap:14px;flex-wrap:wrap;font-family:var(--mono);font-size:10.5px;color:var(--panel-ink)}
+.stat .split b{color:#fff;font-weight:600}
 
-/* ---------- gateladder ---------- */
-.gates{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:26px}
-.gate{border-top:3px solid var(--accent);padding-top:15px;display:flex;flex-direction:column;gap:3px}
-.gate:last-child{border-top-color:var(--aqua)}
-.gate .g{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.12em;color:var(--accent-ink)}
-.gate:last-child .g{color:var(--aqua-ink)}
-.gate h3{margin-top:2px}
-.gate .desc{font-size:13px;color:var(--ink-2);max-width:30ch}
-.gate .fid{margin-top:12px}
-.meter{height:6px;background:var(--st-niet);border:1px solid var(--st-niet-line);margin-top:6px}
-.meter > i{display:block;height:100%;background:var(--accent)}
-.gate:last-child .meter > i{background:var(--aqua)}
-.gate .figs{
-  margin-top:12px;padding-top:11px;border-top:1px solid var(--line);
-  font-family:var(--mono);font-size:11.5px;color:var(--ink-2);
-  display:flex;flex-direction:column;gap:3px;
-}
-.gate .figs b{color:var(--ink);font-weight:600}
+/* ---------- paneel met kopbalk ---------- */
+.panel{background:var(--surface);border:1px solid var(--line)}
+.panel-hd{background:var(--surface-2);border-bottom:1px solid var(--line);padding:8px 14px;display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.panel-hd .t{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-2)}
+.panel-hd .s{font-family:var(--mono);font-size:10px;color:var(--ink-3)}
+.panel-bd{padding:14px}
+.panel-bd.flush{padding:0}
 
-/* ---------- legenda ---------- */
-.legend{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin-top:22px}
-.legend .item{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-2)}
-.swatch{
-  width:16px;height:16px;display:grid;place-items:center;flex:none;
-  font-family:var(--mono);font-size:10px;font-weight:600;line-height:1;
-}
+/* ---------- tabellen ---------- */
+.tablewrap{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th{text-align:left;font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--link);padding:9px 12px;border-bottom:1px solid var(--line-2);white-space:nowrap;background:var(--surface);position:sticky;top:0;z-index:2}
+td{padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr:nth-child(even) td{background:var(--zebra)}
+tbody tr:hover td{background:var(--surface-2)}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);white-space:nowrap}
+td.d{font-family:var(--mono);font-size:11.5px;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink-2)}
+td.d.none{color:var(--ink-3)}
+tr.total td{background:var(--navy) !important;color:#fff;font-weight:600;border-bottom:none}
+tr.total td.n{color:#fff}
+.idlink{font-family:var(--mono);font-size:11.5px;color:var(--link);text-decoration:underline;background:none;border:none;padding:0;cursor:pointer;white-space:nowrap}
+.idlink:hover{color:var(--accent-ink)}
+.wrapcell{white-space:normal;min-width:190px}
 
-/* ---------- leadkaarten met stappenstrip ---------- */
-.leads{display:flex;flex-direction:column;gap:14px;margin-top:24px}
-.lead{background:var(--surface);border:1px solid var(--line)}
-.lead.vb{border-left:3px solid var(--line-2)}
-.lead-head{
-  display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) auto;
-  gap:20px;align-items:start;padding:20px 22px 16px;
-}
-.lead-id{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:5px}
-.lead h3{font-size:19px}
-.lead .proj{font-size:13.5px;color:var(--ink-2);margin-top:2px}
-.chip{
-  font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
-  padding:3px 7px;border:1px solid var(--line-2);color:var(--ink-2);white-space:nowrap;
-}
+/* ---------- chips, pillen, iconen ---------- */
+.chip{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;padding:2px 6px;border:1px solid var(--line-2);color:var(--ink-2);white-space:nowrap;display:inline-block}
 .chip.dg{border-color:var(--accent);color:var(--accent-ink)}
 .chip.dg.hub{border-color:var(--aqua);color:var(--aqua-ink)}
-.chip.gate{background:var(--panel);border-color:var(--panel);color:#fff}
-.chip.prio-Hoog{border-color:var(--accent);color:var(--accent-ink)}
+.chip.gatepill{background:var(--navy);border-color:var(--navy);color:#fff}
+.chip.hi{border-color:var(--accent);color:var(--accent-ink)}
 .chip.vb{border-style:dashed}
-.meta{display:flex;flex-wrap:wrap;column-gap:22px;row-gap:4px;font-size:12.5px;color:var(--ink-2)}
-.meta span b{color:var(--ink);font-weight:500}
-.lead-fig{text-align:right;white-space:nowrap}
-.lead-fig .v{font-family:var(--display);font-weight:700;font-size:23px;letter-spacing:-0.02em;font-variant-numeric:tabular-nums}
-.lead-fig .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-top:2px}
+.chip.ok{color:var(--aqua-ink);border-color:currentColor}
+.chip.open{color:var(--accent-ink);border-color:currentColor}
+.chip.stop{color:var(--bad);border-color:currentColor}
+.mark{display:inline-grid;place-items:center;width:17px;height:17px;border-radius:50%;font-size:10px;font-weight:700;line-height:1;color:#fff}
+.mark.ok{background:var(--ok)}
+.mark.bad{background:var(--bad)}
 
-.progress{padding:0 22px 4px;display:flex;align-items:center;gap:14px}
-.progress .bar{flex:1;height:8px;background:var(--st-niet);border:1px solid var(--st-niet-line);display:flex;gap:0}
-.progress .bar i{display:block;height:100%}
-.progress .bar i.d{background:var(--st-gereed)}
-.progress .bar i.r{background:var(--st-loopt)}
-.progress .bar i.b{background:var(--st-geblok)}
-.progress .pct{font-family:var(--mono);font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;min-width:42px;text-align:right}
+/* ---------- staafjes ---------- */
+.bars{display:flex;flex-direction:column;gap:7px}
+.barrow{display:grid;grid-template-columns:minmax(96px,150px) minmax(0,1fr) minmax(58px,auto);gap:12px;align-items:center;font-size:12.5px}
+.barrow .track{height:17px;background:var(--surface-2);display:flex;gap:2px}
+.barrow .track i{display:block;min-width:2px}
+.barrow .amt{font-family:var(--mono);font-size:11px;color:var(--ink-2);text-align:right;font-variant-numeric:tabular-nums}
 
-.stripwrap{padding:14px 22px 18px;overflow-x:auto}
-.gateband,.strip{display:grid;gap:2px;min-width:620px}
-.gateband{margin-bottom:3px}
-.gateband span{
-  font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.1em;
-  color:var(--ink-3);border-top:2px solid var(--line-2);padding-top:3px;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-}
-/* Geen `all:unset` hier: dat wint qua specificiteit van de .s-* regels
-   hieronder en laat de cellen leeg. De knop wordt met de hand gereset. */
-.strip button{
-  appearance:none;-webkit-appearance:none;margin:0;padding:0;
-  box-sizing:border-box;cursor:help;height:30px;
-  display:grid;place-items:center;
-  font-family:var(--mono);font-size:10px;font-weight:600;line-height:1;
-  border:1px solid transparent;background:transparent;color:inherit;
-}
+/* ---------- stappenstrip ---------- */
+.legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.legend .item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2)}
+.swatch{width:15px;height:15px;display:grid;place-items:center;flex:none;font-family:var(--mono);font-size:9px;font-weight:600;line-height:1;border:1px solid transparent}
+.stripwrap{overflow-x:auto}
+.gateband,.strip,.stepnr{display:grid;gap:2px;min-width:560px}
+.gateband span{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.09em;color:var(--ink-3);border-top:2px solid var(--line-2);padding-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.strip{margin-top:3px}
+.strip button{appearance:none;-webkit-appearance:none;margin:0;padding:0;box-sizing:border-box;cursor:help;height:26px;display:grid;place-items:center;font-family:var(--mono);font-size:9.5px;font-weight:600;line-height:1;border:1px solid transparent;background:transparent;color:inherit}
 .strip button:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
 .swatch.s-Gereed,.strip button.s-Gereed{background:var(--st-gereed);border-color:var(--st-gereed);color:var(--st-ink-on)}
 .swatch.s-Loopt,.strip button.s-Loopt{background:var(--st-loopt);border-color:var(--st-loopt);color:var(--st-ink-on)}
 .swatch.s-Geblokkeerd,.strip button.s-Geblokkeerd{background:var(--st-geblok);border-color:var(--st-geblok);color:#fff}
 .swatch.s-Nietgestart,.strip button.s-Nietgestart{background:var(--st-niet);border-color:var(--st-niet-line);color:var(--ink-3)}
 .swatch.s-Nvt,.strip button.s-Nvt{background:var(--st-nvt);border-color:var(--line);color:var(--ink-3)}
-.swatch{border:1px solid transparent}
-.stepnr{
-  display:grid;gap:2px;min-width:620px;margin-top:3px;
-  font-family:var(--mono);font-size:9px;color:var(--ink-3);text-align:center;
-  font-variant-numeric:tabular-nums;
-}
+.stepnr{margin-top:3px;font-family:var(--mono);font-size:8.5px;color:var(--ink-3);text-align:center;font-variant-numeric:tabular-nums}
+.progress{display:flex;align-items:center;gap:10px;margin:12px 0 4px}
+.progress .bar{flex:1;height:7px;background:var(--st-niet);border:1px solid var(--st-niet-line);display:flex}
+.progress .bar i{display:block;height:100%}
+.progress .pct{font-family:var(--mono);font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;min-width:38px;text-align:right}
 
-.lead-foot{
-  border-top:1px solid var(--line);padding:13px 22px;
-  display:flex;gap:24px;align-items:center;flex-wrap:wrap;
-}
-.nextstep{font-size:13.5px;color:var(--ink-2);flex:1 1 260px;min-width:0}
-.nextstep b{color:var(--ink);font-weight:600}
-.nextstep .deadline{font-family:var(--mono);font-size:11.5px;color:var(--accent-ink)}
-.more{
-  background:transparent;border:1px solid var(--line-2);color:var(--ink-2);
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
-  padding:8px 13px;cursor:pointer;
-}
-.more:hover{border-color:var(--accent);color:var(--accent-ink)}
+/* ---------- gateladder ---------- */
+.gates{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.gate{border-top:3px solid var(--accent);padding-top:13px}
+.gate:last-child{border-top-color:var(--aqua)}
+.gate .g{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.12em;color:var(--accent-ink)}
+.gate:last-child .g{color:var(--aqua-ink)}
+.gate h3{font-size:16px;margin:3px 0 3px}
+.gate .desc{font-size:12.5px;color:var(--ink-2);max-width:30ch}
+.meter{height:6px;background:var(--st-niet);border:1px solid var(--st-niet-line);margin-top:6px}
+.meter > i{display:block;height:100%;background:var(--accent)}
+.gate:last-child .meter > i{background:var(--aqua)}
+.gate .figs{margin-top:11px;padding-top:10px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--ink-2);display:flex;flex-direction:column;gap:2px}
+.gate .figs b{color:var(--ink);font-weight:600}
 
-/* ---------- detail ---------- */
-.detail{border-top:1px solid var(--line);background:var(--surface-2);padding:22px}
-.detail .cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
-.detail h4{
-  font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--ink-3);margin:0 0 10px;
-  padding-bottom:7px;border-bottom:1px solid var(--line-2);
-}
-.rec{padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}
+/* ---------- tijdlijn ---------- */
+.timeline{position:relative;padding:26px 0 0;min-height:104px}
+.tl-rail{position:relative;height:3px;background:var(--line-2);margin:0 10px}
+.tl-dot{appearance:none;-webkit-appearance:none;padding:0;position:absolute;top:50%;width:13px;height:13px;margin:-6.5px 0 0 -6.5px;border:2px solid var(--surface);cursor:help}
+.tl-now{position:absolute;top:-22px;bottom:-56px;width:0;border-left:1px dashed var(--accent)}
+.tl-now span{position:absolute;top:-16px;left:4px;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-ink);white-space:nowrap}
+.tl-axis{position:relative;height:42px;margin:0 10px}
+.tl-tick{position:absolute;top:8px;border-left:1px solid var(--line);height:7px}
+.tl-tick span{position:absolute;top:10px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:9.5px;color:var(--ink-3)}
+.tl-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px}
+.tl-legend .item{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink-2)}
+.tl-legend i{width:10px;height:10px;display:block;flex:none}
+
+/* ---------- opzoeken ---------- */
+.lookup-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:14px;align-items:start}
+.leadlist{max-height:520px;overflow:auto}
+.leadlist button{display:block;width:100%;text-align:left;background:transparent;border:none;border-bottom:1px solid var(--line);padding:10px 14px;cursor:pointer;color:var(--ink);font-family:var(--body);font-size:13px}
+.leadlist button:hover{background:var(--surface-2)}
+.leadlist button[aria-current="true"]{background:var(--surface-2);box-shadow:inset 3px 0 0 var(--koper)}
+.leadlist .o{font-weight:600}
+.leadlist .m{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:.08em;margin-top:2px}
+.factgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(152px,1fr));gap:1px;background:var(--line)}
+.fact{background:var(--surface);padding:11px 13px}
+.fact .k{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.fact .v{font-size:14px;font-weight:600;margin-top:3px;overflow-wrap:break-word}
+.fact .v.big{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:-0.02em;font-variant-numeric:tabular-nums}
+.rec{padding:9px 0;border-bottom:1px solid var(--line);font-size:12.5px}
 .rec:last-child{border-bottom:none}
-.rec .t{font-weight:600;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
-.rec .d{color:var(--ink-2);font-size:12.5px;margin-top:2px}
-.rec .id{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:.08em}
-.pill{
-  font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
-  padding:2px 6px;border:1px solid currentColor;white-space:nowrap;
-}
-.pill.ok{color:var(--aqua-ink)}
-.pill.open{color:var(--accent-ink)}
-.pill.nda{color:var(--st-geblok)}
-.empty{font-size:13px;color:var(--ink-3);font-style:italic;padding:9px 0}
+.rec .t{font-weight:600;display:flex;gap:7px;align-items:baseline;flex-wrap:wrap}
+.rec .d{color:var(--ink-2);font-size:12px;margin-top:2px}
+.rec .id{font-family:var(--mono);font-size:9.5px;color:var(--ink-3);letter-spacing:.08em;margin-top:2px}
+.empty{font-size:12.5px;color:var(--ink-3);font-style:italic;padding:9px 0}
 
-/* ---------- werkstromen ---------- */
-.ws-table{display:flex;flex-direction:column;gap:9px;margin-top:24px}
-.ws-row{display:grid;grid-template-columns:minmax(120px,180px) 1fr minmax(96px,auto);gap:16px;align-items:center}
-.ws-row .nm{font-size:13.5px;color:var(--ink)}
-.ws-bar{display:flex;gap:2px;height:22px;background:transparent}
-.ws-bar i{display:block;min-width:2px}
-.ws-row .tot{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);text-align:right;font-variant-numeric:tabular-nums}
-
-/* ---------- acties ---------- */
-.tablewrap{overflow-x:auto;margin-top:22px;border:1px solid var(--line);background:var(--surface)}
-table{border-collapse:collapse;width:100%;min-width:680px;font-size:13.5px}
-th{
-  text-align:left;font-family:var(--mono);font-size:10.5px;font-weight:600;
-  letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);
-  padding:12px 16px;border-bottom:1px solid var(--line-2);white-space:nowrap;
-}
-td{padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:top}
-tr:last-child td{border-bottom:none}
-td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
-.due{font-family:var(--mono);font-size:12.5px;font-variant-numeric:tabular-nums}
-.due.past{color:var(--st-geblok);font-weight:600}
-.due.soon{color:var(--accent-ink);font-weight:600}
+/* ---------- rechterrail met tellingen ---------- */
+.counts{background:var(--surface);border:1px solid var(--line)}
+.counts .row{padding:10px 14px;border-bottom:1px solid var(--line);text-align:right}
+.counts .row:last-child{border-bottom:none}
+.counts .row.head{background:var(--surface-2);text-align:left}
+.counts .k{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.counts .v{font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-0.02em;font-variant-numeric:tabular-nums;margin-top:1px}
 
 /* ---------- signalen ---------- */
-.signals{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-top:24px}
-.signal{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);padding:16px 18px}
-.signal.hard{border-left-color:var(--st-geblok)}
-.signal .h{font-weight:600;font-size:14px;margin-bottom:4px}
-.signal p{font-size:13px;color:var(--ink-2);max-width:60ch}
-.signal .ref{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--ink-3);margin-top:7px;display:block}
+.sigrow{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;padding:12px 14px;border-bottom:1px solid var(--line);align-items:start}
+.sigrow:last-child{border-bottom:none}
+.sigrow .h{font-weight:600;font-size:13px}
+.sigrow p{font-size:12.5px;color:var(--ink-2);max-width:74ch;margin-top:2px}
+.sigrow .ref{font-family:var(--mono);font-size:10px;letter-spacing:.09em;color:var(--ink-3);margin-top:5px;display:block;word-break:break-word}
+
+/* ---------- leeswijzer ---------- */
+.prose{max-width:74ch;font-size:14px}
+.prose h3{font-size:16px;margin:24px 0 7px}
+.prose h3:first-child{margin-top:0}
+.prose p{margin-bottom:9px;color:var(--ink-2)}
+.prose ol,.prose ul{margin:0 0 9px 20px;color:var(--ink-2)}
+.prose li{margin-bottom:5px}
+.prose code{font-family:var(--mono);font-size:12.5px;background:var(--surface-2);padding:1px 5px}
 
 /* ---------- tooltip ---------- */
-#tip{
-  position:fixed;z-index:90;pointer-events:none;max-width:290px;
-  background:var(--navy);color:#fff;border:1px solid var(--panel-line);
-  padding:11px 13px;font-size:12.5px;line-height:1.45;
-  box-shadow:0 6px 22px rgba(17,43,59,.3);
-}
+#tip{position:fixed;z-index:90;pointer-events:none;max-width:280px;background:var(--navy);color:#fff;border:1px solid var(--panel-line);padding:10px 12px;font-size:12px;line-height:1.42;box-shadow:0 6px 22px rgba(17,43,59,.32)}
+#tip .tm{font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--zink-lt);display:block}
 #tip .tt{font-weight:600;margin-bottom:3px;display:block}
-#tip .tm{font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--zink-lt);display:block}
-#tip .ts{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+#tip .ts{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase}
 #tip .ts i{width:9px;height:9px;display:block}
 
-/* ---------- voet ---------- */
-footer.site{background:var(--navy);color:var(--zink-lt);margin-top:52px;padding:34px 0 28px;font-size:13.5px}
-footer.site .shell{display:flex;gap:26px;justify-content:space-between;flex-wrap:wrap}
-footer.site p{max-width:62ch}
-footer.site a{color:var(--koper-lt)}
-footer.site .fmeta{
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--zink-lt);   /* niet --zink: dat haalt op navy 2,78:1 niet */
-  display:flex;flex-direction:column;gap:5px;text-align:right;
-}
-
-@media (max-width:1000px){
-  .kpis,.tallies{grid-template-columns:repeat(2,1fr)}
+@media (max-width:1180px){
+  .g-kpi{grid-template-columns:repeat(2,1fr)}
+  .g-main{grid-template-columns:minmax(0,1fr)}
   .gates{grid-template-columns:repeat(2,1fr)}
-  .detail .cols{grid-template-columns:1fr}
-  .lead-head{grid-template-columns:1fr;gap:12px}
-  .lead-fig{text-align:left}
+}
+@media (max-width:900px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .rail{position:static;height:auto;flex-direction:column}
+  .rail nav{display:flex;flex-wrap:wrap;padding:6px}
+  .rail nav button{width:auto;border-left:none;border-bottom:3px solid transparent;padding:9px 13px}
+  .rail nav button[aria-current="page"]{border-left-color:transparent;border-bottom-color:var(--koper)}
+  .rail .railfoot{display:none}
+  .ident{border-right:none;padding-right:0}
+  .lookup-grid{grid-template-columns:minmax(0,1fr)}
+  .leadlist{max-height:240px}
 }
 @media (max-width:640px){
-  .shell{padding-inline:16px}
-  header.top .bar,.filters .row{padding-inline:16px}
-  .kpis,.tallies,.gates{grid-template-columns:1fr}
-  .ws-row{grid-template-columns:1fr;gap:5px}
-  .ws-row .tot{text-align:left}
-  .count{margin-left:0}
-  h2{font-size:22px}
+  .pagehead{padding-inline:16px}
+  .page{padding-inline:16px}
+  .g-kpi,.g-2,.gates{grid-template-columns:minmax(0,1fr)}
+  .stamp{margin-left:0;align-items:flex-start;text-align:left}
+  .kpistrip{margin-left:0;width:100%;overflow-x:auto}
+  .barrow{grid-template-columns:minmax(0,1fr);gap:4px}
+  .barrow .amt{text-align:left}
 }
-@media (prefers-reduced-motion:reduce){
-  *{animation:none !important;transition:none !important}
-}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
 </style>
 
-<header class="top">
-  <div class="bar">
-    <img id="logo" alt="Smarteck" src="data:image/png;base64,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">
-    <div class="title-block">
-      <h1>Leadtracker</h1>
-      <span class="sep">/</span>
-      <span class="sub">Vastgoedontwikkelaars en energiehubs</span>
-    </div>
-    <button class="theme-btn" id="theme" type="button">Donker</button>
-  </div>
-</header>
+<div class="app">
 
-<div class="filters">
-  <div class="row">
-    <div class="field grow">
-      <label for="f-zoek">Zoeken</label>
-      <input id="f-zoek" type="search" placeholder="Organisatie, project, plaats of stap" autocomplete="off">
+  <aside class="rail">
+    <div class="brand">
+      <img id="logo" alt="Smarteck" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAVQAAABICAMAAACeL/3TAAAAwFBMVEXwrJ2Yzs6c0dHh6eius7OZzczsrnyXzs7oqoX/AADqqYJ6vLz//39/f3+6unXspX3y5aH//wAA///GwrDTuaF/1NS/f3+qqv+6yb7/onP+/v7+/v4AAADnp4GVy8v+/v7+/v7+/v7+/v7+/v7+/v6c1NSx///zsYmWy8v/f3/oqIKg2dnpqIJ////pqIKWzc0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACwh7MQAAAAMHRSTlMPXB8GBNUKmU0BsAQCAgP1BAEB8/kGBAPxQgH8APz90S2xTo9v/QP+DgLT/nACj68o74v6AAARTklEQVR42qVciVYbOxIVXoEESN6bVb64V2+A4f//bqRea1O7yejkJI6tbklXtatUzsP3LXzaANi4j8/Ht9gePz+cC9+4phN8+Nh3hScPdp+R+H/s2zwA9gztjPG1w/PdGGhHHn5mo1y6Tw9PzRhxGAwP9BMGG4QOwT7SOWMY66EbGJBP+XF69FNojvZ6Dvjdf7690vb2ee8irGL9YGCo0QhA3XCQ3dBvEcZ5mftFUUoP5ykagLFxw97op+nwugP55TL+wuAHW7XrScHDPcB9vL2eXmV7+3D4qZaDAbjUAulKxQ6AE8wwL/CHDL6A/lksFBowRZpIE4Ge/YOJL5LU5B0h0+ePt9dE+whSwZwDOFuw1Y88yykEMJcBa93j0y0zg3OKsdESRUioMQEhkhTsTUaBnPhT/H8P6sXBJSEN7dHBzdlWczZpnhWSDpK+NcVPsL/eI2jBz3d8gsLl9sCUqkb/ICzbD5ef+Hidbg2q8OZKcUvUea1oqFSmYhUpqTKqSZP2lPyUlDWKcIzKUxEcUuNjmj7oFy35XS7u8/VWu+9oFalFM43NxAC4FaAhAYTkUCRncCNurk7IG0uVgb4GBiOOG49eud5SIq6VrJvH19fvoDrBetJAAtIdU6JKqmIYqgY2bPDg/yWqDgkxBZ/iNSWJkdw5SakbfL7OacEIACAWIC22CZrBFEv7tLUzKb0VGZrvhJ+rmJjJQQ1zYedBS+eeKaNMdTflaW9bbTamSrlhwHjPTWdMGTZKWVl7aGtkZW1qeyC560gZWKDU3+J89bYZMOydi5jeS/ROp1P8y7CsfpF5AgkgkWIj+BuMRiGE8SZwaYDBjzKMVwy7BsvwTfAwjHkJOQ5jVuyFEdSNsKVOr48f9/f3H5/axnKmRZlyAXCbjYcdhv0QOH1JNwDI66qqGYEiYfUhwT5MIVLZYdk5dbbbZbXYHhA6jS9w/hc+TsqBapu7l/rrEw4JZkdCyE2LicGun7EDMLi32jWthm2ATpvI0yKLegldWCHP2uGKlLpqN8X5y0aw+Cag2bbQ496yVhnr9xah5bJLwoAVAuDiH3Q5wvjRm9gtkqBqSEWbDMA9N4vllcwfhivG7x4Mk2ojCPUeF3fpX/38S/pZH8yxSsgeIOWpTMoI2GYYBjSFMFui3g0tn4zuJPaZvVwIGinXQz8yXDkVeXBCogZb9ELF2QackN+eVgnfzCdIBTfsF0yoXS1LudTLxlVW2sCf2kjc8LdhrcIYDpZ+DOxMVdRnQJFT3UZIgA0umPDfKbVN6HoRN4E09idcezJWPi5yl9n+fnJQpFUpDGugWSQZrgD1HiX7c+53G2qyoO3xyEl5470do5GMDOpxp50Q1k84pnY0udsulBzUlNkJQ9ZrFwtAmm3ad3JQE0zQGP6PI6inD6KG+tC5e7hPClXIAKUIlI7MCmXVYIZS5vsLwf4S1GSgU3oe6QgkJmMoElR4O57IRar7fQEEV/72TFdFo8pAKB1k00YmeLwITPezl0PZ1Z4eF1iUChHCNV04Ibg1H8OMUQr2T/gNkKA2hz7gyD8z/v+M7A+kFZPNfDA2FMrOh9bK4IYbkxiaUmn0BFOnYTKWNsNm0KCa1BrjqVRPvbmf3ARtwPuFz5Ngf/CjJiY3Qb9H0oVi9MlDmxj9FAhVjRvsrxQksd25kQxbOgxdaf/+lVpRCa3cPSEoFU+Dy4X+BJTHBoL2ZzJz6fM8J0sZxshj47ah5uH4Ie9fAGk4gmsn/F76JVU2hkzlQp1Mpiy72SyVqOYOR15WRWhVXeZiG7SiYno1PtsaFs5xmboaZM/41PO/3k6jzeWGiUTHu2htt6wqmxd3B7rj90WdA2Z4MLwizr+z/bKiewMPTxHxG/v2rW7FAQV11/xQlOPB9IBSPQ5S5yOEkGb2Ncyoyugrq5wQYkpR9ZiWRfy+bNxUIjCD9t9wgd4dDroO1dPjxo3Ulhd0UbtuBmjfTqZWygyAbkOynWgRkuNo3BDFI17ZejQc1MGBZOFNL0chs1F+RZnp15WEJgSoXLlVo1vgmMB8dZcLoCI9wUNoof90o3rOCzWDKq7D+D7LWRIGLJT6JY85Bu0kHuxXNm5pab6C0LmvE2McvcqBMEeJ8OVYdcJIgzoSYEX2mwvM0yPcT60tGzlxf+82/RsuiQXtSvJy2mph+tvz79ZAA2o+hV2B1BzGiFWeJcbQoRKgTk6psmUqM3YKuqvu4kRsr4MV7K+fvxrF9XzpNyc1hSw1MVDdnO0mWglm+KeGiuS+S5Fq84I0TCPrDHKumJhR0SQYpRSVwDQwUaA+xv+nx2DbP/1aLs8/jscr2c+fzv0aObjefbeRgAeq6a41UsYom3oK1F036+rGziGJSmqfLJOq2Xz+dOku3omw/6cbDbXjjxUz6zoiKnffb/WglvNZXXsW3v0ZqLd2Lmf8X9yYUZFk//ivYLwy6CBOqhHWl8/7u9gWx4jrUYVw8t2ftLz3OG5vSWlG9wR0fpL9q5vTGR0UFLNIwgLVwDSwv784me/z8o/1e2iHw379dbcIg66EC1L8Eah9tHyO7BgM+XJCnEwoqhkbl7WIXOZNKEsZ/1obFtZp6svfh33XDgHYrwDrDz9Hys2kvznPV30oIJuQcgmzwM/kpQj+ZW7nhs8sSs0NgohG4YXFVF9OA6YtsPvtIth1xN8s/hDUwi9bF5d9GdzBvKwLzZxTErU1vMokP4jXZc0gVabYodG6xVyK0B6VnmA0LFybP03E6svfe9EOhzvqQIr3ZFVdWfRU6O/zRgHRo6XohbUtrwxjQUnG4M0Gz7wqDZYpGo89h0Y7ekWt8OQuUwWTcYoy7mhZ3QTVstazJtO3dUQJqi/rvWrv2x+tW6HNqbqh4drYsBhtqU2zfMCqpLkTpfaLBPePW3DxUuBmQ2BJPlZRLVtIyS0JtRjG4DZZ3C1FqaXtVrSgNpk/Hawv/9kbqK7Pf7WBpCWfREJOZqblXgyOXfRSY7iCpSSU2lYQxCK89lQ8tdSiE5aR37gZueAQe5uD6NJuagJT7zrv9Tm496dO9+9tVFeGkVMNIZ9CMbo29LMx4gPjJJP1rdWCa5VFqSL/0EKjkCdP8rfKdlGEGMkNk6rW/mx3RN17L8Gv/3hr06fWJqpfOCu/otUnUCqUuE+54euQpLq+Odm3QIIUMYRN9c/aRw8svqShZ5YrkMVQZZaKdNMJlCr0Z2Ha79+YHBVUVkzzCbiebFTvcIQ+Fx74isdVxhh0xgj4SBNHgtavQguqWccElM1U6XMj44wK+qkhhL9UuxwEZb4T8xPnFHWRdblTglIr0z4moPbH1YFiPj7fXl7/Dpb/4f0gYF0o5V+Qo6DM5H4uF/LRY+bx4KyICo/Hen5zeOou6j/F/l4mkkTY+pB5G99mIZ+Sq8eCH8Giv7zRn2czmycRB2r1vicp8Jsmqde5/zZu6teewXr4wg8oUIc1SlB79ArDU7WjsTnd/Uzydx1YV2RUJkClW6Oj1EL11dIXVZkKZpDa9mxAc/4HYC8r50YBtLg7HCSpzgV1WL9FqQnHsC4mQVWXBRLJFNkUQUlQKzFtIJUyMAnqSC5NKiXwtAqKvY2bDFG+1fF4XgHn7YFaq0FXWexvgwrtr7RDr+b4ZFGJSFBl5oMJKqajtRLUQuhRWOlB+jRVu1EYuwdKvXakefQ0KTL+fF1i9XUgDuvialJqQqa2w2hQZ/m5SUol9GMfUX8D1FyAOpkBMAXqcOely5S6Anfb9Xp7J08Z479Hf14TVO+CXLPY35vsD1NRzYxwW6CKO1a29v8GqIVgJCMBhB1BTs+W3U5ZbA9N2zZhE3FCdcYdAXWLxXxQu5iWotR50dg/kKlGfHNapuYpParvYwDTMjWjj7nV4ut9MERXHvIe3Hk1kurh6y8D1O6Juex/O3yckqlLngHvDOO/4YSMaf+ymDqoYrMpLfVEEnBuEsFgmxJKPLNz5Hbfz9i+D6Cuz5ZMRYL9vU2pOu5UDTkVNymVXshOeVSVsFOXeeNj8NYkeQhZVIBfX0froeS+O9JmwcQsjaq7jpooiMyjyg38QVA/7G1QfQJUi1JFvC4fkrFyHik0Zeosk0qanjw9amxXHRDN+VXL8KnBLqsNjyrPknLVEUUUHVGW1BzfvaKkvD/j/waVkwZYolt2W6bS6SVAze3gFSGXnLxmZ9rd4HZKpUA1js8GVBmo2+ia8yu54ZublOqToFrGf6XU7SjG55lUqay/NiFKx9HEfermKlQ1ZJMWlv9+adm/mj74KxKoun9SPdQeRjErTcjU75hUN0HNxssfD1ZQSoHKURUB2JF1K27gL0n662AbZL49oRJB0ZryTjV98Gej2lykINZ9NO5pHlV88LggqK+91P6Dx2Cz/w1Qxxjbg3yFBaq8pV2K8HLvYubJ2DaRhIUlt2jkn4cn7IM/G1Wm/QP/L8X1iLP43bRTfcJNNWQqi2d25wZm5k1SURHjMVdnSzBYOp6n9CcktXFoIX2RKp5R5dIS02dUSKHKQd0fFn3AsxvwuprjUX0r9CcCmO21w0gY2W42qN0f7UZU/i9Nqh1OXhynVjCMwSmP1sxPtVB1/kwCfIf1CmdCD6srkw77eFBlBVQSbqptp/KVtTaVOrxMBlRYFnxm2OD/9jMdjGoyq3BuMoWBqncL0EDUYXtGTExr2uoHFuzHLyS0/zdCf2rBWVEU2Sw3dSnKcZnYVfAzqa9q3cGHWVtQIpWgplCt4I5YUFo8rO8i4RzPy1UMqK7Zb4tgHShKTZlUMOTb/+n7UxsymSuTNzc98jk4uT78kc3ZAIP97aBbkKnHI+Pww2Eb86eaEDUP/R++/PHpG3ZqCtR5zr8NqozJFYlUqhmoFuTcJM9m9LXYH5a2KgOonFQjrPv113b7tT6I7xfBvfpW5B+WRzVTM2TLZ8P45/coTejqeRlbxRgsubkFhZmenszYK4PiXTGp2iemHQSkjRP7IParwnjLSITQh7wJw4PKZ1HqkncsIa6QJs5lejNtmvwqUfprqnOPqbhFTeszikzq6Nid14f9rRaY/3qV/BzszmG7a1vUsjSPG5m8dS690owq1YtReEmjShabPGHISqgLh0mhVMPw1ErwW1s8599HUl3cBPWwXvQ3/XPBA/q8LWeHSQULCnd1MwpbwxY8EEJ2pKb3VGnQt1QqZawNWGZTZMruxqY6t/mFMjZRNFfGyL1rQmpleycyuE23MW3Op9kyCh6IGzioTBTJoNUc9BIKasRmuSDEKlE3EYLGCpkLoQO1XWYgu/aa6txdo2q7jI5PxmrScI+16qtSxlDUFLG+rxdtqLWjs2rX17whxSnD6rIu7QxGiZwqF/UiqCPYrhRXHkPqU9nae3RIVIlEk0bShY6JNB9uCrLjldKukWV1prcV1crZfTsvb/w1v5yFScrJ9H27ioqfRnBzo9hvcweUCAR6WzpXhWLQ5/3UdZmzy+I5u39OxrKKyAwVBLsbruLXZTfMOA4vdwV1FNV1HvoSYuxWrrdluLHpQRLUAq2etwlifY85v0efKMvGiskMgSLIcgCwCtip+8q0L9kbyJoK5NCX3B1OFciCNQ4UKvDJOfGkugfr9jWdjOtNlCNw96VhPbxHz/V6TVWSA2QFGlnyJVEiD7fK8WCqkBwmXjKjKlai3Nd0FS3AqO9q1WruaqLGdm1g3b+TvLSA6Hob3KuVXYZM1OhKFc+FWalO1ATTdZNxq2YcrYIKkh/ieQXqZB0yq14eq7kBJnFERVB6bZ1ksXlWPjkS67XxTded8b/frxuP9fjkZ7R0wUTMr1HEmJrlMiBJPTPJEqxaJ2a8BTCK7xiVGnQNHcd2P8KK1eKuvZp2bpKBVrqqhN5kTPBUar5Qpb3gFUGkCgQZFVrsCu5SkFqlWOV46ItyQNQhpzQs65ORt/8PSr4VmUFsngAAAAAASUVORK5CYII=">
+      <div class="app-name">Leadtracker</div>
+      <div class="app-sub">Vastgoed &amp; energiehubs</div>
     </div>
-    <div class="field">
-      <label for="f-doelgroep">Doelgroep</label>
-      <select id="f-doelgroep"></select>
+    <nav id="nav" aria-label="Hoofdnavigatie"></nav>
+    <div class="railfoot">
+      <span id="rail-file"></span>
+      <span id="rail-date"></span>
+      <button class="btn-lite" id="theme" type="button" style="margin-top:6px">Donker</button>
     </div>
-    <div class="field">
-      <label for="f-status">Leadstatus</label>
-      <select id="f-status"></select>
+  </aside>
+
+  <div>
+    <div class="pagehead">
+      <div class="headrow">
+        <div class="ident">
+          <h1 id="page-title">Portefeuille</h1>
+          <div class="sub" id="page-sub">Alle actieve leads</div>
+        </div>
+        <div class="filterstrip">
+          <div class="field">
+            <label for="f-doelgroep">Doelgroep</label>
+            <select id="f-doelgroep"></select>
+          </div>
+          <div class="field">
+            <label for="f-status">Leadstatus</label>
+            <select id="f-status"></select>
+          </div>
+          <div class="field">
+            <label for="f-fase">Ontwikkelfase</label>
+            <select id="f-fase"></select>
+          </div>
+          <div class="field">
+            <label for="f-gate">Gate</label>
+            <select id="f-gate"></select>
+          </div>
+          <div class="field">
+            <label for="f-eigenaar">Eigenaar</label>
+            <select id="f-eigenaar"></select>
+          </div>
+          <div class="field">
+            <label for="f-zoek">Zoeken</label>
+            <input id="f-zoek" type="search" placeholder="Organisatie, project, stap" autocomplete="off">
+          </div>
+          <button class="btn-lite" id="f-reset" type="button">Filters wissen</button>
+        </div>
+        <div class="stamp">
+          <span id="stamp-count"></span>
+          <span id="stamp-date"></span>
+        </div>
+      </div>
+
+      <div class="tabrow">
+        <div id="tabs" style="display:flex;gap:10px;flex-wrap:wrap" role="tablist"></div>
+        <div class="kpistrip" id="kpistrip"></div>
+      </div>
     </div>
-    <div class="field">
-      <label for="f-gate">Gate</label>
-      <select id="f-gate"></select>
-    </div>
-    <div class="field">
-      <label for="f-eigenaar">Eigenaar</label>
-      <select id="f-eigenaar"></select>
-    </div>
-    <button class="reset" id="f-reset" type="button">Wissen</button>
-    <span class="count" id="f-count"></span>
+
+    <!-- ============ Portefeuille ============ -->
+    <section class="page" id="pg-home" hidden>
+      <div class="grid g-kpi" id="home-stats"></div>
+
+      <div class="sectiontitle">Gateladder</div>
+      <p class="note">Elke lead staat op &eacute;&eacute;n gate. De kans op FID hoort bij de bereikte gate, niet bij de
+        lead; de gewogen fee is de verwachte fee maal die kans. Percentages komen uit het blad Aannames.</p>
+      <div class="gates" id="home-gates"></div>
+
+      <div class="sectiontitle">Verdeling</div>
+      <div class="grid g-main">
+        <div class="grid g-2" id="home-panels"></div>
+        <div class="counts" id="home-counts"></div>
+      </div>
+    </section>
+
+    <!-- ============ Leads ============ -->
+    <section class="page" id="pg-leads" hidden>
+      <div id="leads-alle" hidden>
+        <p class="note">Een regel per lead, met alle velden uit het blad Leads. Klik op een LeadID om de lead te
+          openen. De tabel schuift zijwaarts; bedragen zijn in euro.</p>
+        <div class="panel">
+          <div class="panel-hd"><span class="t">Alle actieve leads</span><span class="s" id="leads-alle-n"></span></div>
+          <div class="panel-bd flush"><div class="tablewrap"><table id="tbl-leads"></table></div></div>
+        </div>
+      </div>
+
+      <div id="leads-mijlpalen" hidden>
+        <p class="note">Per lead de datum waarop een mijlpaal gehaald is. Deze datums komen uit de bladen Leads,
+          Overeenkomsten, Bronnen en Contactpersonen &mdash; het blad Voortgang heeft nog geen datums, dus de
+          ontwikkelstappen staan hier niet in. Een streepje betekent: nog niet gehaald of niet ingevuld.</p>
+        <div class="panel">
+          <div class="panel-hd"><span class="t">Mijlpaaldata</span><span class="s">Leeg = nog niet gehaald</span></div>
+          <div class="panel-bd flush"><div class="tablewrap"><table id="tbl-mijlpalen"></table></div></div>
+        </div>
+      </div>
+
+      <div id="leads-voortgang" hidden>
+        <p class="note">Een cel is &eacute;&eacute;n ontwikkelstap: twintig voor vastgoedontwikkelaars, negentien voor
+          energiehubs. De band erboven geeft de gate waar de stap onder valt. Beweeg over een cel voor de stap
+          en de toelichting.</p>
+        <div class="legend" id="legend"></div>
+        <div class="grid" id="voortgang-cards"></div>
+      </div>
+
+      <div id="leads-werkstromen" hidden>
+        <p class="note">Waar het werk zit, en waar het stilstaat. Zeven werkstromen lopen door beide sporen heen;
+          commercieel en juridisch openen, governance sluit af.</p>
+        <div class="panel">
+          <div class="panel-hd"><span class="t">Stappen per werkstroom</span><span class="s">Zichtbare leads</span></div>
+          <div class="panel-bd"><div class="bars" id="ws-bars"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Lead opzoeken ============ -->
+    <section class="page" id="pg-lookup" hidden>
+      <p class="note">Zoek een lead op en bekijk alles wat er over vastligt: kerngegevens, de tijdlijn van wat er
+        werkelijk gebeurd is, de stappen, en de contactpersonen, overeenkomsten en bronnen eronder.</p>
+      <div class="lookup-grid">
+        <div class="panel">
+          <div class="panel-hd"><span class="t">Leads</span><span class="s" id="lookup-n"></span></div>
+          <div class="panel-bd flush"><div class="leadlist" id="lookup-list"></div></div>
+        </div>
+        <div id="lookup-detail"></div>
+      </div>
+    </section>
+
+    <!-- ============ Acties ============ -->
+    <section class="page" id="pg-acties" hidden>
+      <p class="note">Alles wat nog een handeling vraagt: de volgende actie per lead, overeenkomsten die niet
+        getekend zijn, bronnen die niet verwerkt zijn, en stappen die vastzitten. Gesorteerd op deadline;
+        regels zonder deadline staan onderaan.</p>
+      <div class="panel">
+        <div class="panel-hd"><span class="t">Openstaand</span><span class="s" id="acties-n"></span></div>
+        <div class="panel-bd flush"><div class="tablewrap"><table id="tbl-acties"></table></div></div>
+      </div>
+    </section>
+
+    <!-- ============ Datavalidatie ============ -->
+    <section class="page" id="pg-valid" hidden>
+      <p class="note">De spelregels uit de Leeswijzer, regel voor regel nagelopen op de hele databron &mdash;
+        dus niet op de filterselectie. Een groen vinkje betekent dat de regel klopt.</p>
+      <div class="grid g-2">
+        <div class="panel">
+          <div class="panel-hd"><span class="t">Controles</span><span class="s" id="valid-n"></span></div>
+          <div class="panel-bd flush" id="valid-rows"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-hd"><span class="t">Volledigheid per blad</span><span class="s">Gevulde regels</span></div>
+          <div class="panel-bd flush"><div class="tablewrap"><table id="tbl-volledig"></table></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Leeswijzer ============ -->
+    <section class="page" id="pg-uitleg" hidden>
+      <div class="prose">
+        <h3>Wat u hier ziet</h3>
+        <p>Dit scherm leest de databron; het schrijft er niet in. Het werkboek blijft de bron van waarheid.
+          Werk bij in Excel, draai het bouwscript opnieuw, en dit scherm volgt.</p>
+        <h3>Bijwerken</h3>
+        <p><code>python3 dashboard/tools/build_data.py dashboard/data/Smarteck_Leadtracker_Databron.xlsx</code></p>
+        <p>Het script leest de bladen Leads, Contactpersonen, Overeenkomsten, Bronnen, Voortgang en
+          Ontwikkelstappen plus de aannames, en zet de data in dit bestand.</p>
+        <h3>Spelregels</h3>
+        <ol>
+          <li>ID&rsquo;s zijn verplicht en uniek: LEAD-001, CON-001, OVK-001, BRN-001, VTG-001.</li>
+          <li>StapID heeft altijd het voorvoegsel van de doelgroep: VO-01 t/m VO-20, EH-01 t/m EH-19.</li>
+          <li>Datums als echte datum invoeren (jjjj-mm-dd), niet als tekst.</li>
+          <li>Slaagkans als percentage tussen 0 en 1.</li>
+          <li>Kolomnamen niet wijzigen &mdash; de koppeling loopt op kolomnaam, niet op kolompositie.</li>
+          <li>De voorbeeldregels verwijderen bij ingebruikname.</li>
+        </ol>
+        <h3>Een nieuwe lead starten</h3>
+        <ol>
+          <li>Nieuwe regel op Leads, LeadID oplopend doornummeren.</li>
+          <li>Op Voortgang alle stappen van de doelgroep toevoegen: per stap een regel met LeadID en StapID.
+            Kopieer een bestaand blok en pas het LeadID aan.</li>
+          <li>Status per stap bijwerken. Dit scherm volgt automatisch.</li>
+        </ol>
+        <h3>Wat dit scherm zelf uitrekent</h3>
+        <p>Niets komt uit het blad Overzicht. Alle tellingen worden opnieuw berekend uit de invoerbladen,
+          zodat ze meebewegen met de filters. De peildatum voor verstreken deadlines staat als
+          <code>VANDAAG</code> boven in het script.</p>
+      </div>
+    </section>
+
   </div>
 </div>
-
-<main class="shell">
-
-  <section class="block">
-    <div class="kpis" id="kpis"></div>
-    <div class="tallies" id="tallies"></div>
-  </section>
-
-  <section class="block">
-    <div class="block-head">
-      <h2>Gateladder</h2>
-      <span class="lbl">Kans op FID per bereikte gate &mdash; blad Aannames</span>
-    </div>
-    <p class="block-note">Elke lead staat op &eacute;&eacute;n gate. De kans op FID hoort bij de gate die
-      bereikt is, niet bij de lead; de gewogen fee hieronder is de verwachte fee maal die kans.</p>
-    <div class="gates" id="gates"></div>
-  </section>
-
-  <section class="block">
-    <div class="block-head">
-      <h2>Voortgang per lead</h2>
-      <span class="lbl">Een cel is &eacute;&eacute;n ontwikkelstap</span>
-    </div>
-    <p class="block-note">De strip loopt van stap 1 tot en met de laatste stap van het spoor:
-      twintig stappen voor vastgoedontwikkelaars, negentien voor energiehubs. De band erboven
-      geeft de gate waar de stap onder valt. Beweeg over een cel voor de stap en de toelichting.</p>
-    <div class="legend" id="legend"></div>
-    <div class="leads" id="leads"></div>
-  </section>
-
-  <section class="block">
-    <div class="block-head">
-      <h2>Werkstromen</h2>
-      <span class="lbl">Alle stappen van de zichtbare leads</span>
-    </div>
-    <p class="block-note">Waar het werk zit, en waar het stilstaat. Zeven werkstromen lopen door
-      beide sporen heen; commercieel en juridisch openen, governance sluit af.</p>
-    <div class="ws-table" id="ws"></div>
-  </section>
-
-  <section class="block">
-    <div class="block-head">
-      <h2>Wat er openstaat</h2>
-      <span class="lbl">Volgende acties, contracten en bronnen</span>
-    </div>
-    <div class="tablewrap">
-      <table id="acties">
-        <thead>
-          <tr>
-            <th scope="col">Deadline</th>
-            <th scope="col">Lead</th>
-            <th scope="col">Wat</th>
-            <th scope="col">Soort</th>
-            <th scope="col">Bij wie</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </section>
-
-  <section class="block">
-    <div class="block-head">
-      <h2>Signalen uit de databron</h2>
-      <span class="lbl">Automatisch afgeleid</span>
-    </div>
-    <p class="block-note">Deze regels komen uit de spelregels van de Leeswijzer en uit de
-      onderlinge samenhang van de bladen. Ze verdwijnen zodra de databron klopt.</p>
-    <div class="signals" id="signals"></div>
-  </section>
-
-</main>
-
-<footer class="site">
-  <div class="shell">
-    <p>Databron is het werkboek, niet dit dashboard. Werk bij in Excel, draai
-      <span class="num">build_data.py</span> opnieuw en dit scherm volgt. ID&rsquo;s en kolomnamen
-      niet wijzigen &mdash; de koppeling loopt op kolomnaam.</p>
-    <div class="fmeta">
-      <span id="src-file"></span>
-      <span id="src-date"></span>
-      <span>Smarteck &mdash; gedelegeerd energieontwikkelaar</span>
-    </div>
-  </div>
-</footer>
 
 <div id="tip" hidden></div>
 
@@ -1795,7 +1785,7 @@ const DATA = {
  },
  "_bron": {
   "bestand": "Smarteck_Leadtracker_Databron.xlsx",
-  "gelezen_op": "2026-09-13"
+  "gelezen_op": "2026-09-15"
  }
 };
 /* DATA-END */
@@ -1804,207 +1794,223 @@ const DATA = {
 (function(){
   "use strict";
 
-  const $  = (s, r) => (r || document).querySelector(s);
+  const $ = (s, r) => (r || document).querySelector(s);
   const el = (tag, cls, txt) => {
     const n = document.createElement(tag);
     if (cls) n.className = cls;
     if (txt !== undefined && txt !== null) n.textContent = txt;
     return n;
   };
+  const kids = (parent, ...nodes) => { nodes.filter(Boolean).forEach(n => parent.appendChild(n)); return parent; };
 
-  const nlInt  = new Intl.NumberFormat("nl-NL", {maximumFractionDigits:0});
-  const nlTwo  = new Intl.NumberFormat("nl-NL", {minimumFractionDigits:2, maximumFractionDigits:2});
-  const euro   = v => "€ " + nlInt.format(Math.round(v || 0));
-  const pct    = v => nlInt.format(Math.round((v || 0) * 100)) + "%";
-  const num    = v => (typeof v === "number" ? v : parseFloat(String(v).replace(",", ".")) || 0);
+  const nlInt = new Intl.NumberFormat("nl-NL", {maximumFractionDigits:0});
+  const nlTwo = new Intl.NumberFormat("nl-NL", {minimumFractionDigits:2, maximumFractionDigits:2});
+  const euro  = v => "€ " + nlInt.format(Math.round(v || 0));
+  const pct   = v => nlInt.format(Math.round((v || 0) * 100)) + "%";
+  const num   = v => (typeof v === "number" ? v : parseFloat(String(v).replace(",", ".")) || 0);
+  const DASH  = "—";
 
-  const VANDAAG = "2026-09-13";   /* peildatum van deze uitdraai */
+  const VANDAAG = "2026-09-15";        /* peildatum van deze uitdraai */
 
-  /* ---- statuspalet ---------------------------------------------------
-     Gevalideerd op onderscheid, ook bij kleurenblindheid. Elke status
-     draagt naast de kleur een eigen teken, zodat kleur nooit de enige
-     drager van betekenis is.                                          */
   const STATUS = {
-    "Gereed":            {cls:"s-Gereed",      glyph:"✓", varName:"--st-gereed"},
-    "Loopt":             {cls:"s-Loopt",       glyph:"▸", varName:"--st-loopt"},
-    "Geblokkeerd":       {cls:"s-Geblokkeerd", glyph:"✕", varName:"--st-geblok"},
-    "Niet gestart":      {cls:"s-Nietgestart", glyph:"",       varName:"--st-niet"},
-    "Niet van toepassing":{cls:"s-Nvt",        glyph:"–", varName:"--st-nvt"}
+    "Gereed":             {cls:"s-Gereed",       glyph:"✓", varName:"--st-gereed"},
+    "Loopt":              {cls:"s-Loopt",        glyph:"▸", varName:"--st-loopt"},
+    "Geblokkeerd":        {cls:"s-Geblokkeerd",  glyph:"✕", varName:"--st-geblok"},
+    "Niet gestart":       {cls:"s-Nietgestart",  glyph:"",       varName:"--st-niet"},
+    "Niet van toepassing":{cls:"s-Nvt",          glyph:"–", varName:"--st-nvt"}
   };
   const statusOf = s => STATUS[s] || STATUS["Niet gestart"];
   const VOLGORDE = ["Gereed","Loopt","Geblokkeerd","Niet gestart","Niet van toepassing"];
+  const CONTRACT_KLAAR = ["Getekend","Verlopen","Beeindigd","Ingetrokken"];
+  const BRON_BINNEN    = ["Ontvangen","In analyse","Verwerkt"];
+  const BRON_TE_DOEN   = ["Opgevraagd","Ontvangen","In analyse","Onvolledig"];
 
-  /* ---- databron normaliseren ---------------------------------------- */
   const rows = k => Array.isArray(DATA[k]) ? DATA[k] : [];
   const aanname = k => {
     const v = (DATA.Aannames || {})[k];
     return Array.isArray(v) ? num(v[v.length - 1]) : 0;
   };
-
-  const stapBib = new Map();                       /* StapID -> stapdefinitie */
-  rows("Ontwikkelstappen").forEach(s => stapBib.set(s.StapID, s));
-
   const isVoorbeeld = r => /VOORBEELDRIJ/i.test(String(r.Opmerkingen || ""));
+  const minDatum = ds => ds.filter(Boolean).sort()[0] || "";
+  const maxDatum = ds => ds.filter(Boolean).sort().slice(-1)[0] || "";
+
+  /* ---- model ---------------------------------------------------------- */
+  const stapBib = new Map();
+  rows("Ontwikkelstappen").forEach(s => stapBib.set(s.StapID, s));
 
   const LEADS = rows("Leads").map(l => {
     const id = l.LeadID;
+
     const stappen = rows("Voortgang")
       .filter(v => v.LeadID === id)
       .map(v => {
         const def = stapBib.get(v.StapID) || {};
         return {
-          stapID: v.StapID,
-          nr: num(v.Stapnr) || num(def.Nr),
-          naam: v.Stap || def.Stap || v.StapID,
-          workstream: v.Workstream || def.Workstream || "Overig",
-          gate: def.Gate || "",
-          verplicht: def.Verplicht !== "Nee",
-          toelichting: def.Toelichting || "",
-          status: STATUS[v.Status] ? v.Status : "Niet gestart",
-          wie: v.Verantwoordelijke || "",
-          opmerking: v.Opmerkingen || ""
+          stapID:v.StapID,
+          nr:num(v.Stapnr) || num(def.Nr),
+          naam:v.Stap || def.Stap || v.StapID,
+          workstream:v.Workstream || def.Workstream || "Overig",
+          gate:def.Gate || "",
+          verplicht:def.Verplicht !== "Nee",
+          toelichting:def.Toelichting || "",
+          status:STATUS[v.Status] ? v.Status : "Niet gestart",
+          wie:v.Verantwoordelijke || ""
         };
       })
       .sort((a, b) => a.nr - b.nr);
 
     const tel = st => stappen.filter(s => s.status === st).length;
     const gereed = tel("Gereed"), loopt = tel("Loopt"), geblok = tel("Geblokkeerd");
-    const volgende = stappen.find(s => s.status === "Loopt")
-                  || stappen.find(s => s.status === "Niet gestart")
-                  || null;
 
     const contracten = rows("Overeenkomsten").filter(o => o.LeadID === id);
     const bronnen    = rows("Bronnen").filter(b => b.LeadID === id);
     const contacten  = rows("Contactpersonen").filter(c => c.LeadID === id);
 
+    const nda = contracten.find(o => /NDA/i.test(o.Type || "") && o.Status === "Getekend");
+
+    /* Mijlpalen: alleen datums die er werkelijk zijn. Het blad Voortgang
+       heeft geen datumkolommen ingevuld, dus daar komt niets uit. */
+    const mijlpalen = {
+      "Eerste contact":        l["Datum eerste contact"] || "",
+      "Eerste bron ontvangen": minDatum(bronnen.map(b => b["Datum ontvangen"])),
+      "NDA getekend":          nda ? nda["Datum getekend"] : "",
+      "Overeenkomst verzonden":minDatum(contracten.map(o => o["Datum verzonden"])),
+      "Laatst getekend":       maxDatum(contracten.map(o => o["Datum getekend"])),
+      "Laatste contactmoment": maxDatum(contacten.map(c => c["Laatste contact"])),
+      "Deadline actie":        l["Deadline volgende actie"] || "",
+      "Einde looptijd":        maxDatum(contracten.map(o => o.Einddatum))
+    };
+
     return {
       id,
-      doelgroep: l.Doelgroep || "",
-      hub: /hub/i.test(l.Doelgroep || ""),
-      organisatie: l.Organisatie || id,
-      project: l.Projectnaam || "",
-      plaats: [l.Plaats, l.Provincie].filter(Boolean).join(", "),
-      herkomst: l["Herkomst van de lead"] || "",
-      eersteContact: l["Datum eerste contact"] || "",
-      leadstatus: l.Leadstatus || "",
-      fase: l.Ontwikkelfase || "",
-      gate: l["Huidige gate"] || "",
-      omvang: l["Omvang (woningen of MW)"] || "",
-      capex: num(l["Verwachte CAPEX (EUR)"]),
-      fee: num(l["Verwachte Smarteck-fee (EUR)"]),
-      slaagkans: num(l.Slaagkans),
-      gewogen: num(l["Gewogen fee (EUR)"]),
-      piek: num(l["Structureel vermeden piek (kW)"]),
-      eigenaar: l.Eigenaar || "",
-      prioriteit: l.Prioriteit || "",
-      actie: l["Volgende actie"] || "",
-      deadline: l["Deadline volgende actie"] || "",
-      opmerkingen: l.Opmerkingen || "",
-      voorbeeld: isVoorbeeld(l),
+      doelgroep:l.Doelgroep || "",
+      hub:/hub/i.test(l.Doelgroep || ""),
+      organisatie:l.Organisatie || id,
+      project:l.Projectnaam || "",
+      plaats:l.Plaats || "",
+      provincie:l.Provincie || "",
+      locatie:[l.Plaats, l.Provincie].filter(Boolean).join(", "),
+      herkomst:l["Herkomst van de lead"] || "",
+      aangebracht:l["Aangebracht door"] || "",
+      eersteContact:l["Datum eerste contact"] || "",
+      leadstatus:l.Leadstatus || "",
+      fase:l.Ontwikkelfase || "",
+      gate:l["Huidige gate"] || "",
+      omvang:l["Omvang (woningen of MW)"] || "",
+      capex:num(l["Verwachte CAPEX (EUR)"]),
+      fee:num(l["Verwachte Smarteck-fee (EUR)"]),
+      slaagkans:num(l.Slaagkans),
+      gewogen:num(l["Gewogen fee (EUR)"]),
+      piek:num(l["Structureel vermeden piek (kW)"]),
+      eigenaar:l.Eigenaar || "",
+      prioriteit:l.Prioriteit || "",
+      actie:l["Volgende actie"] || "",
+      deadline:l["Deadline volgende actie"] || "",
+      opmerkingen:l.Opmerkingen || "",
+      voorbeeld:isVoorbeeld(l),
       stappen, gereed, loopt, geblok,
-      totaal: stappen.length,
-      pctGereed: stappen.length ? gereed / stappen.length : 0,
-      volgende,
-      contracten, bronnen, contacten,
-      getekend: contracten.filter(o => o.Status === "Getekend").length,
-      openContract: contracten.filter(o => !["Getekend","Verlopen","Beeindigd","Ingetrokken"].includes(o.Status)).length,
-      bronOntvangen: bronnen.filter(b => ["Ontvangen","In analyse","Verwerkt"].includes(b.Status)).length,
-      bronTeVerwerken: bronnen.filter(b => ["Ontvangen","In analyse","Onvolledig","Opgevraagd"].includes(b.Status)).length
+      totaal:stappen.length,
+      pctGereed:stappen.length ? gereed / stappen.length : 0,
+      volgende:stappen.find(s => s.status === "Loopt") || stappen.find(s => s.status === "Niet gestart") || null,
+      contracten, bronnen, contacten, mijlpalen,
+      getekend:contracten.filter(o => o.Status === "Getekend").length,
+      openContract:contracten.filter(o => !CONTRACT_KLAAR.includes(o.Status)).length,
+      bronOntvangen:bronnen.filter(b => BRON_BINNEN.includes(b.Status)).length,
+      bronTeVerwerken:bronnen.filter(b => BRON_TE_DOEN.includes(b.Status)).length
     };
   });
 
-  /* ---- filters ------------------------------------------------------- */
-  const F = {zoek:"", doelgroep:"", status:"", gate:"", eigenaar:""};
+  const MIJLPAALNAMEN = ["Eerste contact","Eerste bron ontvangen","NDA getekend","Overeenkomst verzonden",
+                         "Laatst getekend","Laatste contactmoment","Deadline actie","Einde looptijd"];
 
-  function vulSelect(sel, label, waarden){
-    sel.replaceChildren();
-    sel.appendChild(new Option(label, ""));
-    [...new Set(waarden.filter(Boolean))].sort().forEach(v => sel.appendChild(new Option(v, v)));
-  }
+  /* ---- filters --------------------------------------------------------- */
+  const F = {doelgroep:"", status:"", fase:"", gate:"", eigenaar:"", zoek:""};
 
   function zichtbaar(){
     const q = F.zoek.trim().toLowerCase();
     return LEADS.filter(l => {
       if (F.doelgroep && l.doelgroep !== F.doelgroep) return false;
       if (F.status    && l.leadstatus !== F.status)   return false;
+      if (F.fase      && l.fase !== F.fase)           return false;
       if (F.gate      && l.gate !== F.gate)           return false;
       if (F.eigenaar  && l.eigenaar !== F.eigenaar)   return false;
       if (!q) return true;
-      const hooi = [l.organisatie, l.project, l.plaats, l.herkomst, l.actie, l.opmerkingen, l.id,
-                    ...l.stappen.map(s => s.naam)].join(" ").toLowerCase();
-      return hooi.includes(q);
+      return [l.organisatie, l.project, l.locatie, l.herkomst, l.actie, l.opmerkingen, l.id,
+              ...l.stappen.map(s => s.naam)].join(" ").toLowerCase().includes(q);
     });
   }
 
-  /* ---- kerncijfers ---------------------------------------------------- */
-  function tekenKpis(sel){
-    const gewogen = sel.reduce((a,l) => a + l.gewogen, 0);
-    const fee     = sel.reduce((a,l) => a + l.fee, 0);
-    const capex   = sel.reduce((a,l) => a + l.capex, 0);
-    const piekKW  = sel.reduce((a,l) => a + l.piek, 0);
-    const vastgoed = sel.filter(l => !l.hub).length;
-    const hubs     = sel.filter(l => l.hub).length;
-    /* 3,2 GW is het landelijke piekreductiepotentieel uit het
-       potentieonderzoek energiehubs -- dezelfde bron als op de website. */
-    const landelijkKW = 3200000;
-    const aandeel = piekKW / landelijkKW * 100;
+  /* ---- tabelhulp ------------------------------------------------------- */
+  function bouwTabel(tabel, kolommen, records, opts){
+    opts = opts || {};
+    tabel.replaceChildren();
+    const thead = el("thead"), hr = el("tr");
+    kolommen.forEach(k => {
+      const th = el("th", k.n ? "n" : null, k.kop);
+      th.scope = "col";
+      hr.appendChild(th);
+    });
+    kids(thead, hr);
+    tabel.appendChild(thead);
 
-    const tegels = [
-      {lbl:"Gewogen pijplijn", n:euro(gewogen), p:"Verwachte fee maal de kans op FID die bij de bereikte gate hoort.",
-       split:[["Verwachte fee", euro(fee)], ["CAPEX", euro(capex)]]},
-      {lbl:"Structureel vermeden piek", n:nlTwo.format(piekKW/1000), u:" MW",
-       p:"Wat deze pijplijn van de netbeheerder afhaalt — niet in nieuwe kabels, in slimmer ontworpen systemen.",
-       split:[["Van 3,2 GW landelijk", nlTwo.format(aandeel) + "%"]]},
-      {lbl:"Leads in beeld", n:nlInt.format(sel.length),
-       p:"Twee sporen, één systeem: gebiedsontwikkeling en bedrijventerrein.",
-       split:[["Vastgoed", String(vastgoed)], ["Hub", String(hubs)]]},
-      {lbl:"Ontwikkelstappen gereed", n:nlInt.format(sel.reduce((a,l)=>a+l.gereed,0)),
-       u:" / " + nlInt.format(sel.reduce((a,l)=>a+l.totaal,0)),
-       p:"Afgevinkte stappen over alle zichtbare leads, uit het blad Voortgang.",
-       split:[["Loopt", String(sel.reduce((a,l)=>a+l.loopt,0))],
-              ["Geblokkeerd", String(sel.reduce((a,l)=>a+l.geblok,0))]]}
-    ];
-
-    const host = $("#kpis");
-    host.replaceChildren();
-    tegels.forEach(t => {
-      const c = el("div","kpi");
-      c.appendChild(el("div","lbl", t.lbl));
-      const n = el("div","n", t.n);
-      if (t.u) n.appendChild(el("span","u", t.u));
-      c.appendChild(n);
-      c.appendChild(el("p", null, t.p));
-      const sp = el("div","split");
-      t.split.forEach(([k,v]) => {
-        const s = el("span", null, k + " ");
-        s.appendChild(el("b", null, v));
-        sp.appendChild(s);
+    const tb = el("tbody");
+    if (!records.length){
+      const tr = el("tr"), td = el("td", null, opts.leeg || "Geen regels in deze selectie.");
+      td.colSpan = kolommen.length;
+      kids(tr, td);
+      tb.appendChild(tr);
+    } else {
+      records.forEach(rec => {
+        const tr = el("tr");
+        kolommen.forEach(k => {
+          const waarde = k.cel(rec);
+          if (waarde instanceof Node){
+            const td = el("td", k.cls || (k.n ? "n" : null));
+            td.appendChild(waarde);
+            tr.appendChild(td);
+          } else {
+            tr.appendChild(el("td", k.cls || (k.n ? "n" : null), waarde === "" || waarde === undefined ? DASH : waarde));
+          }
+        });
+        tb.appendChild(tr);
       });
-      c.appendChild(sp);
-      host.appendChild(c);
-    });
+      if (opts.totaal){
+        const tr = el("tr","total");
+        kolommen.forEach((k, i) => tr.appendChild(el("td", k.n ? "n" : null, opts.totaal(k, i))));
+        tb.appendChild(tr);
+      }
+    }
+    tabel.appendChild(tb);
+  }
 
-    const alleBronnen    = sel.flatMap(l => l.bronnen);
-    const alleContracten = sel.flatMap(l => l.contracten);
-    const ndaOpen = alleBronnen.filter(b => b["Onder NDA"] === "Ja" && b.Status !== "Verwerkt").length;
-    const tellers = [
-      {k:"Overeenkomsten open", v:sel.reduce((a,l)=>a+l.openContract,0), m:"van " + alleContracten.length + " vastgelegd", warn:true},
-      {k:"Bronnen te verwerken", v:sel.reduce((a,l)=>a+l.bronTeVerwerken,0), m:"van " + alleBronnen.length + " geregistreerd", warn:true},
-      {k:"Onder NDA, nog niet verwerkt", v:ndaOpen, m:"vertrouwelijk materiaal in behandeling", stop:ndaOpen>0},
-      {k:"Contactpersonen", v:sel.flatMap(l=>l.contacten).length, m:"beslissers, gatekeepers en kartrekkers"}
-    ];
-    const th = $("#tallies");
-    th.replaceChildren();
-    tellers.forEach(t => {
-      const c = el("div","tally");
-      c.appendChild(el("div","lbl", t.k));
-      c.appendChild(el("div","v" + (t.stop ? " stop" : t.warn && t.v > 0 ? " warn" : ""), nlInt.format(t.v)));
-      c.appendChild(el("div","m", t.m));
-      th.appendChild(c);
+  function datumCel(d){
+    if (!d) return el("span","", DASH);
+    const span = el("span", null, d);
+    return span;
+  }
+
+  function leadLink(l){
+    const b = el("button","idlink", l.id);
+    b.type = "button";
+    b.addEventListener("click", () => openLead(l.id));
+    return b;
+  }
+
+  /* ---- kerncijfers in de kopbalk --------------------------------------- */
+  function tekenKpiStrip(sel){
+    const host = $("#kpistrip");
+    host.replaceChildren();
+    [["Gewogen fee", euro(sel.reduce((a,l)=>a+l.gewogen,0))],
+     ["Vermeden piek", nlTwo.format(sel.reduce((a,l)=>a+l.piek,0)/1000) + " MW"],
+     ["# Leads", nlInt.format(sel.length)]
+    ].forEach(([k,v]) => {
+      const b = el("div","kpibox");
+      kids(b, el("div","k",k), el("div","v",v));
+      host.appendChild(b);
     });
   }
 
-  /* ---- gateladder ----------------------------------------------------- */
+  /* ---- pagina: portefeuille -------------------------------------------- */
   const GATES = [
     {g:"M1", naam:"Origination",    desc:"Gekwalificeerd, bronnen binnen, propositie uit."},
     {g:"M2", naam:"Feasibility",    desc:"Concept, businesscase en structuur staan."},
@@ -2012,26 +2018,53 @@ const DATA = {
     {g:"M4", naam:"Ready-to-Build", desc:"Netcontractering en investeringsbesluit."}
   ];
 
-  function tekenGates(sel){
-    const host = $("#gates");
+  function tekenHome(sel){
+    const gewogen = sel.reduce((a,l)=>a+l.gewogen,0);
+    const fee     = sel.reduce((a,l)=>a+l.fee,0);
+    const capex   = sel.reduce((a,l)=>a+l.capex,0);
+    const piekKW  = sel.reduce((a,l)=>a+l.piek,0);
+    const stapT   = sel.reduce((a,l)=>a+l.totaal,0);
+    const stapG   = sel.reduce((a,l)=>a+l.gereed,0);
+
+    const tegels = [
+      {k:"Gewogen pijplijn", v:euro(gewogen),
+       p:"Verwachte fee maal de kans op FID die bij de bereikte gate hoort.",
+       split:[["Verwachte fee", euro(fee)],["CAPEX", euro(capex)]]},
+      {k:"Structureel vermeden piek", v:nlTwo.format(piekKW/1000), u:" MW",
+       p:"Wat deze pijplijn van de netbeheerder afhaalt — niet in nieuwe kabels, in slimmer ontworpen systemen.",
+       split:[["Van 3,2 GW landelijk", nlTwo.format(piekKW/3200000*100) + "%"]]},
+      {k:"Leads in beeld", v:nlInt.format(sel.length),
+       p:"Twee sporen, één systeem: gebiedsontwikkeling en bedrijventerrein.",
+       split:[["Vastgoed", String(sel.filter(l=>!l.hub).length)],["Hub", String(sel.filter(l=>l.hub).length)]]},
+      {k:"Ontwikkelstappen gereed", v:nlInt.format(stapG), u:" / " + nlInt.format(stapT),
+       p:"Afgevinkte stappen over alle zichtbare leads, uit het blad Voortgang.",
+       split:[["Loopt", String(sel.reduce((a,l)=>a+l.loopt,0))],["Geblokkeerd", String(sel.reduce((a,l)=>a+l.geblok,0))]]}
+    ];
+    const host = $("#home-stats");
     host.replaceChildren();
+    tegels.forEach(t => {
+      const c = el("div","stat");
+      const v = el("div","v", t.v);
+      if (t.u) v.appendChild(el("span","u", t.u));
+      const sp = el("div","split");
+      t.split.forEach(([k,val]) => {
+        const s = el("span", null, k + " ");
+        s.appendChild(el("b", null, val));
+        sp.appendChild(s);
+      });
+      kids(c, el("div","k",t.k), v, el("p",null,t.p), sp);
+      host.appendChild(c);
+    });
+
+    const gh = $("#home-gates");
+    gh.replaceChildren();
     GATES.forEach(gt => {
       const kans = aanname(gt.g + " bereikt");
       const hier = sel.filter(l => l.gate === gt.g);
       const c = el("div","gate");
-      c.appendChild(el("div","g", gt.g));
-      c.appendChild(el("h3", null, gt.naam));
-      c.appendChild(el("p","desc", gt.desc));
-
-      const fid = el("div","fid");
-      fid.appendChild(el("div","lbl","Kans op FID · " + pct(kans)));
-      const m = el("div","meter");
-      const i = el("i");
+      const m = el("div","meter"), i = el("i");
       i.style.width = (kans * 100) + "%";
-      m.appendChild(i);
-      fid.appendChild(m);
-      c.appendChild(fid);
-
+      kids(m, i);
       const figs = el("div","figs");
       [["Leads op deze gate", nlInt.format(hier.length)],
        ["Gewogen fee", euro(hier.reduce((a,l)=>a+l.gewogen,0))]
@@ -2040,265 +2073,223 @@ const DATA = {
         r.appendChild(el("b", null, v));
         figs.appendChild(r);
       });
-      c.appendChild(figs);
-      host.appendChild(c);
+      kids(c, el("div","g",gt.g), el("h3",null,gt.naam), el("p","desc",gt.desc),
+              el("div","lbl","Kans op FID · " + pct(kans)), m, figs);
+      gh.appendChild(c);
+    });
+
+    /* verdelingspanelen */
+    const panels = [
+      ["Per doelgroep",     l => l.doelgroep || "Onbekend"],
+      ["Per leadstatus",    l => l.leadstatus || "Onbekend"],
+      ["Per ontwikkelfase", l => l.fase || "Onbekend"],
+      ["Per herkomst",      l => l.herkomst || "Onbekend"]
+    ];
+    const ph = $("#home-panels");
+    ph.replaceChildren();
+    panels.forEach(([titel, sleutel]) => {
+      const per = new Map();
+      sel.forEach(l => {
+        const k = sleutel(l);
+        if (!per.has(k)) per.set(k, {n:0, gewogen:0});
+        const b = per.get(k);
+        b.n += 1; b.gewogen += l.gewogen;
+      });
+      const lijst = [...per.entries()].sort((a,b) => b[1].gewogen - a[1].gewogen || b[1].n - a[1].n);
+      const maxG = Math.max(1, ...lijst.map(([,b]) => b.gewogen));
+
+      const p = el("div","panel");
+      const hd = el("div","panel-hd");
+      kids(hd, el("span","t",titel), el("span","s","Gewogen fee"));
+      const bd = el("div","panel-bd");
+      const bars = el("div","bars");
+      if (!lijst.length) bars.appendChild(el("p","empty","Geen leads in de selectie."));
+      lijst.forEach(([naam, b]) => {
+        const row = el("div","barrow");
+        const track = el("div","track");
+        const fill = el("i");
+        fill.style.width = Math.max(2, b.gewogen / maxG * 100) + "%";
+        fill.style.background = "var(--aqua)";
+        fill.dataset.tip = JSON.stringify({boven:titel, titel:naam, tekst:b.n + " leads", status:""});
+        kids(track, fill);
+        kids(row, el("div","nm",naam), track, el("div","amt", euro(b.gewogen)));
+        bars.appendChild(row);
+      });
+      kids(bd, bars);
+      kids(p, hd, bd);
+      ph.appendChild(p);
+    });
+
+    /* rechterrail met tellingen */
+    const ch = $("#home-counts");
+    ch.replaceChildren();
+    const hd = el("div","row head");
+    kids(hd, el("div","k","Aantallen"));
+    ch.appendChild(hd);
+    [["Leads", sel.length],
+     ["Vastgoedontwikkelaar", sel.filter(l=>!l.hub).length],
+     ["Energiehub", sel.filter(l=>l.hub).length],
+     ["Contactpersonen", sel.flatMap(l=>l.contacten).length],
+     ["Overeenkomsten", sel.flatMap(l=>l.contracten).length],
+     ["Bronnen", sel.flatMap(l=>l.bronnen).length],
+     ["Stappen geblokkeerd", sel.reduce((a,l)=>a+l.geblok,0)]
+    ].forEach(([k,v]) => {
+      const r = el("div","row");
+      kids(r, el("div","k",k), el("div","v", nlInt.format(v)));
+      ch.appendChild(r);
     });
   }
 
-  /* ---- legenda -------------------------------------------------------- */
+  /* ---- pagina: leads / alle -------------------------------------------- */
+  function tekenLeadsTabel(sel){
+    $("#leads-alle-n").textContent = sel.length + (sel.length === 1 ? " lead" : " leads");
+    bouwTabel($("#tbl-leads"), [
+      {kop:"LeadID",      cel:l => leadLink(l)},
+      {kop:"Organisatie", cel:l => {
+        const w = el("div","wrapcell");
+        kids(w, el("b", null, l.organisatie));
+        if (l.project) kids(w, el("div","id", l.project));
+        return w;
+      }},
+      {kop:"Doelgroep",   cel:l => el("span","chip dg" + (l.hub ? " hub" : ""), l.hub ? "Energiehub" : "Vastgoed")},
+      {kop:"Plaats",      cel:l => l.locatie},
+      {kop:"Herkomst",    cel:l => l.herkomst},
+      {kop:"Status",      cel:l => l.leadstatus},
+      {kop:"Fase",        cel:l => l.fase},
+      {kop:"Gate",        cel:l => el("span","chip gatepill", l.gate || DASH)},
+      {kop:"Omvang",      cel:l => l.omvang},
+      {kop:"CAPEX",       cel:l => euro(l.capex),    n:true},
+      {kop:"Fee",         cel:l => euro(l.fee),      n:true},
+      {kop:"Kans",        cel:l => pct(l.slaagkans), n:true},
+      {kop:"Gewogen fee", cel:l => euro(l.gewogen),  n:true},
+      {kop:"Piek kW",     cel:l => nlInt.format(l.piek), n:true},
+      {kop:"Voortgang",   cel:l => pct(l.pctGereed), n:true},
+      {kop:"Eigenaar",    cel:l => l.eigenaar},
+      {kop:"Prioriteit",  cel:l => l.prioriteit ? el("span","chip" + (l.prioriteit === "Hoog" ? " hi" : ""), l.prioriteit) : DASH},
+      {kop:"Deadline",    cel:l => l.deadline, cls:"d"}
+    ], sel, {
+      leeg:"Geen leads die aan deze filters voldoen.",
+      totaal:(k, i) => {
+        if (i === 0) return "Totaal";
+        if (k.kop === "CAPEX")       return euro(sel.reduce((a,l)=>a+l.capex,0));
+        if (k.kop === "Fee")         return euro(sel.reduce((a,l)=>a+l.fee,0));
+        if (k.kop === "Gewogen fee") return euro(sel.reduce((a,l)=>a+l.gewogen,0));
+        if (k.kop === "Piek kW")     return nlInt.format(sel.reduce((a,l)=>a+l.piek,0));
+        return "";
+      }
+    });
+  }
+
+  /* ---- pagina: leads / mijlpalen --------------------------------------- */
+  function tekenMijlpalen(sel){
+    bouwTabel($("#tbl-mijlpalen"), [
+      {kop:"LeadID",      cel:l => leadLink(l)},
+      {kop:"Organisatie", cel:l => el("b", null, l.organisatie)},
+      {kop:"Gate",        cel:l => el("span","chip gatepill", l.gate || DASH)},
+      ...MIJLPAALNAMEN.map(naam => ({
+        kop:naam,
+        cls:"d",
+        cel:l => {
+          const d = l.mijlpalen[naam];
+          if (!d) { const s = el("span", null, DASH); return s; }
+          return el("span", null, d);
+        }
+      }))
+    ], sel, {leeg:"Geen leads die aan deze filters voldoen."});
+    /* lege datumcellen grijzer zetten */
+    $("#tbl-mijlpalen").querySelectorAll("td.d").forEach(td => {
+      if (td.textContent.trim() === DASH) td.classList.add("none");
+    });
+  }
+
+  /* ---- pagina: leads / voortgang --------------------------------------- */
   function tekenLegenda(){
     const host = $("#legend");
     host.replaceChildren();
     VOLGORDE.forEach(st => {
       const s = statusOf(st);
       const item = el("span","item");
-      const sw = el("span","swatch " + s.cls, s.glyph);
-      item.appendChild(sw);
-      item.appendChild(el("span", null, st));
+      kids(item, el("span","swatch " + s.cls, s.glyph), el("span", null, st));
       host.appendChild(item);
     });
   }
 
-  /* ---- leadkaart ------------------------------------------------------ */
   function gateBanden(stappen){
-    /* Aaneengesloten reeksen van dezelfde gate. Springt de gate terug --
-       zoals EH-13, die op M1 staat tussen M2-stappen -- dan levert dat
-       een eigen segment op in plaats van een stilzwijgende hergroepering. */
     const banden = [];
     stappen.forEach(s => {
       const laatste = banden[banden.length - 1];
       if (laatste && laatste.gate === s.gate) laatste.n += 1;
-      else banden.push({gate:s.gate || "—", n:1});
+      else banden.push({gate:s.gate || DASH, n:1});
     });
     return banden;
   }
 
-  function tekenLead(l){
-    const card = el("article","lead" + (l.voorbeeld ? " vb" : ""));
+  function tekenVoortgang(sel){
+    const host = $("#voortgang-cards");
+    host.replaceChildren();
+    if (!sel.length){ host.appendChild(el("p","empty","Geen leads die aan deze filters voldoen.")); return; }
 
-    /* kop */
-    const head = el("div","lead-head");
-    const links = el("div");
-    const idrow = el("div","lead-id");
-    idrow.appendChild(el("span","chip dg" + (l.hub ? " hub" : ""), l.hub ? "Energiehub" : "Vastgoed"));
-    idrow.appendChild(el("span","chip gate", l.gate || "—"));
-    idrow.appendChild(el("span","chip", l.leadstatus));
-    if (l.prioriteit) idrow.appendChild(el("span","chip prio-" + l.prioriteit, "Prioriteit " + l.prioriteit.toLowerCase()));
-    if (l.voorbeeld) idrow.appendChild(el("span","chip vb","Voorbeeldrij"));
-    links.appendChild(idrow);
-    links.appendChild(el("h3", null, l.organisatie));
-    if (l.project) links.appendChild(el("p","proj", l.project));
-    head.appendChild(links);
+    sel.forEach(l => {
+      const p = el("div","panel");
+      const hd = el("div","panel-hd");
+      const t = el("span","t", l.organisatie + " · " + l.id);
+      const s = el("span","s", (l.volgende ? "Volgende: " + l.volgende.nr + ". " + l.volgende.naam : "Alle stappen afgerond"));
+      kids(hd, t, s);
 
-    const meta = el("div","meta");
-    [["Fase", l.fase], ["Omvang", l.omvang], ["Plaats", l.plaats],
-     ["Herkomst", l.herkomst], ["Eigenaar", l.eigenaar], ["Eerste contact", l.eersteContact]
-    ].filter(([,v]) => v).forEach(([k,v]) => {
-      const s = el("span", null, k + " ");
-      s.appendChild(el("b", null, v));
-      meta.appendChild(s);
-    });
-    head.appendChild(meta);
-
-    const fig = el("div","lead-fig");
-    fig.appendChild(el("div","v", euro(l.gewogen)));
-    fig.appendChild(el("div","k","Gewogen fee"));
-    fig.appendChild(el("div","v", euro(l.fee)));
-    fig.appendChild(el("div","k","Verwachte fee · kans " + pct(l.slaagkans)));
-    head.appendChild(fig);
-    card.appendChild(head);
-
-    /* voortgangsbalk */
-    const prog = el("div","progress");
-    const bar = el("div","bar");
-    bar.setAttribute("role","img");
-    bar.setAttribute("aria-label",
-      l.gereed + " van " + l.totaal + " stappen gereed, " + l.loopt + " lopend, " + l.geblok + " geblokkeerd");
-    [["d", l.gereed], ["r", l.loopt], ["b", l.geblok]].forEach(([c, n]) => {
-      if (!n) return;
-      const i = el("i", c);
-      i.style.width = (n / l.totaal * 100) + "%";
-      bar.appendChild(i);
-    });
-    prog.appendChild(bar);
-    prog.appendChild(el("span","pct", pct(l.pctGereed)));
-    card.appendChild(prog);
-
-    /* stappenstrip */
-    const wrap = el("div","stripwrap");
-    const cols = "repeat(" + l.totaal + ",minmax(0,1fr))";
-
-    const band = el("div","gateband");
-    band.style.gridTemplateColumns = cols;
-    gateBanden(l.stappen).forEach(b => {
-      const s = el("span", null, b.gate);
-      s.style.gridColumn = "span " + b.n;
-      band.appendChild(s);
-    });
-    wrap.appendChild(band);
-
-    const strip = el("div","strip");
-    strip.style.gridTemplateColumns = cols;
-    l.stappen.forEach(s => {
-      const st = statusOf(s.status);
-      const b = el("button", st.cls, st.glyph);
-      b.type = "button";
-      b.setAttribute("aria-label", "Stap " + s.nr + ": " + s.naam + " — " + s.status);
-      b.dataset.tip = JSON.stringify({
-        boven: s.stapID + " · " + s.workstream + (s.gate ? " · " + s.gate : "") + (s.verplicht ? "" : " · optioneel"),
-        titel: s.nr + ". " + s.naam,
-        tekst: s.toelichting,
-        status: s.status
+      const bd = el("div","panel-bd");
+      const prog = el("div","progress");
+      const bar = el("div","bar");
+      bar.setAttribute("role","img");
+      bar.setAttribute("aria-label", l.gereed + " van " + l.totaal + " stappen gereed, " + l.loopt + " lopend, " + l.geblok + " geblokkeerd");
+      [["--st-gereed", l.gereed],["--st-loopt", l.loopt],["--st-geblok", l.geblok]].forEach(([v,n]) => {
+        if (!n) return;
+        const i = el("i");
+        i.style.width = (n / l.totaal * 100) + "%";
+        i.style.background = "var(" + v + ")";
+        bar.appendChild(i);
       });
-      strip.appendChild(b);
-    });
-    wrap.appendChild(strip);
+      kids(prog, bar, el("span","pct", pct(l.pctGereed)));
 
-    const nrs = el("div","stepnr");
-    nrs.style.gridTemplateColumns = cols;
-    nrs.setAttribute("aria-hidden","true");
-    l.stappen.forEach(s => nrs.appendChild(el("span", null, s.nr % 5 === 0 || s.nr === 1 ? String(s.nr) : "")));
-    wrap.appendChild(nrs);
-    card.appendChild(wrap);
+      const wrap = el("div","stripwrap");
+      const cols = "repeat(" + l.totaal + ",minmax(0,1fr))";
 
-    /* voet */
-    const foot = el("div","lead-foot");
-    const ns = el("div","nextstep");
-    if (l.volgende){
-      ns.appendChild(document.createTextNode("Volgende stap: "));
-      ns.appendChild(el("b", null, l.volgende.nr + ". " + l.volgende.naam));
-      ns.appendChild(document.createTextNode(" · " + l.volgende.workstream));
-    } else {
-      ns.appendChild(el("b", null, "Alle stappen afgerond"));
-    }
-    if (l.actie){
-      ns.appendChild(el("br"));
-      ns.appendChild(document.createTextNode("Actie: " + l.actie + " "));
-      if (l.deadline) ns.appendChild(el("span","deadline", "· " + l.deadline));
-    }
-    foot.appendChild(ns);
-
-    const tellers = el("div","meta");
-    [["Overeenkomsten", l.getekend + " getekend, " + l.openContract + " open"],
-     ["Bronnen", l.bronOntvangen + " binnen, " + l.bronTeVerwerken + " te verwerken"],
-     ["Contactpersonen", String(l.contacten.length)]
-    ].forEach(([k,v]) => {
-      const s = el("span", null, k + " ");
-      s.appendChild(el("b", null, v));
-      tellers.appendChild(s);
-    });
-    foot.appendChild(tellers);
-
-    const btn = el("button","more","Details");
-    btn.type = "button";
-    btn.setAttribute("aria-expanded","false");
-    foot.appendChild(btn);
-    card.appendChild(foot);
-
-    const detail = tekenDetail(l);
-    detail.hidden = true;
-    btn.addEventListener("click", () => {
-      detail.hidden = !detail.hidden;
-      btn.setAttribute("aria-expanded", String(!detail.hidden));
-      btn.textContent = detail.hidden ? "Details" : "Sluiten";
-    });
-    card.appendChild(detail);
-    return card;
-  }
-
-  /* ---- detailpaneel --------------------------------------------------- */
-  function kolom(titel, records, leeg){
-    const c = el("div");
-    c.appendChild(el("h4", null, titel));
-    if (!records.length){ c.appendChild(el("p","empty", leeg)); return c; }
-    records.forEach(r => c.appendChild(r));
-    return c;
-  }
-
-  const CONTRACT_KLAAR = ["Getekend","Verlopen","Beeindigd","Ingetrokken"];
-
-  function tekenDetail(l){
-    const d = el("div","detail");
-    const cols = el("div","cols");
-
-    cols.appendChild(kolom("Contactpersonen", l.contacten.map(c => {
-      const r = el("div","rec");
-      const t = el("div","t");
-      t.appendChild(el("span", null, c.Naam));
-      if (c["Rol in besluitvorming"]) t.appendChild(el("span","pill", c["Rol in besluitvorming"]));
-      r.appendChild(t);
-      const regels = [c.Functie, c.Organisatie, c["E-mail"], c.Telefoon].filter(Boolean).join(" · ");
-      if (regels) r.appendChild(el("div","d", regels));
-      if (c["Laatste contact"]) r.appendChild(el("div","d","Laatst gesproken " + c["Laatste contact"] + (c["Relatie-eigenaar"] ? " · " + c["Relatie-eigenaar"] : "")));
-      r.appendChild(el("div","id", c.ContactID));
-      return r;
-    }), "Nog geen contactpersonen vastgelegd."));
-
-    cols.appendChild(kolom("Overeenkomsten", l.contracten.map(o => {
-      const klaar = CONTRACT_KLAAR.includes(o.Status);
-      const r = el("div","rec");
-      const t = el("div","t");
-      t.appendChild(el("span", null, o.Titel || o.Type));
-      t.appendChild(el("span","pill " + (o.Status === "Getekend" ? "ok" : klaar ? "" : "open"), o.Status));
-      r.appendChild(t);
-      const regels = [o.Type,
-        o["Datum getekend"] ? "getekend " + o["Datum getekend"] : (o["Datum verzonden"] ? "verzonden " + o["Datum verzonden"] : ""),
-        o.Einddatum ? "loopt tot " + o.Einddatum : "",
-        num(o["Contractwaarde (EUR)"]) ? euro(num(o["Contractwaarde (EUR)"])) : ""
-      ].filter(Boolean).join(" · ");
-      if (regels) r.appendChild(el("div","d", regels));
-      if (o["Actie vereist"] === "Ja") r.appendChild(el("div","d","Actie vereist" + (o.Opmerkingen ? ": " + o.Opmerkingen : "")));
-      r.appendChild(el("div","id", o.OvereenkomstID));
-      return r;
-    }), "Nog geen overeenkomsten vastgelegd."));
-
-    cols.appendChild(kolom("Bronnen", l.bronnen.map(b => {
-      const r = el("div","rec");
-      const t = el("div","t");
-      t.appendChild(el("span", null, b["Titel of bestandsnaam"] || b.Brontype));
-      t.appendChild(el("span","pill " + (b.Status === "Verwerkt" ? "ok" : "open"), b.Status));
-      if (b["Onder NDA"] === "Ja") t.appendChild(el("span","pill nda","Onder NDA"));
-      r.appendChild(t);
-      const regels = [b.Brontype, b.Formaat, b.Bruikbaarheid,
-        b["Datum ontvangen"] ? "ontvangen " + b["Datum ontvangen"] : "",
-        b["Gebruikt voor stap"] ? "voor " + b["Gebruikt voor stap"] : ""
-      ].filter(Boolean).join(" · ");
-      if (regels) r.appendChild(el("div","d", regels));
-      r.appendChild(el("div","id", b.BronID));
-      return r;
-    }), "Nog geen bronnen ontvangen."));
-
-    d.appendChild(cols);
-
-    /* lopende en geblokkeerde stappen voluit */
-    const open = l.stappen.filter(s => s.status === "Loopt" || s.status === "Geblokkeerd");
-    if (open.length){
-      const sec = el("div");
-      sec.style.marginTop = "22px";
-      sec.appendChild(el("h4", null, "Stappen die nu lopen of vastzitten"));
-      open.forEach(s => {
-        const r = el("div","rec");
-        const t = el("div","t");
-        t.appendChild(el("span", null, s.nr + ". " + s.naam));
-        t.appendChild(el("span","pill " + (s.status === "Geblokkeerd" ? "nda" : "open"), s.status));
-        t.appendChild(el("span","pill", s.workstream));
-        r.appendChild(t);
-        if (s.toelichting) r.appendChild(el("div","d", s.toelichting));
-        r.appendChild(el("div","id", s.stapID + (s.wie ? " · " + s.wie : "")));
-        sec.appendChild(r);
+      const band = el("div","gateband");
+      band.style.gridTemplateColumns = cols;
+      gateBanden(l.stappen).forEach(b => {
+        const sp = el("span", null, b.gate);
+        sp.style.gridColumn = "span " + b.n;
+        band.appendChild(sp);
       });
-      d.appendChild(sec);
-    }
 
-    if (l.opmerkingen){
-      const p = el("p","block-note", l.opmerkingen);
-      p.style.marginTop = "20px";
-      d.appendChild(p);
-    }
-    return d;
+      const strip = el("div","strip");
+      strip.style.gridTemplateColumns = cols;
+      l.stappen.forEach(st => {
+        const cfg = statusOf(st.status);
+        const b = el("button", cfg.cls, cfg.glyph);
+        b.type = "button";
+        b.setAttribute("aria-label", "Stap " + st.nr + ": " + st.naam + " — " + st.status);
+        b.dataset.tip = JSON.stringify({
+          boven:st.stapID + " · " + st.workstream + (st.gate ? " · " + st.gate : "") + (st.verplicht ? "" : " · optioneel"),
+          titel:st.nr + ". " + st.naam,
+          tekst:st.toelichting,
+          status:st.status
+        });
+        strip.appendChild(b);
+      });
+
+      const nrs = el("div","stepnr");
+      nrs.style.gridTemplateColumns = cols;
+      nrs.setAttribute("aria-hidden","true");
+      l.stappen.forEach(st => nrs.appendChild(el("span", null, st.nr % 5 === 0 || st.nr === 1 ? String(st.nr) : "")));
+
+      kids(wrap, band, strip, nrs);
+      kids(bd, prog, wrap);
+      kids(p, hd, bd);
+      host.appendChild(p);
+    });
   }
 
-  /* ---- werkstromen ----------------------------------------------------- */
+  /* ---- pagina: leads / werkstromen ------------------------------------- */
   function tekenWerkstromen(sel){
     const per = new Map();
     sel.flatMap(l => l.stappen).forEach(s => {
@@ -2306,99 +2297,312 @@ const DATA = {
       const b = per.get(s.workstream);
       b[s.status] = (b[s.status] || 0) + 1;
     });
-    const host = $("#ws");
+    const host = $("#ws-bars");
     host.replaceChildren();
     if (!per.size){ host.appendChild(el("p","empty","Geen stappen in de selectie.")); return; }
 
-    const max = Math.max(...[...per.values()].map(b => Object.values(b).reduce((a,n)=>a+n,0)));
-    [...per.entries()]
-      .sort((a,b) => Object.values(b[1]).reduce((x,n)=>x+n,0) - Object.values(a[1]).reduce((x,n)=>x+n,0))
-      .forEach(([naam, blok]) => {
-        const totaal = Object.values(blok).reduce((a,n)=>a+n,0);
-        const row = el("div","ws-row");
-        row.appendChild(el("div","nm", naam));
-        const bar = el("div","ws-bar");
-        bar.style.width = (totaal / max * 100) + "%";
-        VOLGORDE.forEach(st => {
-          const n = blok[st] || 0;
-          if (!n) return;
-          const i = el("i");
-          i.style.flex = n + " 1 0";
-          i.style.background = "var(" + statusOf(st).varName + ")";
-          if (st === "Niet gestart" || st === "Niet van toepassing")
-            i.style.boxShadow = "inset 0 0 0 1px var(--st-niet-line)";
-          i.dataset.tip = JSON.stringify({boven:naam, titel:n + " × " + st, tekst:"", status:st});
-          bar.appendChild(i);
-        });
-        row.appendChild(bar);
-        const gereed = blok["Gereed"] || 0;
-        row.appendChild(el("div","tot", gereed + "/" + totaal + " gereed"));
-        host.appendChild(row);
+    const tot = b => Object.values(b).reduce((a,n)=>a+n,0);
+    const max = Math.max(...[...per.values()].map(tot));
+    [...per.entries()].sort((a,b) => tot(b[1]) - tot(a[1])).forEach(([naam, blok]) => {
+      const totaal = tot(blok);
+      const row = el("div","barrow");
+      const track = el("div","track");
+      track.style.width = (totaal / max * 100) + "%";
+      track.style.background = "transparent";
+      VOLGORDE.forEach(st => {
+        const n = blok[st] || 0;
+        if (!n) return;
+        const i = el("i");
+        i.style.flex = n + " 1 0";
+        i.style.background = "var(" + statusOf(st).varName + ")";
+        if (st === "Niet gestart" || st === "Niet van toepassing") i.style.boxShadow = "inset 0 0 0 1px var(--st-niet-line)";
+        i.dataset.tip = JSON.stringify({boven:naam, titel:n + " × " + st, tekst:"", status:st});
+        track.appendChild(i);
       });
+      kids(row, el("div","nm",naam), track, el("div","amt",(blok["Gereed"] || 0) + "/" + totaal + " gereed"));
+      host.appendChild(row);
+    });
   }
 
-  /* ---- acties ---------------------------------------------------------- */
+  /* ---- pagina: lead opzoeken ------------------------------------------- */
+  let gekozenLead = LEADS.length ? LEADS[0].id : null;
+
+  /* Mijlpalen op de tijdlijn. Kleuren volgen dezelfde logica als elders:
+     aqua = binnen, koper = in gang, wijnrood = grens of einddatum. */
+  const TL_KLEUR = {
+    "Eerste contact":        "--aqua",
+    "Eerste bron ontvangen": "--aqua",
+    "NDA getekend":          "--aqua",
+    "Overeenkomst verzonden":"--koper",
+    "Laatst getekend":       "--aqua",
+    "Laatste contactmoment": "--koper",
+    "Deadline actie":        "--st-geblok",
+    "Einde looptijd":        "--st-geblok"
+  };
+
+  const TL_SOORT = {
+    "--aqua":       "Gehaald",
+    "--koper":      "Verzonden of lopend",
+    "--st-geblok":  "Grens of einddatum"
+  };
+
+  function tekenTijdlijn(l){
+    const punten = MIJLPAALNAMEN
+      .map(naam => ({naam, datum:l.mijlpalen[naam]}))
+      .filter(p => p.datum);
+
+    if (!punten.length) return el("p","empty","Geen datums vastgelegd voor deze lead.");
+
+    const alle = punten.map(p => +new Date(p.datum)).concat([+new Date(VANDAAG)]);
+    let lo = Math.min(...alle), hi = Math.max(...alle);
+    /* altijd hele jaren, en nooit een nulbreedte-schaal */
+    let jaarLo = new Date(lo).getUTCFullYear(), jaarHi = new Date(hi).getUTCFullYear();
+    if (jaarHi === jaarLo) jaarHi += 1;
+    lo = Date.UTC(jaarLo, 0, 1); hi = Date.UTC(jaarHi + 1, 0, 1);
+    const x = d => (+new Date(d) - lo) / (hi - lo) * 100;
+
+    const box = el("div","timeline");
+    const rail = el("div","tl-rail");
+
+    const nu = el("div","tl-now");
+    nu.style.left = x(VANDAAG) + "%";
+    kids(nu, el("span", null, "Vandaag"));
+    rail.appendChild(nu);
+
+    punten.forEach(p => {
+      const dot = el("button","tl-dot");
+      dot.type = "button";
+      dot.style.left = x(p.datum) + "%";
+      dot.style.background = "var(" + (TL_KLEUR[p.naam] || "--koper") + ")";
+      dot.setAttribute("aria-label", p.naam + ": " + p.datum);
+      dot.dataset.tip = JSON.stringify({boven:p.datum, titel:p.naam, tekst:"", status:""});
+      rail.appendChild(dot);
+    });
+
+    const axis = el("div","tl-axis");
+    for (let j = jaarLo; j <= jaarHi + 1; j++){
+      const t = el("div","tl-tick");
+      t.style.left = x(j + "-01-01") + "%";
+      kids(t, el("span", null, String(j)));
+      axis.appendChild(t);
+    }
+
+    /* De kleur codeert de soort mijlpaal, niet welke mijlpaal het is --
+       acht namen op drie kleuren zou een legenda opleveren die niets
+       onderscheidt. Welke mijlpaal een stip is, staat in de tooltip en
+       in het aria-label. */
+    const leg = el("div","tl-legend");
+    [...new Set(punten.map(p => TL_KLEUR[p.naam] || "--koper"))].forEach(kleur => {
+      const item = el("span","item");
+      const i = el("i");
+      i.style.background = "var(" + kleur + ")";
+      kids(item, i, el("span", null, TL_SOORT[kleur] || "Overig"));
+      leg.appendChild(item);
+    });
+
+    kids(box, rail, axis, leg);
+    return box;
+  }
+
+  function recordLijst(titel, records, leeg){
+    const p = el("div","panel");
+    const hd = el("div","panel-hd");
+    kids(hd, el("span","t",titel), el("span","s", String(records.length)));
+    const bd = el("div","panel-bd");
+    if (!records.length) bd.appendChild(el("p","empty", leeg));
+    records.forEach(r => bd.appendChild(r));
+    kids(p, hd, bd);
+    return p;
+  }
+
+  function tekenLookup(sel){
+    $("#lookup-n").textContent = sel.length + (sel.length === 1 ? " lead" : " leads");
+    const lijst = $("#lookup-list");
+    lijst.replaceChildren();
+
+    if (sel.length && !sel.some(l => l.id === gekozenLead)) gekozenLead = sel[0].id;
+    if (!sel.length) gekozenLead = null;
+
+    sel.forEach(l => {
+      const b = el("button");
+      b.type = "button";
+      b.setAttribute("aria-current", String(l.id === gekozenLead));
+      kids(b, el("div","o", l.organisatie),
+              el("div","m", l.id + " · " + (l.hub ? "Hub" : "Vastgoed") + " · " + (l.gate || DASH)));
+      b.addEventListener("click", () => { gekozenLead = l.id; tekenLookup(zichtbaar()); });
+      lijst.appendChild(b);
+    });
+
+    const host = $("#lookup-detail");
+    host.replaceChildren();
+    const l = LEADS.find(x => x.id === gekozenLead);
+    if (!l){ host.appendChild(el("p","empty","Geen lead geselecteerd.")); return; }
+
+    /* kerngegevens */
+    const kern = el("div","panel");
+    const kernHd = el("div","panel-hd");
+    kids(kernHd, el("span","t", l.organisatie + (l.project ? " · " + l.project : "")),
+                 el("span","s", l.id + (l.voorbeeld ? " · voorbeeldrij" : "")));
+    const fg = el("div","factgrid");
+    [["Doelgroep", l.doelgroep],["Leadstatus", l.leadstatus],["Ontwikkelfase", l.fase],["Huidige gate", l.gate],
+     ["Omvang", l.omvang],["Plaats", l.locatie],["Herkomst", l.herkomst],["Aangebracht door", l.aangebracht],
+     ["Eigenaar", l.eigenaar],["Prioriteit", l.prioriteit],["Eerste contact", l.eersteContact]
+    ].forEach(([k,v]) => {
+      const f = el("div","fact");
+      kids(f, el("div","k",k), el("div","v", v || DASH));
+      fg.appendChild(f);
+    });
+    [["Verwachte CAPEX", euro(l.capex)],["Verwachte fee", euro(l.fee)],["Slaagkans", pct(l.slaagkans)],
+     ["Gewogen fee", euro(l.gewogen)],["Vermeden piek", nlInt.format(l.piek) + " kW"],
+     ["Voortgang", pct(l.pctGereed)]
+    ].forEach(([k,v]) => {
+      const f = el("div","fact");
+      kids(f, el("div","k",k), el("div","v big", v));
+      fg.appendChild(f);
+    });
+    const kernBd = el("div","panel-bd flush");
+    kids(kernBd, fg);
+    kids(kern, kernHd, kernBd);
+    host.appendChild(kern);
+
+    /* volgende actie */
+    if (l.actie){
+      const a = el("div","panel");
+      a.style.marginTop = "14px";
+      const ahd = el("div","panel-hd");
+      kids(ahd, el("span","t","Volgende actie"), el("span","s", l.deadline || "geen deadline"));
+      const abd = el("div","panel-bd");
+      kids(abd, el("p", null, l.actie));
+      if (l.volgende) kids(abd, el("p","note","Eerstvolgende stap: " + l.volgende.nr + ". " + l.volgende.naam + " · " + l.volgende.workstream));
+      kids(a, ahd, abd);
+      host.appendChild(a);
+    }
+
+    /* tijdlijn */
+    const tl = el("div","panel");
+    tl.style.marginTop = "14px";
+    const tlHd = el("div","panel-hd");
+    kids(tlHd, el("span","t","Tijdlijn"), el("span","s","Vastgelegde datums"));
+    const tlBd = el("div","panel-bd");
+    kids(tlBd, tekenTijdlijn(l));
+    kids(tl, tlHd, tlBd);
+    host.appendChild(tl);
+
+    /* onderliggende registers */
+    const cols = el("div","grid g-2");
+    cols.style.marginTop = "14px";
+
+    cols.appendChild(recordLijst("Contactpersonen", l.contacten.map(c => {
+      const r = el("div","rec"), t = el("div","t");
+      kids(t, el("span", null, c.Naam));
+      if (c["Rol in besluitvorming"]) kids(t, el("span","chip", c["Rol in besluitvorming"]));
+      kids(r, t);
+      const regels = [c.Functie, c.Organisatie, c["E-mail"], c.Telefoon].filter(Boolean).join(" · ");
+      if (regels) kids(r, el("div","d", regels));
+      if (c["Laatste contact"]) kids(r, el("div","d","Laatst gesproken " + c["Laatste contact"] + (c["Relatie-eigenaar"] ? " · " + c["Relatie-eigenaar"] : "")));
+      kids(r, el("div","id", c.ContactID));
+      return r;
+    }), "Nog geen contactpersonen vastgelegd."));
+
+    cols.appendChild(recordLijst("Overeenkomsten", l.contracten.map(o => {
+      const klaar = CONTRACT_KLAAR.includes(o.Status);
+      const r = el("div","rec"), t = el("div","t");
+      kids(t, el("span", null, o.Titel || o.Type),
+              el("span","chip " + (o.Status === "Getekend" ? "ok" : klaar ? "" : "open"), o.Status));
+      kids(r, t);
+      const regels = [o.Type,
+        o["Datum getekend"] ? "getekend " + o["Datum getekend"] : (o["Datum verzonden"] ? "verzonden " + o["Datum verzonden"] : ""),
+        o.Einddatum ? "loopt tot " + o.Einddatum : "",
+        num(o["Contractwaarde (EUR)"]) ? euro(num(o["Contractwaarde (EUR)"])) : ""
+      ].filter(Boolean).join(" · ");
+      if (regels) kids(r, el("div","d", regels));
+      if (o["Actie vereist"] === "Ja") kids(r, el("div","d","Actie vereist" + (o.Opmerkingen ? ": " + o.Opmerkingen : "")));
+      kids(r, el("div","id", o.OvereenkomstID));
+      return r;
+    }), "Nog geen overeenkomsten vastgelegd."));
+
+    cols.appendChild(recordLijst("Bronnen", l.bronnen.map(b => {
+      const r = el("div","rec"), t = el("div","t");
+      kids(t, el("span", null, b["Titel of bestandsnaam"] || b.Brontype),
+              el("span","chip " + (b.Status === "Verwerkt" ? "ok" : "open"), b.Status));
+      if (b["Onder NDA"] === "Ja") kids(t, el("span","chip stop","Onder NDA"));
+      kids(r, t);
+      const regels = [b.Brontype, b.Formaat, b.Bruikbaarheid,
+        b["Datum ontvangen"] ? "ontvangen " + b["Datum ontvangen"] : "",
+        b["Gebruikt voor stap"] ? "voor " + b["Gebruikt voor stap"] : ""
+      ].filter(Boolean).join(" · ");
+      if (regels) kids(r, el("div","d", regels));
+      kids(r, el("div","id", b.BronID));
+      return r;
+    }), "Nog geen bronnen ontvangen."));
+
+    const open = l.stappen.filter(s => s.status === "Loopt" || s.status === "Geblokkeerd");
+    cols.appendChild(recordLijst("Stappen die lopen of vastzitten", open.map(s => {
+      const r = el("div","rec"), t = el("div","t");
+      kids(t, el("span", null, s.nr + ". " + s.naam),
+              el("span","chip " + (s.status === "Geblokkeerd" ? "stop" : "open"), s.status),
+              el("span","chip", s.workstream));
+      kids(r, t);
+      if (s.toelichting) kids(r, el("div","d", s.toelichting));
+      kids(r, el("div","id", s.stapID + (s.wie ? " · " + s.wie : "")));
+      return r;
+    }), "Geen stappen onderhanden."));
+
+    host.appendChild(cols);
+  }
+
+  function openLead(id){
+    gekozenLead = id;
+    gaNaar("lookup");
+  }
+
+  /* ---- pagina: acties --------------------------------------------------- */
   function tekenActies(sel){
     const items = [];
     sel.forEach(l => {
       if (l.actie) items.push({d:l.deadline, lead:l, wat:l.actie, soort:"Volgende actie", wie:l.eigenaar});
       l.contracten.filter(o => o["Actie vereist"] === "Ja" || !CONTRACT_KLAAR.includes(o.Status))
-        .forEach(o => items.push({
-          d:"", lead:l, wat:(o.Titel || o.Type) + " — " + o.Status,
-          soort:"Overeenkomst", wie:o["Ondertekenaar Smarteck"] || l.eigenaar}));
+        .forEach(o => items.push({d:"", lead:l, wat:(o.Titel || o.Type) + " — " + o.Status,
+                                  soort:"Overeenkomst", wie:o["Ondertekenaar Smarteck"] || l.eigenaar}));
       l.bronnen.filter(b => b.Status !== "Verwerkt")
-        .forEach(b => items.push({
-          d:"", lead:l, wat:(b["Titel of bestandsnaam"] || b.Brontype) + " — " + b.Status,
-          soort:b["Onder NDA"] === "Ja" ? "Bron (NDA)" : "Bron",
-          wie:b["Beoordeeld door"] || l.eigenaar}));
+        .forEach(b => items.push({d:"", lead:l, wat:(b["Titel of bestandsnaam"] || b.Brontype) + " — " + b.Status,
+                                  soort:b["Onder NDA"] === "Ja" ? "Bron (NDA)" : "Bron",
+                                  wie:b["Beoordeeld door"] || l.eigenaar}));
       l.stappen.filter(s => s.status === "Geblokkeerd")
         .forEach(s => items.push({d:"", lead:l, wat:s.nr + ". " + s.naam, soort:"Geblokkeerde stap", wie:s.wie || l.eigenaar}));
     });
     items.sort((a,b) => (a.d ? 0 : 1) - (b.d ? 0 : 1) || String(a.d).localeCompare(String(b.d)));
+    $("#acties-n").textContent = items.length + (items.length === 1 ? " regel" : " regels");
 
-    const tb = $("#acties tbody");
-    tb.replaceChildren();
-    if (!items.length){
-      const tr = el("tr");
-      const td = el("td", null, "Niets openstaand in deze selectie.");
-      td.colSpan = 5;
-      tr.appendChild(td);
-      tb.appendChild(tr);
-      return;
-    }
-    items.forEach(it => {
-      const tr = el("tr");
-      const td1 = el("td","num");
-      if (it.d){
+    bouwTabel($("#tbl-acties"), [
+      {kop:"Deadline", cls:"d", cel:it => {
+        if (!it.d) return el("span", null, DASH);
         const over = it.d < VANDAAG;
         const dagen = (new Date(it.d) - new Date(VANDAAG)) / 864e5;
-        td1.appendChild(el("span","due" + (over ? " past" : dagen <= 21 ? " soon" : ""), it.d));
-      } else td1.appendChild(el("span","due","—"));
-      tr.appendChild(td1);
-      const td2 = el("td");
-      td2.appendChild(el("b", null, it.lead.organisatie));
-      td2.appendChild(el("div","id", it.lead.id));
-      tr.appendChild(td2);
-      tr.appendChild(el("td", null, it.wat));
-      const td4 = el("td");
-      td4.appendChild(el("span","pill" + (it.soort === "Geblokkeerde stap" ? " nda" : ""), it.soort));
-      tr.appendChild(td4);
-      tr.appendChild(el("td", null, it.wie || "—"));
-      tb.appendChild(tr);
-    });
+        const s = el("span", null, it.d);
+        s.style.color = over ? "var(--bad)" : dagen <= 21 ? "var(--accent-ink)" : "";
+        if (over || dagen <= 21) s.style.fontWeight = "600";
+        return s;
+      }},
+      {kop:"LeadID",      cel:it => leadLink(it.lead)},
+      {kop:"Organisatie", cel:it => el("b", null, it.lead.organisatie)},
+      {kop:"Wat",         cel:it => el("div","wrapcell", it.wat)},
+      {kop:"Soort",       cel:it => el("span","chip" + (it.soort === "Geblokkeerde stap" ? " stop" : ""), it.soort)},
+      {kop:"Bij wie",     cel:it => it.wie}
+    ], items, {leeg:"Niets openstaand in deze selectie."});
   }
 
-  /* ---- signalen -------------------------------------------------------- */
-  function tekenSignalen(){
-    const sig = [];
+  /* ---- pagina: datavalidatie ------------------------------------------- */
+  function tekenValidatie(){
+    const controles = [];
+    const voeg = (ok, h, p, ref) => controles.push({ok, h, p, ref});
 
     const vb = LEADS.filter(l => l.voorbeeld);
-    if (vb.length) sig.push({hard:false, h:"Voorbeeldrijen staan er nog in",
-      p:"De Leeswijzer vraagt de voorbeeldregels te verwijderen bij ingebruikname. Zolang ze meetellen "
-        + "kleuren ze de pijplijn: " + vb.map(l => l.organisatie).join(", ") + ".",
-      ref:vb.map(l => l.id).join(" · ")});
+    voeg(!vb.length, "Voorbeeldrijen verwijderd",
+      vb.length ? "De Leeswijzer vraagt de voorbeeldregels te verwijderen bij ingebruikname. Zolang ze meetellen kleuren ze de pijplijn."
+                : "Geen voorbeeldregels meer in de databron.",
+      vb.map(l => l.id + " · " + l.organisatie).join("  |  "));
 
-    /* gates horen oplopend te zijn binnen een spoor */
     const sprongen = [];
     LEADS.forEach(l => {
       let hoogst = 0;
@@ -2410,56 +2614,130 @@ const DATA = {
       });
     });
     const uniek = [...new Set(sprongen)];
-    if (uniek.length) sig.push({hard:false, h:"Gate loopt terug in de stappenbibliotheek",
-      p:"Deze stappen staan op een lagere gate dan een eerdere stap in hetzelfde spoor. De gateband boven "
-        + "de strip laat dat zien als een los segment. Controleer of de gate klopt op het blad Ontwikkelstappen.",
-      ref:uniek.join(" · ")});
+    voeg(!uniek.length, "Gates lopen oplopend",
+      uniek.length ? "Deze stappen staan op een lagere gate dan een eerdere stap in hetzelfde spoor. De gateband boven de strip laat dat zien als een los segment. Controleer de gate op het blad Ontwikkelstappen."
+                   : "Binnen elk spoor loopt de gate netjes op.",
+      uniek.join(" · "));
 
-    const zonderPlaats = LEADS.filter(l => !l.plaats);
-    if (zonderPlaats.length) sig.push({hard:false, h:"Plaats en provincie ontbreken",
-      p:"Zonder plaats is niet te bepalen welke netbeheerder en welk congestiegebied van toepassing zijn — "
-        + "de eerste vraag bij stap 4 en 5.",
-      ref:zonderPlaats.map(l => l.id).join(" · ")});
+    const zonderPlaats = LEADS.filter(l => !l.locatie);
+    voeg(!zonderPlaats.length, "Plaats en provincie ingevuld",
+      zonderPlaats.length ? "Zonder plaats is niet te bepalen welke netbeheerder en welk congestiegebied van toepassing zijn — de eerste vraag bij de quickscan netcapaciteit."
+                          : "Elke lead heeft een plaats of provincie.",
+      zonderPlaats.map(l => l.id).join(" · "));
 
-    const nda = LEADS.flatMap(l => l.bronnen.filter(b => b["Onder NDA"] === "Ja" && b.Status !== "Verwerkt")
-      .map(b => ({l, b})));
-    if (nda.length) sig.push({hard:true, h:"Materiaal onder NDA nog niet verwerkt",
-      p:"Het blad Bronnen is tegelijk het bewijs van wat onder NDA valt. Deze stukken liggen er wel, maar zijn "
-        + "nog niet beoordeeld — tot die tijd blijven cijfers die eruit zouden moeten komen een aanname.",
-      ref:nda.map(x => x.b.BronID + " · " + x.l.organisatie).join("  |  ")});
+    const nda = LEADS.flatMap(l => l.bronnen.filter(b => b["Onder NDA"] === "Ja" && b.Status !== "Verwerkt").map(b => b.BronID + " · " + l.organisatie));
+    voeg(!nda.length, "Materiaal onder NDA verwerkt",
+      nda.length ? "Het blad Bronnen is tegelijk het bewijs van wat onder NDA valt. Deze stukken liggen er wel, maar zijn nog niet beoordeeld — tot die tijd blijven cijfers die eruit zouden moeten komen een aanname."
+                 : "Al het materiaal onder NDA is beoordeeld.",
+      nda.join("  |  "));
 
     const zonderStappen = LEADS.filter(l => !l.totaal);
-    if (zonderStappen.length) sig.push({hard:true, h:"Lead zonder stappenblok",
-      p:"Op het blad Voortgang staat voor deze lead geen enkele regel. Voeg per stap van de doelgroep een regel toe; "
-        + "kopieer een bestaand blok en pas het LeadID aan.",
-      ref:zonderStappen.map(l => l.id).join(" · ")});
+    voeg(!zonderStappen.length, "Elke lead heeft een stappenblok",
+      zonderStappen.length ? "Op het blad Voortgang staat voor deze lead geen enkele regel. Voeg per stap van de doelgroep een regel toe; kopieer een bestaand blok en pas het LeadID aan."
+                           : "Elke lead heeft zijn stappen op het blad Voortgang staan.",
+      zonderStappen.map(l => l.id).join(" · "));
 
     const over = LEADS.filter(l => l.deadline && l.deadline < VANDAAG);
-    if (over.length) sig.push({hard:true, h:"Deadline verstreken",
-      p:"De deadline van de volgende actie ligt achter de peildatum van deze uitdraai (" + VANDAAG + ").",
-      ref:over.map(l => l.id + " · " + l.deadline).join(" · ")});
+    voeg(!over.length, "Deadlines nog niet verstreken",
+      over.length ? "De deadline van de volgende actie ligt achter de peildatum van deze uitdraai (" + VANDAAG + ")."
+                  : "Geen verstreken deadlines.",
+      over.map(l => l.id + " · " + l.deadline).join(" · "));
 
-    const host = $("#signals");
+    const geenDatums = rows("Voortgang").every(v => !v.Startdatum && !v["Gepland gereed"] && !v["Werkelijk gereed"]);
+    voeg(!geenDatums, "Voortgang heeft datums",
+      geenDatums ? "Geen enkele regel op het blad Voortgang heeft een startdatum, geplande of werkelijke einddatum. Daardoor is er geen doorlooptijd te berekenen en staan de ontwikkelstappen niet op de tijdlijn."
+                 : "Er staan datums op het blad Voortgang.",
+      geenDatums ? rows("Voortgang").length + " regels zonder datum" : "");
+
+    const dubbel = [];
+    const gezien = new Set();
+    LEADS.forEach(l => { if (gezien.has(l.id)) dubbel.push(l.id); gezien.add(l.id); });
+    voeg(!dubbel.length, "LeadID's uniek",
+      dubbel.length ? "Deze LeadID's komen meer dan eens voor op het blad Leads." : "Elk LeadID komt precies één keer voor.",
+      dubbel.join(" · "));
+
+    const host = $("#valid-rows");
     host.replaceChildren();
-    if (!sig.length){
-      const c = el("div","signal");
-      c.appendChild(el("div","h","Geen signalen"));
-      c.appendChild(el("p", null, "De databron voldoet aan de spelregels uit de Leeswijzer."));
-      host.appendChild(c);
-      return;
-    }
-    sig.forEach(s => {
-      const c = el("div","signal" + (s.hard ? " hard" : ""));
-      c.appendChild(el("div","h", s.h));
-      c.appendChild(el("p", null, s.p));
-      if (s.ref) c.appendChild(el("span","ref", s.ref));
-      host.appendChild(c);
+    const falen = controles.filter(c => !c.ok).length;
+    $("#valid-n").textContent = falen ? falen + " van " + controles.length + " vraagt aandacht" : "alle " + controles.length + " in orde";
+
+    controles.sort((a,b) => a.ok - b.ok).forEach(c => {
+      const row = el("div","sigrow");
+      kids(row, el("span","mark " + (c.ok ? "ok" : "bad"), c.ok ? "✓" : "✕"));
+      const body = el("div");
+      kids(body, el("div","h", c.h), el("p", null, c.p));
+      if (!c.ok && c.ref) kids(body, el("span","ref", c.ref));
+      kids(row, body);
+      host.appendChild(row);
+    });
+
+    /* volledigheid per blad */
+    const bladen = ["Leads","Contactpersonen","Overeenkomsten","Bronnen","Voortgang","Ontwikkelstappen"];
+    const recs = bladen.map(b => {
+      const rs = rows(b);
+      const velden = rs.length ? Object.keys(rs[0]) : [];
+      const cellen = rs.length * velden.length;
+      const gevuld = rs.reduce((a,r) => a + velden.filter(k => r[k] !== "" && r[k] !== null && r[k] !== undefined).length, 0);
+      return {blad:b, regels:rs.length, velden:velden.length, vulling:cellen ? gevuld / cellen : 0};
+    });
+    bouwTabel($("#tbl-volledig"), [
+      {kop:"Blad",    cel:r => el("b", null, r.blad)},
+      {kop:"Regels",  cel:r => nlInt.format(r.regels), n:true},
+      {kop:"Kolommen",cel:r => nlInt.format(r.velden), n:true},
+      {kop:"Gevuld",  cel:r => pct(r.vulling), n:true}
+    ], recs);
+  }
+
+  /* ---- paginas en tabs -------------------------------------------------- */
+  const PAGINAS = [
+    {id:"home",   nav:"Portefeuille",   titel:"Portefeuille",    sub:"Overzicht van de pijplijn", el:"#pg-home",   filters:true},
+    {id:"leads",  nav:"Leads",          titel:"Leads",           sub:"Alle actieve leads",        el:"#pg-leads",  filters:true,
+     tabs:[{id:"alle",       naam:"Alle leads",   el:"#leads-alle"},
+           {id:"mijlpalen",  naam:"Mijlpaaldata", el:"#leads-mijlpalen"},
+           {id:"voortgang",  naam:"Voortgang",    el:"#leads-voortgang"},
+           {id:"werkstromen",naam:"Werkstromen",  el:"#leads-werkstromen"}]},
+    {id:"lookup", nav:"Lead opzoeken",  titel:"Lead opzoeken",   sub:"Alles per lead",            el:"#pg-lookup", filters:true},
+    {id:"acties", nav:"Acties",         titel:"Acties",          sub:"Wat er openstaat",          el:"#pg-acties", filters:true},
+    {id:"valid",  nav:"Datavalidatie",  titel:"Datavalidatie",   sub:"Controle op de spelregels", el:"#pg-valid",  filters:false},
+    {id:"uitleg", nav:"Leeswijzer",     titel:"Leeswijzer",      sub:"Werken met dit scherm",     el:"#pg-uitleg", filters:false}
+  ];
+  const tabKeuze = {leads:"alle"};
+  let huidige = "home";
+
+  function gaNaar(id){
+    huidige = id;
+    teken();
+    document.querySelector(".pagehead").scrollIntoView({block:"start", behavior:"auto"});
+  }
+
+  function tekenNav(){
+    const host = $("#nav");
+    host.replaceChildren();
+    PAGINAS.forEach(p => {
+      const b = el("button", null, p.nav);
+      b.type = "button";
+      if (p.id === huidige) b.setAttribute("aria-current","page");
+      b.addEventListener("click", () => gaNaar(p.id));
+      host.appendChild(b);
     });
   }
 
-  /* ---- tooltip --------------------------------------------------------- */
-  const tip = $("#tip");
+  function tekenTabs(pagina){
+    const host = $("#tabs");
+    host.replaceChildren();
+    if (!pagina.tabs) return;
+    pagina.tabs.forEach(t => {
+      const b = el("button","tab", t.naam);
+      b.type = "button";
+      b.setAttribute("role","tab");
+      b.setAttribute("aria-selected", String(tabKeuze[pagina.id] === t.id));
+      b.addEventListener("click", () => { tabKeuze[pagina.id] = t.id; teken(); });
+      host.appendChild(b);
+    });
+  }
 
+  /* ---- tooltip ---------------------------------------------------------- */
+  const tip = $("#tip");
   function toonTip(host, evt){
     let d;
     try { d = JSON.parse(host.dataset.tip); } catch (e) { return; }
@@ -2468,29 +2746,24 @@ const DATA = {
     if (d.titel) tip.appendChild(el("span","tt", d.titel));
     if (d.tekst) tip.appendChild(el("span", null, d.tekst));
     if (d.status){
-      const s = el("span","ts");
-      const i = el("i");
+      const s = el("span","ts"), i = el("i");
       i.style.background = "var(" + statusOf(d.status).varName + ")";
-      s.appendChild(i);
-      s.appendChild(el("span", null, d.status));
+      kids(s, i, el("span", null, d.status));
       tip.appendChild(s);
     }
     tip.hidden = false;
     plaatsTip(evt, host);
   }
-
   function plaatsTip(evt, host){
-    const r = tip.getBoundingClientRect();
-    const b = host.getBoundingClientRect();
+    const r = tip.getBoundingClientRect(), b = host.getBoundingClientRect();
     const x = evt ? evt.clientX : b.left + b.width / 2;
     const y = evt ? evt.clientY : b.top;
     let left = x + 14, top = y + 16;
-    if (left + r.width > innerWidth - 10)  left = Math.max(10, x - r.width - 14);
-    if (top + r.height > innerHeight - 10) top = Math.max(10, y - r.height - 14);
+    if (left + r.width  > innerWidth  - 10) left = Math.max(10, x - r.width - 14);
+    if (top  + r.height > innerHeight - 10) top  = Math.max(10, y - r.height - 14);
     tip.style.left = left + "px";
     tip.style.top  = top + "px";
   }
-
   document.addEventListener("pointerover", e => {
     const host = e.target.closest("[data-tip]");
     if (host) toonTip(host, e);
@@ -2499,7 +2772,6 @@ const DATA = {
     const host = e.target.closest("[data-tip]");
     if (host && !tip.hidden) plaatsTip(e, host); else if (!host) tip.hidden = true;
   });
-  document.addEventListener("pointerleave", () => { tip.hidden = true; }, true);
   document.addEventListener("focusin", e => {
     const host = e.target.closest("[data-tip]");
     if (host) toonTip(host, null); else tip.hidden = true;
@@ -2507,68 +2779,80 @@ const DATA = {
   document.addEventListener("keydown", e => { if (e.key === "Escape") tip.hidden = true; });
   addEventListener("scroll", () => { tip.hidden = true; }, {passive:true});
 
-  /* ---- thema ----------------------------------------------------------- */
+  /* ---- thema ------------------------------------------------------------ */
   const themeBtn = $("#theme");
-  function huidigDonker(){
+  const donkerNu = () => {
     const stamp = document.documentElement.getAttribute("data-theme");
-    if (stamp) return stamp === "dark";
-    return matchMedia("(prefers-color-scheme: dark)").matches;
-  }
-  function zetThemaLabel(){ themeBtn.textContent = huidigDonker() ? "Licht" : "Donker"; }
+    return stamp ? stamp === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  };
+  const zetThemaLabel = () => { themeBtn.textContent = donkerNu() ? "Licht" : "Donker"; };
   themeBtn.addEventListener("click", () => {
-    document.documentElement.setAttribute("data-theme", huidigDonker() ? "light" : "dark");
+    document.documentElement.setAttribute("data-theme", donkerNu() ? "light" : "dark");
     zetThemaLabel();
   });
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", zetThemaLabel);
 
-  /* ---- tekenen --------------------------------------------------------- */
+  /* ---- tekenen ---------------------------------------------------------- */
   function teken(){
+    const pagina = PAGINAS.find(p => p.id === huidige) || PAGINAS[0];
     const sel = zichtbaar();
-    $("#f-count").textContent =
-      sel.length === LEADS.length
-        ? LEADS.length + " leads"
-        : sel.length + " van " + LEADS.length + " leads";
 
-    tekenKpis(sel);
-    tekenGates(sel);
+    $("#page-title").textContent = pagina.titel;
+    $("#page-sub").textContent   = pagina.sub;
+    $(".filterstrip").hidden = !pagina.filters;
+    $("#stamp-count").textContent = pagina.filters
+      ? (sel.length === LEADS.length ? LEADS.length + " leads" : sel.length + " van " + LEADS.length + " leads")
+      : LEADS.length + " leads in de databron";
 
-    const host = $("#leads");
-    host.replaceChildren();
-    if (!sel.length){
-      host.appendChild(el("p","empty","Geen leads die aan deze filters voldoen."));
-    } else {
-      sel.slice()
-        .sort((a,b) => b.gewogen - a.gewogen || a.organisatie.localeCompare(b.organisatie))
-        .forEach(l => host.appendChild(tekenLead(l)));
+    tekenNav();
+    tekenTabs(pagina);
+    tekenKpiStrip(pagina.filters ? sel : LEADS);
+
+    PAGINAS.forEach(p => { $(p.el).hidden = p.id !== pagina.id; });
+    if (pagina.tabs) pagina.tabs.forEach(t => { $(t.el).hidden = tabKeuze[pagina.id] !== t.id; });
+
+    if (huidige === "home")   tekenHome(sel);
+    if (huidige === "leads"){
+      const t = tabKeuze.leads;
+      if (t === "alle")        tekenLeadsTabel(sel);
+      if (t === "mijlpalen")   tekenMijlpalen(sel);
+      if (t === "voortgang")   tekenVoortgang(sel);
+      if (t === "werkstromen") tekenWerkstromen(sel);
     }
-
-    tekenWerkstromen(sel);
-    tekenActies(sel);
+    if (huidige === "lookup") tekenLookup(sel);
+    if (huidige === "acties") tekenActies(sel);
+    if (huidige === "valid")  tekenValidatie();
   }
 
-  /* ---- wiring ---------------------------------------------------------- */
-  vulSelect($("#f-doelgroep"), "Alle doelgroepen", LEADS.map(l => l.doelgroep));
-  vulSelect($("#f-status"),    "Alle statussen",   LEADS.map(l => l.leadstatus));
-  vulSelect($("#f-gate"),      "Alle gates",       LEADS.map(l => l.gate));
-  vulSelect($("#f-eigenaar"),  "Alle eigenaren",   LEADS.map(l => l.eigenaar));
+  /* ---- wiring ----------------------------------------------------------- */
+  function vulSelect(sel, label, waarden){
+    sel.replaceChildren();
+    sel.appendChild(new Option(label, ""));
+    [...new Set(waarden.filter(Boolean))].sort().forEach(v => sel.appendChild(new Option(v, v)));
+  }
+  vulSelect($("#f-doelgroep"), "Alle", LEADS.map(l => l.doelgroep));
+  vulSelect($("#f-status"),    "Alle", LEADS.map(l => l.leadstatus));
+  vulSelect($("#f-fase"),      "Alle", LEADS.map(l => l.fase));
+  vulSelect($("#f-gate"),      "Alle", LEADS.map(l => l.gate));
+  vulSelect($("#f-eigenaar"),  "Alle", LEADS.map(l => l.eigenaar));
 
   const bind = (sel, key) => $(sel).addEventListener("input", e => { F[key] = e.target.value; teken(); });
-  bind("#f-zoek","zoek"); bind("#f-doelgroep","doelgroep"); bind("#f-status","status");
-  bind("#f-gate","gate");  bind("#f-eigenaar","eigenaar");
+  bind("#f-doelgroep","doelgroep"); bind("#f-status","status"); bind("#f-fase","fase");
+  bind("#f-gate","gate"); bind("#f-eigenaar","eigenaar"); bind("#f-zoek","zoek");
 
   $("#f-reset").addEventListener("click", () => {
     Object.keys(F).forEach(k => { F[k] = ""; });
-    ["#f-zoek","#f-doelgroep","#f-status","#f-gate","#f-eigenaar"].forEach(s => { $(s).value = ""; });
+    ["#f-doelgroep","#f-status","#f-fase","#f-gate","#f-eigenaar","#f-zoek"].forEach(s => { $(s).value = ""; });
     teken();
   });
 
   const bron = DATA._bron || {};
-  $("#src-file").textContent = bron.bestand || "Smarteck_Leadtracker_Databron.xlsx";
-  $("#src-date").textContent = bron.gelezen_op ? "Uitgelezen " + bron.gelezen_op : "";
+  $("#rail-file").textContent  = bron.bestand || "Databron.xlsx";
+  $("#rail-date").textContent  = bron.gelezen_op ? "Uitgelezen " + bron.gelezen_op : "";
+  $("#stamp-date").textContent = bron.gelezen_op ? "Laatst ververst " + bron.gelezen_op : "";
 
   zetThemaLabel();
   tekenLegenda();
-  tekenSignalen();
   teken();
 })();
 </script>

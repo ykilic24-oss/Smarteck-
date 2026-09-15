@@ -6,6 +6,28 @@ netwerkschijf of vanuit SharePoint — er is geen server nodig.
 
 De databron blijft het werkboek. Dit scherm leest, het schrijft niet.
 
+## Indeling
+
+Zes pagina's achter een vaste zijbalk:
+
+| Pagina | Wat erop staat |
+| --- | --- |
+| Portefeuille | Kerncijfers, gateladder, verdeling per doelgroep, status, fase en herkomst |
+| Leads | Vier tabbladen: alle leads, mijlpaaldata, voortgang per stap, werkstromen |
+| Lead opzoeken | Eén lead voluit: kerngegevens, tijdlijn, contacten, overeenkomsten, bronnen |
+| Acties | Alles wat nog een handeling vraagt, op deadline |
+| Datavalidatie | De spelregels uit de Leeswijzer, regel voor regel afgevinkt |
+| Leeswijzer | Werken met dit scherm |
+
+De opzet volgt het patroon van een portefeuilledashboard: vaste zijbalk,
+paginakop met een filterstrook en een verversingsstempel, een tabrij met de
+kerncijfers ernaast, dichte tabellen met een totaalregel, en panelen met een
+kopbalk. De filters gelden voor de vier eerste pagina's tegelijk; Datavalidatie
+kijkt bewust naar de hele databron en verbergt de filterstrook.
+
+Het visuele idioom blijft van Smarteck: geen border-radius, Space Grotesk voor
+display, IBM Plex voor tekst en cijfers.
+
 ## Bijwerken
 
 ```
@@ -33,8 +55,15 @@ berekend uit de invoerbladen, zodat ze meebewegen met de filters.
 | Gateband boven de strip | blad Ontwikkelstappen, kolom *Gate* |
 | Volgende stap | eerste stap op *Loopt*, anders de eerste op *Niet gestart* |
 | Signalen | de spelregels uit de Leeswijzer, per regel nagelopen |
+| Mijlpaaldata | Leads, Overeenkomsten, Bronnen en Contactpersonen |
+| Tijdlijn per lead | dezelfde mijlpaaldata, op een jaarschaal |
 
 De peildatum voor verstreken deadlines staat als `VANDAAG` boven in het script.
+
+Het blad Voortgang heeft geen enkele datum ingevuld — geen startdatum, geen
+geplande en geen werkelijke einddatum. Daarom staan de ontwikkelstappen niet op
+de tijdlijn en is er geen doorlooptijd te berekenen; de mijlpaaldata komen uit de
+bladen die wél datums dragen. Datavalidatie meldt dit als openstaand punt.
 
 ## Merk
 
