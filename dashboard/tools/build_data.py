@@ -61,6 +61,26 @@ def read_table(ws, header_row):
     return rows
 
 
+def read_keuzelijsten(ws):
+    """Het blad Keuzelijsten is kolomsgewijs: een kop L_xxx met de waarden
+    eronder. Levert {L_Doelgroep: [...], ...}."""
+    kop_rij = None
+    for i, row in enumerate(ws.iter_rows(values_only=True), 1):
+        if any(isinstance(c, str) and c.startswith("L_") for c in row):
+            kop_rij = i
+            break
+    if kop_rij is None:
+        return {}
+    koppen = [clean(c.value) for c in ws[kop_rij]]
+    lijsten = {k: [] for k in koppen if k}
+    for row in ws.iter_rows(min_row=kop_rij + 1):
+        for kop, cel in zip(koppen, row):
+            waarde = clean(cel.value)
+            if kop and waarde != "":
+                lijsten[kop].append(waarde)
+    return lijsten
+
+
 def read_aannames(ws):
     """Het blad Aannames is een label/waarde-lijst, geen tabel."""
     pairs = {}
@@ -83,15 +103,16 @@ def main():
 
     data = {name: read_table(wb[name], row) for name, row in SHEETS.items()}
     data["Aannames"] = read_aannames(wb["Aannames"])
+    data["Keuzelijsten"] = read_keuzelijsten(wb["Keuzelijsten"])
     data["_bron"] = {
         "bestand": src.name,
         "gelezen_op": _dt.date.today().isoformat(),
     }
 
-    payload = json.dumps(data, ensure_ascii=False, indent=1)
+    payload = json.dumps(data, ensure_ascii=True, indent=1)
 
     OUT_JSON.parent.mkdir(parents=True, exist_ok=True)
-    OUT_JSON.write_text(payload + "\n", encoding="utf-8")
+    OUT_JSON.write_text(json.dumps(data, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     print(f"geschreven: {OUT_JSON.relative_to(ROOT)}")
     for name in SHEETS:
         print(f"  {name}: {len(data[name])} regels")

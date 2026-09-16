@@ -4,7 +4,33 @@
 alleen de webfonts komen van buiten. Openen kan met een dubbelklik, vanaf een
 netwerkschijf of vanuit SharePoint — er is geen server nodig.
 
-De databron blijft het werkboek. Dit scherm leest, het schrijft niet.
+## Twee standen
+
+| Stand | Wanneer | Wat kan |
+| --- | --- | --- |
+| **Live** | de gepubliceerde, gedeelde versie | Toevoegen, wijzigen en verwijderen; iedereen ziet elkaars wijzigingen meteen |
+| **Momentopname** | dit bestand los geopend (schijf, SharePoint, zip) | Alleen lezen; toont de gegevens zoals ze uit het werkboek kwamen |
+
+De stand staat linksonder in de zijbalk. In de live stand staan de gegevens in de
+opslag van het dashboard, niet meer in het werkboek; `build_data.py` vult dan nog
+wel de stappenbibliotheek, de aannames en de keuzelijsten.
+
+Bewerkbaar zijn: leads (een nieuwe lead krijgt automatisch het volledige
+stappenspoor van zijn doelgroep), contactpersonen, overeenkomsten, bronnen, en de
+status van elke ontwikkelstap via een klik op de cel in de strip. Alle
+keuzemenu's worden gevoed door het blad Keuzelijsten.
+
+## Tekens en codering
+
+Het bestand begint met `<meta charset="utf-8">` en de bron is volledig ASCII:
+euroteken, kastlijntje en de status-tekens staan als `\uXXXX` in de scriptcode,
+en `build_data.py` spuit de data met `ensure_ascii=True` in. Zonder die twee
+dingen viel een browser die het bestand rechtstreeks van schijf opende terug op
+Windows-1252 en werden `EUR`, `-` en `e-accent` onleesbaar.
+
+De vinkjes, kruisjes en driehoekjes in de stappenstrip zijn getekende SVG's, geen
+lettertekens: die glyphs zitten niet in elke mono-letterfamilie en vielen anders
+terug op een vervangend blokje.
 
 ## Indeling
 
@@ -49,7 +75,7 @@ berekend uit de invoerbladen, zodat ze meebewegen met de filters.
 
 | Op het scherm | Waar het vandaan komt |
 | --- | --- |
-| Gewogen pijplijn | som van *Gewogen fee* over de zichtbare leads |
+| Gewogen pijplijn | berekend, zie hieronder |
 | Kans op FID per gate | blad Aannames, `M1..M4 bereikt` |
 | Voortgang per lead | blad Voortgang, aandeel stappen op *Gereed* |
 | Gateband boven de strip | blad Ontwikkelstappen, kolom *Gate* |
@@ -58,7 +84,27 @@ berekend uit de invoerbladen, zodat ze meebewegen met de filters.
 | Mijlpaaldata | Leads, Overeenkomsten, Bronnen en Contactpersonen |
 | Tijdlijn per lead | dezelfde mijlpaaldata, op een jaarschaal |
 
-De peildatum voor verstreken deadlines staat als `VANDAAG` boven in het script.
+De peildatum voor verstreken deadlines is de dag van openen.
+
+### Feemodel
+
+Slaagkans en gewogen fee zijn niet los in te vullen; ze volgen uit de gate en de
+verwachte fee. De initiatiefee is verdiend zodra M1 bereikt is en elk gate-aandeel
+zodra die gate bereikt is; wat daarna nog komt telt mee maal de kans op FID van de
+bereikte gate:
+
+```
+ontwikkelfee = fee - initiatiefee
+verdiend     = initiatiefee + som van de aandelen tot en met de bereikte gate
+resterend    = som van de aandelen na de bereikte gate
+gewogen fee  = verdiend + resterend * kans(bereikte gate)
+```
+
+Dit model is afgeleid uit het blad Aannames en getoetst aan beide regels van het
+werkboek: 555.000 op M2 geeft 332.400 en 250.000 op M1 geeft 70.000 — allebei
+exact de waarde die het werkboek zelf noemt. Toets het bij twijfel tegen
+`Smarteck_Engine2_Feemodel.xlsx`; de staffel, de gateverdeling en de kansen komen
+alle uit het blad Aannames, dus een wijziging daar werkt meteen door.
 
 Het blad Voortgang heeft geen enkele datum ingevuld — geen startdatum, geen
 geplande en geen werkelijke einddatum. Daarom staan de ontwikkelstappen niet op

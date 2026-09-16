@@ -1257,8 +1257,172 @@
    0.9
   ]
  },
+ "Keuzelijsten": {
+  "L_Doelgroep": [
+   "Vastgoedontwikkelaar",
+   "Energiehub"
+  ],
+  "L_Herkomst": [
+   "Eigen netwerk",
+   "Netbeheerder",
+   "Kennisplatform Energiehubs",
+   "Provincie of ROM",
+   "Gemeente",
+   "Congres of netwerkevent",
+   "LinkedIn",
+   "Inbound via website",
+   "Doorverwijzing partner",
+   "Aanbesteding",
+   "Via Jaap van Eck",
+   "Via Hans Schouten",
+   "Via Phlip Boswinkel",
+   "Overig"
+  ],
+  "L_Leadstatus": [
+   "Nieuw",
+   "In kwalificatie",
+   "Gekwalificeerd",
+   "Propositie uitgebracht",
+   "In onderhandeling",
+   "Opdracht",
+   "On hold",
+   "Afgewezen",
+   "Verloren"
+  ],
+  "L_Fase": [
+   "Origination",
+   "Feasibility",
+   "Development",
+   "Ready-to-Build",
+   "Realisatie",
+   "On hold",
+   "Gestopt"
+  ],
+  "L_Gate": [
+   "M1",
+   "M2",
+   "M3",
+   "M4"
+  ],
+  "L_Workstream": [
+   "Commercieel",
+   "Techniek",
+   "Net en congestie",
+   "Juridisch",
+   "Financieel",
+   "Vergunningen",
+   "Governance"
+  ],
+  "L_Stapstatus": [
+   "Niet gestart",
+   "Loopt",
+   "Gereed",
+   "Geblokkeerd",
+   "Niet van toepassing"
+  ],
+  "L_Contracttype": [
+   "NDA",
+   "LOI of intentieverklaring",
+   "Exclusiviteitsovereenkomst",
+   "Opdrachtbevestiging",
+   "Raamovereenkomst",
+   "MoU",
+   "Samenwerkingsovereenkomst",
+   "Deelnemersovereenkomst hub",
+   "Anterieure overeenkomst",
+   "Grondovereenkomst",
+   "ATO netbeheerder",
+   "GTO of groeps-CSC",
+   "Warmteleveringsovereenkomst",
+   "PPA",
+   "SLA of uptimeafspraak",
+   "EPC-contract",
+   "Assetmanagement-overeenkomst",
+   "Verwerkersovereenkomst"
+  ],
+  "L_Contractstatus": [
+   "Concept",
+   "Interne review",
+   "Bij wederpartij",
+   "In onderhandeling",
+   "Getekend",
+   "Verlopen",
+   "Beeindigd",
+   "Ingetrokken"
+  ],
+  "L_Brontype": [
+   "Energievisie",
+   "Stedenbouwkundig plan",
+   "Programma van eisen",
+   "Verbruiksdata of EAN-lijst",
+   "Aansluitgegevens en contractvermogens",
+   "Netcapaciteitsinformatie",
+   "Congestiebrief netbeheerder",
+   "Warmtevraagprofiel",
+   "Meetdata of kwartierwaarden",
+   "Kadastrale gegevens",
+   "Tekeningen of GIS-bestanden",
+   "Businesscase van de klant",
+   "Vergunningsdossier",
+   "Deelnemerslijst hub",
+   "Rapport derde partij",
+   "Overig"
+  ],
+  "L_Bronstatus": [
+   "Opgevraagd",
+   "Ontvangen",
+   "In analyse",
+   "Verwerkt",
+   "Onvolledig",
+   "Niet ontvangen"
+  ],
+  "L_Bruikbaarheid": [
+   "Direct bruikbaar",
+   "Bewerking nodig",
+   "Beperkt bruikbaar",
+   "Niet bruikbaar",
+   "Nog niet beoordeeld"
+  ],
+  "L_Formaat": [
+   "PDF",
+   "Excel of CSV",
+   "Word",
+   "DWG of DXF",
+   "GIS of shapefile",
+   "Afbeelding",
+   "Mondeling of presentatie",
+   "Overig"
+  ],
+  "L_JaNee": [
+   "Ja",
+   "Nee"
+  ],
+  "L_Rol": [
+   "Beslisser",
+   "Budgethouder",
+   "Beinvloeder",
+   "Gatekeeper",
+   "Technisch inhoudelijk",
+   "Kartrekker hub",
+   "Adviseur"
+  ],
+  "L_Prioriteit": [
+   "Hoog",
+   "Midden",
+   "Laag"
+  ],
+  "L_Medewerker": [
+   "Yusuf",
+   "Jaap van Eck",
+   "Hans Schouten",
+   "Gertjan de Joode",
+   "Lucas van Eck",
+   "Arnoud",
+   "Extern"
+  ]
+ },
  "_bron": {
   "bestand": "Smarteck_Leadtracker_Databron.xlsx",
-  "gelezen_op": "2026-09-15"
+  "gelezen_op": "2026-09-16"
  }
 }

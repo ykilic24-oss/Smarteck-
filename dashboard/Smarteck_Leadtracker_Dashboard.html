@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>Smarteck Leadtracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -6,10 +7,13 @@
 /* ------------------------------------------------------------------
    Smarteck Leadtracker
    Tokens uit design/README.md (de :root van de website), ongewijzigd.
-   Indeling volgt het portefeuilledashboard-patroon: vaste zijbalk,
-   paginakop met filterstrook, tabrij met kerncijfers ernaast,
-   dichte tabellen en panelen met een kopbalk. Geen border-radius --
-   die komt uit het merk, niet uit het voorbeeld.
+   Geen border-radius -- dat komt uit het merk.
+
+   Let op: de bron van dit bestand is bewust volledig ASCII. Tekens als
+   het euroteken en het kastlijntje staan als entiteit of als \uXXXX in
+   de scriptcode. Samen met de charset-regel hierboven kan het bestand
+   daardoor nergens verkeerd gedecodeerd worden -- ook niet als het van
+   een netwerkschijf of uit een zipbestand geopend wordt.
    ------------------------------------------------------------------ */
 :root{
   --navy:#112B3B; --navy-2:#12314A; --koper:#BE612E; --koper-lt:#E8A882;
@@ -20,65 +24,42 @@
   --body:'IBM Plex Sans',Arial,Helvetica,sans-serif;
   --mono:'IBM Plex Mono',Consolas,'Courier New',monospace;
 
-  --ground:var(--kalk);
-  --surface:#FFFFFF;
-  --surface-2:#EFECE6;
-  --surface-3:#E4DFD5;
-  --line:var(--kalk-2);
-  --line-2:#D7D0C2;
-  --ink:var(--navy);
-  --ink-2:var(--zink);
-  --ink-3:#8B97A0;
-  --accent:var(--koper);
-  --accent-ink:var(--koper-dk);
-  --aqua-ink:#15726F;
-  --link:#1B5E86;
+  --ground:var(--kalk); --surface:#FFFFFF; --surface-2:#EFECE6; --surface-3:#E4DFD5;
+  --line:var(--kalk-2); --line-2:#D7D0C2;
+  --ink:var(--navy); --ink-2:var(--zink); --ink-3:#8B97A0;
+  --accent:var(--koper); --accent-ink:var(--koper-dk); --aqua-ink:#15726F; --link:#1B5E86;
 
-  --rail:var(--navy);
-  --rail-ink:var(--zink-lt);
-  --rail-line:#1E4560;
-  --rail-on:#16384F;
+  --rail:var(--navy); --rail-ink:var(--zink-lt); --rail-line:#1E4560; --rail-on:#16384F;
+  --panel:var(--navy); --panel-2:var(--navy-2); --panel-line:#1E4560;
+  --panel-ink:var(--zink-lt); --panel-num:var(--koper-lt);
 
-  --panel:var(--navy);
-  --panel-2:var(--navy-2);
-  --panel-line:#1E4560;
-  --panel-ink:var(--zink-lt);
-  --panel-num:var(--koper-lt);
+  --st-gereed:#1D8F91; --st-loopt:#BE612E; --st-geblok:#8C1D4E;
+  --st-niet:#E7E2D8; --st-niet-line:#C9C2B4; --st-nvt:#EFECE6; --st-ink-on:#FFFFFF;
 
-  --st-gereed:#1D8F91;
-  --st-loopt:#BE612E;
-  --st-geblok:#8C1D4E;
-  --st-niet:#E7E2D8;
-  --st-niet-line:#C9C2B4;
-  --st-nvt:#EFECE6;
-  --st-ink-on:#FFFFFF;
-
-  --ok:#1D8F91;
-  --bad:#8C1D4E;
-  --focus:#1D8F91;
-  --zebra:#FAF9F6;
+  --ok:#1D8F91; --bad:#8C1D4E; --focus:#1D8F91; --zebra:#FAF9F6;
+  --veil:rgba(17,43,59,.44);
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     --ground:#0B1C26; --surface:var(--navy); --surface-2:#16354A; --surface-3:#1B3F58;
     --line:#1E4560; --line-2:#2A5B7C; --ink:#FFFFFF; --ink-2:var(--zink-lt); --ink-3:#7D8D98;
     --accent:var(--koper-lt); --accent-ink:var(--koper-lt); --aqua-ink:var(--aqua-lt); --link:#7FB6D6;
-    --rail:#08151D; --rail-ink:var(--zink-lt); --rail-line:#1E4560; --rail-on:#132D3E;
+    --rail:#08151D; --rail-line:#1E4560; --rail-on:#132D3E;
     --panel:var(--navy-2); --panel-2:#163A57; --panel-line:#26567A;
     --st-gereed:#4FB3B4; --st-loopt:#E8A882; --st-geblok:#E84E6B;
     --st-niet:#16354A; --st-niet-line:#2A5B7C; --st-nvt:#13293A; --st-ink-on:#0B1C26;
-    --ok:#4FB3B4; --bad:#E84E6B; --focus:#96CCCC; --zebra:#0F2735;
+    --ok:#4FB3B4; --bad:#E84E6B; --focus:#96CCCC; --zebra:#0F2735; --veil:rgba(4,12,18,.62);
   }
 }
 :root[data-theme="dark"]{
   --ground:#0B1C26; --surface:var(--navy); --surface-2:#16354A; --surface-3:#1B3F58;
   --line:#1E4560; --line-2:#2A5B7C; --ink:#FFFFFF; --ink-2:var(--zink-lt); --ink-3:#7D8D98;
   --accent:var(--koper-lt); --accent-ink:var(--koper-lt); --aqua-ink:var(--aqua-lt); --link:#7FB6D6;
-  --rail:#08151D; --rail-ink:var(--zink-lt); --rail-line:#1E4560; --rail-on:#132D3E;
+  --rail:#08151D; --rail-line:#1E4560; --rail-on:#132D3E;
   --panel:var(--navy-2); --panel-2:#163A57; --panel-line:#26567A;
   --st-gereed:#4FB3B4; --st-loopt:#E8A882; --st-geblok:#E84E6B;
   --st-niet:#16354A; --st-niet-line:#2A5B7C; --st-nvt:#13293A; --st-ink-on:#0B1C26;
-  --ok:#4FB3B4; --bad:#E84E6B; --focus:#96CCCC; --zebra:#0F2735;
+  --ok:#4FB3B4; --bad:#E84E6B; --focus:#96CCCC; --zebra:#0F2735; --veil:rgba(4,12,18,.62);
 }
 
 *{box-sizing:border-box}
@@ -90,8 +71,8 @@ a{color:var(--link)}
 :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
 .lbl{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+svg{display:block}
 
-/* ---------- raamwerk ---------- */
 .app{display:grid;grid-template-columns:216px minmax(0,1fr);min-height:100vh}
 
 /* ---------- zijbalk ---------- */
@@ -101,14 +82,14 @@ a{color:var(--link)}
 .rail .brand .app-name{font-family:var(--display);font-weight:700;font-size:15px;color:#fff;letter-spacing:-0.02em;margin-top:11px}
 .rail .brand .app-sub{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--zink-lt);margin-top:3px}
 .rail nav{padding:10px 0;flex:1}
-.rail nav button{
-  display:block;width:100%;text-align:left;background:transparent;border:none;
-  border-left:3px solid transparent;color:var(--rail-ink);
-  font-family:var(--body);font-size:13.5px;padding:10px 18px;cursor:pointer;
-}
+.rail nav button{display:block;width:100%;text-align:left;background:transparent;border:none;border-left:3px solid transparent;color:var(--rail-ink);font-family:var(--body);font-size:13.5px;padding:10px 18px;cursor:pointer}
 .rail nav button:hover{background:var(--rail-on);color:#fff}
 .rail nav button[aria-current="page"]{background:var(--rail-on);color:#fff;border-left-color:var(--koper)}
-.rail .railfoot{padding:16px 18px;border-top:1px solid var(--rail-line);font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--zink-lt);display:flex;flex-direction:column;gap:4px;overflow-wrap:anywhere}
+.rail .railfoot{padding:14px 18px;border-top:1px solid var(--rail-line);font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--zink-lt);display:flex;flex-direction:column;gap:5px;overflow-wrap:anywhere}
+.modus{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase}
+.modus i{width:7px;height:7px;flex:none;background:var(--zink-lt)}
+.modus.live i{background:var(--ok)}
+.modus.live{color:var(--aqua-lt)}
 
 /* ---------- paginakop ---------- */
 .pagehead{background:var(--surface);border-bottom:1px solid var(--line);padding:16px 22px 0}
@@ -119,25 +100,29 @@ a{color:var(--link)}
 .filterstrip{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;flex:1}
 .field{display:flex;flex-direction:column;gap:4px;min-width:0}
 .field label{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3)}
-.field select,.field input{font-family:var(--body);font-size:13px;color:var(--ink);background:var(--ground);border:1px solid var(--line-2);padding:6px 8px;min-width:132px;max-width:100%}
+.field select,.field input,.field textarea{font-family:var(--body);font-size:13px;color:var(--ink);background:var(--ground);border:1px solid var(--line-2);padding:6px 8px;min-width:132px;max-width:100%}
 .field input{min-width:180px}
-.btn-lite{background:transparent;border:1px solid var(--line-2);color:var(--ink-2);font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:7px 11px;cursor:pointer}
-.btn-lite:hover{border-color:var(--accent);color:var(--accent-ink)}
 .stamp{margin-left:auto;text-align:right;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);display:flex;flex-direction:column;gap:3px;align-items:flex-end}
 
-/* tabrij + kerncijfers delen een regel, zoals in het voorbeeld */
+.btn-lite,.btn-solid{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:7px 11px;cursor:pointer;border:1px solid var(--line-2);background:transparent;color:var(--ink-2)}
+.btn-lite:hover{border-color:var(--accent);color:var(--accent-ink)}
+.btn-solid{background:var(--koper);border-color:var(--koper);color:#fff}
+.btn-solid:hover{background:var(--koper-dk);border-color:var(--koper-dk)}
+.btn-danger{border-color:var(--bad);color:var(--bad)}
+.btn-danger:hover{background:var(--bad);color:#fff}
+button[disabled]{opacity:.45;cursor:not-allowed}
+
 .tabrow{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;padding:14px 0 0}
 .tab{background:var(--surface);border:1px solid var(--line-2);color:var(--ink-2);font-family:var(--body);font-weight:500;font-size:13px;padding:9px 18px;cursor:pointer;margin-bottom:-1px}
 .tab:hover{border-color:var(--accent);color:var(--accent-ink)}
 .tab[aria-selected="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
 .kpistrip{margin-left:auto;display:flex;gap:10px;margin-bottom:10px}
-.kpibox{border:1px solid var(--line-2);background:var(--ground);padding:7px 15px;min-width:104px;text-align:right}
+.kpibox{border:1px solid var(--line-2);background:var(--ground);padding:7px 15px;width:136px;text-align:right}
 .kpibox .k{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
 .kpibox .v{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:-0.02em;font-variant-numeric:tabular-nums;margin-top:1px}
 
 /* ---------- pagina ---------- */
 .page{padding:20px 22px 44px}
-.page[hidden]{display:none !important}
 .grid{display:grid;gap:14px}
 .g-kpi{grid-template-columns:repeat(4,1fr)}
 .g-2{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -145,29 +130,34 @@ a{color:var(--link)}
 .sectiontitle{font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:-0.02em;margin:26px 0 12px}
 .sectiontitle:first-child{margin-top:0}
 .note{font-size:13px;color:var(--ink-2);max-width:78ch;margin-bottom:14px}
+.toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.toolbar .spacer{flex:1}
 
-/* grote kerncijfertegels */
+.banner{border:1px solid var(--line-2);border-left:3px solid var(--accent);background:var(--surface);padding:12px 15px;margin-bottom:16px;font-size:13px;color:var(--ink-2);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.banner b{color:var(--ink)}
+
 .stat{background:var(--panel);border:1px solid var(--panel-line);padding:18px 18px 16px;display:flex;flex-direction:column}
 .stat .k{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--aqua-lt)}
 .stat .v{font-family:var(--display);font-weight:700;font-size:33px;letter-spacing:-0.035em;line-height:1;color:var(--panel-num);margin:12px 0 7px;font-variant-numeric:tabular-nums}
 .stat .v .u{font-size:17px;letter-spacing:-0.01em}
-.stat p{font-size:12.5px;line-height:1.4;color:var(--panel-ink);max-width:34ch}
+.stat p{font-size:12.5px;line-height:1.4;color:var(--panel-ink);max-width:34ch;min-height:3.4em}
 .stat .split{margin-top:auto;padding-top:11px;border-top:1px solid var(--panel-line);display:flex;gap:14px;flex-wrap:wrap;font-family:var(--mono);font-size:10.5px;color:var(--panel-ink)}
 .stat .split b{color:#fff;font-weight:600}
 
-/* ---------- paneel met kopbalk ---------- */
-.panel{background:var(--surface);border:1px solid var(--line)}
-.panel-hd{background:var(--surface-2);border-bottom:1px solid var(--line);padding:8px 14px;display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+/* panelen zijn flexkolommen, zodat ze in een rij even hoog uitkomen */
+.panel{background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column}
+.panel-hd{background:var(--surface-2);border-bottom:1px solid var(--line);padding:8px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:37px}
 .panel-hd .t{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-2)}
 .panel-hd .s{font-family:var(--mono);font-size:10px;color:var(--ink-3)}
-.panel-bd{padding:14px}
+.panel-hd .acts{display:flex;gap:7px}
+.panel-bd{padding:14px;flex:1}
 .panel-bd.flush{padding:0}
 
 /* ---------- tabellen ---------- */
 .tablewrap{overflow-x:auto;max-width:100%}
 table{border-collapse:collapse;width:100%;font-size:12.5px}
 th{text-align:left;font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--link);padding:9px 12px;border-bottom:1px solid var(--line-2);white-space:nowrap;background:var(--surface);position:sticky;top:0;z-index:2}
-td{padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+td{padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
 tbody tr:nth-child(even) td{background:var(--zebra)}
 tbody tr:hover td{background:var(--surface-2)}
 td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);white-space:nowrap}
@@ -178,9 +168,13 @@ tr.total td.n{color:#fff}
 .idlink{font-family:var(--mono);font-size:11.5px;color:var(--link);text-decoration:underline;background:none;border:none;padding:0;cursor:pointer;white-space:nowrap}
 .idlink:hover{color:var(--accent-ink)}
 .wrapcell{white-space:normal;min-width:190px}
+td .rowacts{display:flex;gap:6px;justify-content:flex-end}
+.iconbtn{appearance:none;background:transparent;border:1px solid var(--line-2);color:var(--ink-3);width:26px;height:26px;display:grid;place-items:center;cursor:pointer;padding:0}
+.iconbtn:hover{border-color:var(--accent);color:var(--accent-ink)}
+.iconbtn.danger:hover{border-color:var(--bad);color:var(--bad)}
 
-/* ---------- chips, pillen, iconen ---------- */
-.chip{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;padding:2px 6px;border:1px solid var(--line-2);color:var(--ink-2);white-space:nowrap;display:inline-block}
+/* ---------- chips ---------- */
+.chip{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;padding:2px 6px;border:1px solid var(--line-2);color:var(--ink-2);white-space:nowrap;display:inline-block;line-height:1.35}
 .chip.dg{border-color:var(--accent);color:var(--accent-ink)}
 .chip.dg.hub{border-color:var(--aqua);color:var(--aqua-ink)}
 .chip.gatepill{background:var(--navy);border-color:var(--navy);color:#fff}
@@ -189,13 +183,13 @@ tr.total td.n{color:#fff}
 .chip.ok{color:var(--aqua-ink);border-color:currentColor}
 .chip.open{color:var(--accent-ink);border-color:currentColor}
 .chip.stop{color:var(--bad);border-color:currentColor}
-.mark{display:inline-grid;place-items:center;width:17px;height:17px;border-radius:50%;font-size:10px;font-weight:700;line-height:1;color:#fff}
+.mark{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;color:#fff;flex:none}
 .mark.ok{background:var(--ok)}
 .mark.bad{background:var(--bad)}
 
 /* ---------- staafjes ---------- */
 .bars{display:flex;flex-direction:column;gap:7px}
-.barrow{display:grid;grid-template-columns:minmax(96px,150px) minmax(0,1fr) minmax(58px,auto);gap:12px;align-items:center;font-size:12.5px}
+.barrow{display:grid;grid-template-columns:minmax(96px,150px) minmax(0,1fr) minmax(58px,auto);gap:12px;align-items:center;font-size:12.5px;min-height:26px}
 .barrow .track{height:17px;background:var(--surface-2);display:flex;gap:2px}
 .barrow .track i{display:block;min-width:2px}
 .barrow .amt{font-family:var(--mono);font-size:11px;color:var(--ink-2);text-align:right;font-variant-numeric:tabular-nums}
@@ -203,12 +197,13 @@ tr.total td.n{color:#fff}
 /* ---------- stappenstrip ---------- */
 .legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
 .legend .item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2)}
-.swatch{width:15px;height:15px;display:grid;place-items:center;flex:none;font-family:var(--mono);font-size:9px;font-weight:600;line-height:1;border:1px solid transparent}
+.swatch{width:16px;height:16px;display:grid;place-items:center;flex:none;border:1px solid transparent}
 .stripwrap{overflow-x:auto}
 .gateband,.strip,.stepnr{display:grid;gap:2px;min-width:560px}
 .gateband span{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.09em;color:var(--ink-3);border-top:2px solid var(--line-2);padding-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .strip{margin-top:3px}
-.strip button{appearance:none;-webkit-appearance:none;margin:0;padding:0;box-sizing:border-box;cursor:help;height:26px;display:grid;place-items:center;font-family:var(--mono);font-size:9.5px;font-weight:600;line-height:1;border:1px solid transparent;background:transparent;color:inherit}
+.strip button{appearance:none;-webkit-appearance:none;margin:0;padding:0;box-sizing:border-box;cursor:help;height:26px;display:grid;place-items:center;border:1px solid transparent;background:transparent;color:inherit}
+.strip button.kanbewerken{cursor:pointer}
 .strip button:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
 .swatch.s-Gereed,.strip button.s-Gereed{background:var(--st-gereed);border-color:var(--st-gereed);color:var(--st-ink-on)}
 .swatch.s-Loopt,.strip button.s-Loopt{background:var(--st-loopt);border-color:var(--st-loopt);color:var(--st-ink-on)}
@@ -223,22 +218,23 @@ tr.total td.n{color:#fff}
 
 /* ---------- gateladder ---------- */
 .gates{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.gate{border-top:3px solid var(--accent);padding-top:13px}
+.gate{border-top:3px solid var(--accent);padding-top:13px;display:flex;flex-direction:column}
 .gate:last-child{border-top-color:var(--aqua)}
 .gate .g{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.12em;color:var(--accent-ink)}
 .gate:last-child .g{color:var(--aqua-ink)}
 .gate h3{font-size:16px;margin:3px 0 3px}
-.gate .desc{font-size:12.5px;color:var(--ink-2);max-width:30ch}
+.gate .desc{font-size:12.5px;color:var(--ink-2);max-width:30ch;min-height:3.1em}
 .meter{height:6px;background:var(--st-niet);border:1px solid var(--st-niet-line);margin-top:6px}
 .meter > i{display:block;height:100%;background:var(--accent)}
 .gate:last-child .meter > i{background:var(--aqua)}
-.gate .figs{margin-top:11px;padding-top:10px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--ink-2);display:flex;flex-direction:column;gap:2px}
+.gate .figs{margin-top:auto;padding-top:10px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--ink-2);display:flex;flex-direction:column;gap:2px}
 .gate .figs b{color:var(--ink);font-weight:600}
+.gate .fid{margin-top:11px}
 
 /* ---------- tijdlijn ---------- */
-.timeline{position:relative;padding:26px 0 0;min-height:104px}
+.timeline{position:relative;padding:26px 0 0}
 .tl-rail{position:relative;height:3px;background:var(--line-2);margin:0 10px}
-.tl-dot{appearance:none;-webkit-appearance:none;padding:0;position:absolute;top:50%;width:13px;height:13px;margin:-6.5px 0 0 -6.5px;border:2px solid var(--surface);cursor:help}
+.tl-dot{appearance:none;padding:0;position:absolute;top:50%;width:13px;height:13px;margin:-6.5px 0 0 -6.5px;border:2px solid var(--surface);cursor:help}
 .tl-now{position:absolute;top:-22px;bottom:-56px;width:0;border-left:1px dashed var(--accent)}
 .tl-now span{position:absolute;top:-16px;left:4px;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-ink);white-space:nowrap}
 .tl-axis{position:relative;height:42px;margin:0 10px}
@@ -251,39 +247,37 @@ tr.total td.n{color:#fff}
 /* ---------- opzoeken ---------- */
 .lookup-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:14px;align-items:start}
 .leadlist{max-height:520px;overflow:auto}
-.leadlist button{display:block;width:100%;text-align:left;background:transparent;border:none;border-bottom:1px solid var(--line);padding:10px 14px;cursor:pointer;color:var(--ink);font-family:var(--body);font-size:13px}
+.leadlist button{display:block;width:100%;text-align:left;background:transparent;border:none;border-bottom:1px solid var(--line);padding:10px 14px;cursor:pointer;color:var(--ink);font-family:var(--body);font-size:13px;min-height:54px}
 .leadlist button:hover{background:var(--surface-2)}
 .leadlist button[aria-current="true"]{background:var(--surface-2);box-shadow:inset 3px 0 0 var(--koper)}
 .leadlist .o{font-weight:600}
 .leadlist .m{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:.08em;margin-top:2px}
-.factgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(152px,1fr));gap:1px;background:var(--line)}
-.fact{background:var(--surface);padding:11px 13px}
+.factgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line)}
+.fact{background:var(--surface);padding:11px 13px;min-height:72px;display:flex;flex-direction:column;justify-content:flex-start}
 .fact .k{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
-.fact .v{font-size:14px;font-weight:600;margin-top:3px;overflow-wrap:break-word}
+.fact .v{font-size:14px;font-weight:600;margin-top:4px;overflow-wrap:break-word}
 .fact .v.big{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:-0.02em;font-variant-numeric:tabular-nums}
-.rec{padding:9px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+.fact.afgeleid{background:var(--surface-2)}
+.rec{padding:10px 0;border-bottom:1px solid var(--line);font-size:12.5px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:start}
 .rec:last-child{border-bottom:none}
 .rec .t{font-weight:600;display:flex;gap:7px;align-items:baseline;flex-wrap:wrap}
 .rec .d{color:var(--ink-2);font-size:12px;margin-top:2px}
-.rec .id{font-family:var(--mono);font-size:9.5px;color:var(--ink-3);letter-spacing:.08em;margin-top:2px}
+.rec .id{font-family:var(--mono);font-size:9.5px;color:var(--ink-3);letter-spacing:.08em;margin-top:3px}
 .empty{font-size:12.5px;color:var(--ink-3);font-style:italic;padding:9px 0}
 
-/* ---------- rechterrail met tellingen ---------- */
 .counts{background:var(--surface);border:1px solid var(--line)}
-.counts .row{padding:10px 14px;border-bottom:1px solid var(--line);text-align:right}
+.counts .row{padding:10px 14px;border-bottom:1px solid var(--line);text-align:right;min-height:54px;display:flex;flex-direction:column;justify-content:center}
 .counts .row:last-child{border-bottom:none}
-.counts .row.head{background:var(--surface-2);text-align:left}
+.counts .row.head{background:var(--surface-2);text-align:left;min-height:37px}
 .counts .k{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
 .counts .v{font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-0.02em;font-variant-numeric:tabular-nums;margin-top:1px}
 
-/* ---------- signalen ---------- */
 .sigrow{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;padding:12px 14px;border-bottom:1px solid var(--line);align-items:start}
 .sigrow:last-child{border-bottom:none}
 .sigrow .h{font-weight:600;font-size:13px}
 .sigrow p{font-size:12.5px;color:var(--ink-2);max-width:74ch;margin-top:2px}
-.sigrow .ref{font-family:var(--mono);font-size:10px;letter-spacing:.09em;color:var(--ink-3);margin-top:5px;display:block;word-break:break-word}
+.sigrow .ref{font-family:var(--mono);font-size:10px;letter-spacing:.09em;color:var(--ink-3);margin-top:5px;display:block;overflow-wrap:anywhere}
 
-/* ---------- leeswijzer ---------- */
 .prose{max-width:74ch;font-size:14px}
 .prose h3{font-size:16px;margin:24px 0 7px}
 .prose h3:first-child{margin-top:0}
@@ -292,43 +286,76 @@ tr.total td.n{color:#fff}
 .prose li{margin-bottom:5px}
 .prose code{font-family:var(--mono);font-size:12.5px;background:var(--surface-2);padding:1px 5px}
 
-/* ---------- tooltip ---------- */
+/* ---------- formulier in een dialoog ---------- */
+dialog{padding:0;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);max-width:min(760px,94vw);width:100%}
+dialog::backdrop{background:var(--veil)}
+.dlg-hd{background:var(--surface-2);border-bottom:1px solid var(--line);padding:13px 18px;display:flex;justify-content:space-between;align-items:center;gap:14px}
+.dlg-hd h2{font-size:16px}
+.dlg-bd{padding:18px;max-height:min(66vh,560px);overflow:auto}
+.dlg-ft{border-top:1px solid var(--line);padding:13px 18px;display:flex;gap:9px;justify-content:flex-end;align-items:center;flex-wrap:wrap}
+.dlg-ft .spacer{flex:1}
+.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.formgrid .vol{grid-column:1 / -1}
+.ff{display:flex;flex-direction:column;gap:4px}
+.ff label{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.ff input,.ff select,.ff textarea{font-family:var(--body);font-size:13.5px;color:var(--ink);background:var(--ground);border:1px solid var(--line-2);padding:8px 9px;width:100%}
+.ff textarea{min-height:68px;resize:vertical}
+.ff .hint{font-size:11.5px;color:var(--ink-3)}
+.ff.fout input,.ff.fout select{border-color:var(--bad)}
+.dlg-fout{color:var(--bad);font-size:12.5px;margin-right:auto}
+
+/* statuskiezer boven een stapcel */
+.statusmenu{position:fixed;z-index:95;background:var(--surface);border:1px solid var(--line-2);box-shadow:0 8px 26px rgba(17,43,59,.26);min-width:196px}
+.statusmenu .kop{padding:9px 12px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.statusmenu .kop .t{font-weight:600;font-size:12.5px}
+.statusmenu .kop .m{font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;color:var(--ink-3);margin-top:2px}
+.statusmenu button{display:flex;width:100%;align-items:center;gap:9px;background:transparent;border:none;border-bottom:1px solid var(--line);padding:9px 12px;cursor:pointer;font-family:var(--body);font-size:13px;color:var(--ink);text-align:left}
+.statusmenu button:last-child{border-bottom:none}
+.statusmenu button:hover{background:var(--surface-2)}
+.statusmenu button[aria-current="true"]{font-weight:600}
+.statusmenu .sw{width:15px;height:15px;flex:none;display:grid;place-items:center;border:1px solid transparent}
+
 #tip{position:fixed;z-index:90;pointer-events:none;max-width:280px;background:var(--navy);color:#fff;border:1px solid var(--panel-line);padding:10px 12px;font-size:12px;line-height:1.42;box-shadow:0 6px 22px rgba(17,43,59,.32)}
 #tip .tm{font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--zink-lt);display:block}
 #tip .tt{font-weight:600;margin-bottom:3px;display:block}
 #tip .ts{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase}
 #tip .ts i{width:9px;height:9px;display:block}
 
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:99;background:var(--navy);color:#fff;border:1px solid var(--panel-line);padding:11px 17px;font-size:13px;box-shadow:0 8px 26px rgba(17,43,59,.3);max-width:min(520px,92vw)}
+#toast.fout{background:var(--bad);border-color:var(--bad)}
+
 @media (max-width:1180px){
   .g-kpi{grid-template-columns:repeat(2,1fr)}
   .g-main{grid-template-columns:minmax(0,1fr)}
   .gates{grid-template-columns:repeat(2,1fr)}
+  .factgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 @media (max-width:900px){
   .app{grid-template-columns:minmax(0,1fr)}
-  .rail{position:static;height:auto;flex-direction:column}
+  .rail{position:static;height:auto}
   .rail nav{display:flex;flex-wrap:wrap;padding:6px}
   .rail nav button{width:auto;border-left:none;border-bottom:3px solid transparent;padding:9px 13px}
   .rail nav button[aria-current="page"]{border-left-color:transparent;border-bottom-color:var(--koper)}
-  .rail .railfoot{display:none}
   .ident{border-right:none;padding-right:0}
   .lookup-grid{grid-template-columns:minmax(0,1fr)}
   .leadlist{max-height:240px}
+  .factgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media (max-width:640px){
-  .pagehead{padding-inline:16px}
-  .page{padding-inline:16px}
-  .g-kpi,.g-2,.gates{grid-template-columns:minmax(0,1fr)}
+  .pagehead,.page{padding-inline:16px}
+  .g-kpi,.g-2,.gates,.formgrid{grid-template-columns:minmax(0,1fr)}
+  .factgrid{grid-template-columns:minmax(0,1fr)}
   .stamp{margin-left:0;align-items:flex-start;text-align:left}
   .kpistrip{margin-left:0;width:100%;overflow-x:auto}
-  .barrow{grid-template-columns:minmax(0,1fr);gap:4px}
+  .kpibox{flex:none}
+  .barrow{grid-template-columns:minmax(0,1fr);gap:4px;align-items:start}
   .barrow .amt{text-align:left}
+  .stat p,.gate .desc{min-height:0}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
 </style>
 
 <div class="app">
-
   <aside class="rail">
     <div class="brand">
       <img id="logo" alt="Smarteck" src="data:image/png;base64,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">
@@ -337,9 +364,10 @@ tr.total td.n{color:#fff}
     </div>
     <nav id="nav" aria-label="Hoofdnavigatie"></nav>
     <div class="railfoot">
+      <span class="modus" id="modus"><i></i><span id="modus-tekst">Momentopname</span></span>
       <span id="rail-file"></span>
       <span id="rail-date"></span>
-      <button class="btn-lite" id="theme" type="button" style="margin-top:6px">Donker</button>
+      <button class="btn-lite" id="theme" type="button" style="margin-top:4px">Donker</button>
     </div>
   </aside>
 
@@ -348,33 +376,15 @@ tr.total td.n{color:#fff}
       <div class="headrow">
         <div class="ident">
           <h1 id="page-title">Portefeuille</h1>
-          <div class="sub" id="page-sub">Alle actieve leads</div>
+          <div class="sub" id="page-sub">Overzicht van de pijplijn</div>
         </div>
         <div class="filterstrip">
-          <div class="field">
-            <label for="f-doelgroep">Doelgroep</label>
-            <select id="f-doelgroep"></select>
-          </div>
-          <div class="field">
-            <label for="f-status">Leadstatus</label>
-            <select id="f-status"></select>
-          </div>
-          <div class="field">
-            <label for="f-fase">Ontwikkelfase</label>
-            <select id="f-fase"></select>
-          </div>
-          <div class="field">
-            <label for="f-gate">Gate</label>
-            <select id="f-gate"></select>
-          </div>
-          <div class="field">
-            <label for="f-eigenaar">Eigenaar</label>
-            <select id="f-eigenaar"></select>
-          </div>
-          <div class="field">
-            <label for="f-zoek">Zoeken</label>
-            <input id="f-zoek" type="search" placeholder="Organisatie, project, stap" autocomplete="off">
-          </div>
+          <div class="field"><label for="f-doelgroep">Doelgroep</label><select id="f-doelgroep"></select></div>
+          <div class="field"><label for="f-status">Leadstatus</label><select id="f-status"></select></div>
+          <div class="field"><label for="f-fase">Ontwikkelfase</label><select id="f-fase"></select></div>
+          <div class="field"><label for="f-gate">Gate</label><select id="f-gate"></select></div>
+          <div class="field"><label for="f-eigenaar">Eigenaar</label><select id="f-eigenaar"></select></div>
+          <div class="field"><label for="f-zoek">Zoeken</label><input id="f-zoek" type="search" placeholder="Organisatie, project, stap" autocomplete="off"></div>
           <button class="btn-lite" id="f-reset" type="button">Filters wissen</button>
         </div>
         <div class="stamp">
@@ -382,22 +392,20 @@ tr.total td.n{color:#fff}
           <span id="stamp-date"></span>
         </div>
       </div>
-
       <div class="tabrow">
         <div id="tabs" style="display:flex;gap:10px;flex-wrap:wrap" role="tablist"></div>
         <div class="kpistrip" id="kpistrip"></div>
       </div>
     </div>
 
-    <!-- ============ Portefeuille ============ -->
     <section class="page" id="pg-home" hidden>
+      <div id="home-banner"></div>
       <div class="grid g-kpi" id="home-stats"></div>
-
       <div class="sectiontitle">Gateladder</div>
-      <p class="note">Elke lead staat op &eacute;&eacute;n gate. De kans op FID hoort bij de bereikte gate, niet bij de
-        lead; de gewogen fee is de verwachte fee maal die kans. Percentages komen uit het blad Aannames.</p>
+      <p class="note">Elke lead staat op &eacute;&eacute;n gate. De gewogen fee telt op wat bij de bereikte gate al
+        verdiend is, plus wat daarna nog komt maal de kans op FID van die gate. Percentages en verdeling komen
+        uit het blad Aannames.</p>
       <div class="gates" id="home-gates"></div>
-
       <div class="sectiontitle">Verdeling</div>
       <div class="grid g-main">
         <div class="grid g-2" id="home-panels"></div>
@@ -405,11 +413,16 @@ tr.total td.n{color:#fff}
       </div>
     </section>
 
-    <!-- ============ Leads ============ -->
     <section class="page" id="pg-leads" hidden>
+      <div class="toolbar">
+        <button class="btn-solid" id="btn-nieuwe-lead" type="button">Nieuwe lead</button>
+        <span class="spacer"></span>
+        <span class="lbl" id="leads-bewerkhint"></span>
+      </div>
+
       <div id="leads-alle" hidden>
-        <p class="note">Een regel per lead, met alle velden uit het blad Leads. Klik op een LeadID om de lead te
-          openen. De tabel schuift zijwaarts; bedragen zijn in euro.</p>
+        <p class="note">Een regel per lead. Klik op een LeadID om de lead te openen, of op het potlood om te
+          bewerken. Slaagkans en gewogen fee worden berekend uit de gate en de fee; die zijn niet los in te vullen.</p>
         <div class="panel">
           <div class="panel-hd"><span class="t">Alle actieve leads</span><span class="s" id="leads-alle-n"></span></div>
           <div class="panel-bd flush"><div class="tablewrap"><table id="tbl-leads"></table></div></div>
@@ -417,9 +430,8 @@ tr.total td.n{color:#fff}
       </div>
 
       <div id="leads-mijlpalen" hidden>
-        <p class="note">Per lead de datum waarop een mijlpaal gehaald is. Deze datums komen uit de bladen Leads,
-          Overeenkomsten, Bronnen en Contactpersonen &mdash; het blad Voortgang heeft nog geen datums, dus de
-          ontwikkelstappen staan hier niet in. Een streepje betekent: nog niet gehaald of niet ingevuld.</p>
+        <p class="note">Per lead de datum waarop een mijlpaal gehaald is, afgeleid uit de leadgegevens,
+          overeenkomsten, bronnen en contactmomenten. Een streepje betekent: nog niet gehaald of niet ingevuld.</p>
         <div class="panel">
           <div class="panel-hd"><span class="t">Mijlpaaldata</span><span class="s">Leeg = nog niet gehaald</span></div>
           <div class="panel-bd flush"><div class="tablewrap"><table id="tbl-mijlpalen"></table></div></div>
@@ -428,8 +440,8 @@ tr.total td.n{color:#fff}
 
       <div id="leads-voortgang" hidden>
         <p class="note">Een cel is &eacute;&eacute;n ontwikkelstap: twintig voor vastgoedontwikkelaars, negentien voor
-          energiehubs. De band erboven geeft de gate waar de stap onder valt. Beweeg over een cel voor de stap
-          en de toelichting.</p>
+          energiehubs. De band erboven geeft de gate. Beweeg over een cel voor de toelichting; klik erop om de
+          status te zetten.</p>
         <div class="legend" id="legend"></div>
         <div class="grid" id="voortgang-cards"></div>
       </div>
@@ -444,10 +456,9 @@ tr.total td.n{color:#fff}
       </div>
     </section>
 
-    <!-- ============ Lead opzoeken ============ -->
     <section class="page" id="pg-lookup" hidden>
-      <p class="note">Zoek een lead op en bekijk alles wat er over vastligt: kerngegevens, de tijdlijn van wat er
-        werkelijk gebeurd is, de stappen, en de contactpersonen, overeenkomsten en bronnen eronder.</p>
+      <p class="note">Zoek een lead op en bekijk of bewerk alles wat erover vastligt: kerngegevens, de tijdlijn,
+        de stappen, en de contactpersonen, overeenkomsten en bronnen eronder.</p>
       <div class="lookup-grid">
         <div class="panel">
           <div class="panel-hd"><span class="t">Leads</span><span class="s" id="lookup-n"></span></div>
@@ -457,7 +468,6 @@ tr.total td.n{color:#fff}
       </div>
     </section>
 
-    <!-- ============ Acties ============ -->
     <section class="page" id="pg-acties" hidden>
       <p class="note">Alles wat nog een handeling vraagt: de volgende actie per lead, overeenkomsten die niet
         getekend zijn, bronnen die niet verwerkt zijn, en stappen die vastzitten. Gesorteerd op deadline;
@@ -468,59 +478,41 @@ tr.total td.n{color:#fff}
       </div>
     </section>
 
-    <!-- ============ Datavalidatie ============ -->
     <section class="page" id="pg-valid" hidden>
-      <p class="note">De spelregels uit de Leeswijzer, regel voor regel nagelopen op de hele databron &mdash;
-        dus niet op de filterselectie. Een groen vinkje betekent dat de regel klopt.</p>
+      <p class="note">De spelregels uit de Leeswijzer, regel voor regel nagelopen op alle leads &mdash; dus niet op
+        de filterselectie. Een groen vinkje betekent dat de regel klopt.</p>
       <div class="grid g-2">
         <div class="panel">
           <div class="panel-hd"><span class="t">Controles</span><span class="s" id="valid-n"></span></div>
           <div class="panel-bd flush" id="valid-rows"></div>
         </div>
         <div class="panel">
-          <div class="panel-hd"><span class="t">Volledigheid per blad</span><span class="s">Gevulde regels</span></div>
+          <div class="panel-hd"><span class="t">Omvang per register</span><span class="s">Vastgelegde regels</span></div>
           <div class="panel-bd flush"><div class="tablewrap"><table id="tbl-volledig"></table></div></div>
         </div>
       </div>
     </section>
 
-    <!-- ============ Leeswijzer ============ -->
     <section class="page" id="pg-uitleg" hidden>
-      <div class="prose">
-        <h3>Wat u hier ziet</h3>
-        <p>Dit scherm leest de databron; het schrijft er niet in. Het werkboek blijft de bron van waarheid.
-          Werk bij in Excel, draai het bouwscript opnieuw, en dit scherm volgt.</p>
-        <h3>Bijwerken</h3>
-        <p><code>python3 dashboard/tools/build_data.py dashboard/data/Smarteck_Leadtracker_Databron.xlsx</code></p>
-        <p>Het script leest de bladen Leads, Contactpersonen, Overeenkomsten, Bronnen, Voortgang en
-          Ontwikkelstappen plus de aannames, en zet de data in dit bestand.</p>
-        <h3>Spelregels</h3>
-        <ol>
-          <li>ID&rsquo;s zijn verplicht en uniek: LEAD-001, CON-001, OVK-001, BRN-001, VTG-001.</li>
-          <li>StapID heeft altijd het voorvoegsel van de doelgroep: VO-01 t/m VO-20, EH-01 t/m EH-19.</li>
-          <li>Datums als echte datum invoeren (jjjj-mm-dd), niet als tekst.</li>
-          <li>Slaagkans als percentage tussen 0 en 1.</li>
-          <li>Kolomnamen niet wijzigen &mdash; de koppeling loopt op kolomnaam, niet op kolompositie.</li>
-          <li>De voorbeeldregels verwijderen bij ingebruikname.</li>
-        </ol>
-        <h3>Een nieuwe lead starten</h3>
-        <ol>
-          <li>Nieuwe regel op Leads, LeadID oplopend doornummeren.</li>
-          <li>Op Voortgang alle stappen van de doelgroep toevoegen: per stap een regel met LeadID en StapID.
-            Kopieer een bestaand blok en pas het LeadID aan.</li>
-          <li>Status per stap bijwerken. Dit scherm volgt automatisch.</li>
-        </ol>
-        <h3>Wat dit scherm zelf uitrekent</h3>
-        <p>Niets komt uit het blad Overzicht. Alle tellingen worden opnieuw berekend uit de invoerbladen,
-          zodat ze meebewegen met de filters. De peildatum voor verstreken deadlines staat als
-          <code>VANDAAG</code> boven in het script.</p>
-      </div>
+      <div class="prose" id="uitleg-prose"></div>
     </section>
-
   </div>
 </div>
 
+<dialog id="dlg">
+  <form method="dialog" id="dlg-form">
+    <div class="dlg-hd"><h2 id="dlg-titel">Bewerken</h2><button class="btn-lite" type="button" id="dlg-sluit">Sluiten</button></div>
+    <div class="dlg-bd"><div class="formgrid" id="dlg-velden"></div></div>
+    <div class="dlg-ft">
+      <span class="dlg-fout" id="dlg-fout"></span>
+      <button class="btn-lite" type="button" id="dlg-annuleer">Annuleren</button>
+      <button class="btn-solid" type="button" id="dlg-bewaar">Bewaren</button>
+    </div>
+  </form>
+</dialog>
+
 <div id="tip" hidden></div>
+<div id="toast" hidden></div>
 
 <script>
 /* DATA-START */
@@ -1783,9 +1775,173 @@ const DATA = {
    0.9
   ]
  },
+ "Keuzelijsten": {
+  "L_Doelgroep": [
+   "Vastgoedontwikkelaar",
+   "Energiehub"
+  ],
+  "L_Herkomst": [
+   "Eigen netwerk",
+   "Netbeheerder",
+   "Kennisplatform Energiehubs",
+   "Provincie of ROM",
+   "Gemeente",
+   "Congres of netwerkevent",
+   "LinkedIn",
+   "Inbound via website",
+   "Doorverwijzing partner",
+   "Aanbesteding",
+   "Via Jaap van Eck",
+   "Via Hans Schouten",
+   "Via Phlip Boswinkel",
+   "Overig"
+  ],
+  "L_Leadstatus": [
+   "Nieuw",
+   "In kwalificatie",
+   "Gekwalificeerd",
+   "Propositie uitgebracht",
+   "In onderhandeling",
+   "Opdracht",
+   "On hold",
+   "Afgewezen",
+   "Verloren"
+  ],
+  "L_Fase": [
+   "Origination",
+   "Feasibility",
+   "Development",
+   "Ready-to-Build",
+   "Realisatie",
+   "On hold",
+   "Gestopt"
+  ],
+  "L_Gate": [
+   "M1",
+   "M2",
+   "M3",
+   "M4"
+  ],
+  "L_Workstream": [
+   "Commercieel",
+   "Techniek",
+   "Net en congestie",
+   "Juridisch",
+   "Financieel",
+   "Vergunningen",
+   "Governance"
+  ],
+  "L_Stapstatus": [
+   "Niet gestart",
+   "Loopt",
+   "Gereed",
+   "Geblokkeerd",
+   "Niet van toepassing"
+  ],
+  "L_Contracttype": [
+   "NDA",
+   "LOI of intentieverklaring",
+   "Exclusiviteitsovereenkomst",
+   "Opdrachtbevestiging",
+   "Raamovereenkomst",
+   "MoU",
+   "Samenwerkingsovereenkomst",
+   "Deelnemersovereenkomst hub",
+   "Anterieure overeenkomst",
+   "Grondovereenkomst",
+   "ATO netbeheerder",
+   "GTO of groeps-CSC",
+   "Warmteleveringsovereenkomst",
+   "PPA",
+   "SLA of uptimeafspraak",
+   "EPC-contract",
+   "Assetmanagement-overeenkomst",
+   "Verwerkersovereenkomst"
+  ],
+  "L_Contractstatus": [
+   "Concept",
+   "Interne review",
+   "Bij wederpartij",
+   "In onderhandeling",
+   "Getekend",
+   "Verlopen",
+   "Beeindigd",
+   "Ingetrokken"
+  ],
+  "L_Brontype": [
+   "Energievisie",
+   "Stedenbouwkundig plan",
+   "Programma van eisen",
+   "Verbruiksdata of EAN-lijst",
+   "Aansluitgegevens en contractvermogens",
+   "Netcapaciteitsinformatie",
+   "Congestiebrief netbeheerder",
+   "Warmtevraagprofiel",
+   "Meetdata of kwartierwaarden",
+   "Kadastrale gegevens",
+   "Tekeningen of GIS-bestanden",
+   "Businesscase van de klant",
+   "Vergunningsdossier",
+   "Deelnemerslijst hub",
+   "Rapport derde partij",
+   "Overig"
+  ],
+  "L_Bronstatus": [
+   "Opgevraagd",
+   "Ontvangen",
+   "In analyse",
+   "Verwerkt",
+   "Onvolledig",
+   "Niet ontvangen"
+  ],
+  "L_Bruikbaarheid": [
+   "Direct bruikbaar",
+   "Bewerking nodig",
+   "Beperkt bruikbaar",
+   "Niet bruikbaar",
+   "Nog niet beoordeeld"
+  ],
+  "L_Formaat": [
+   "PDF",
+   "Excel of CSV",
+   "Word",
+   "DWG of DXF",
+   "GIS of shapefile",
+   "Afbeelding",
+   "Mondeling of presentatie",
+   "Overig"
+  ],
+  "L_JaNee": [
+   "Ja",
+   "Nee"
+  ],
+  "L_Rol": [
+   "Beslisser",
+   "Budgethouder",
+   "Beinvloeder",
+   "Gatekeeper",
+   "Technisch inhoudelijk",
+   "Kartrekker hub",
+   "Adviseur"
+  ],
+  "L_Prioriteit": [
+   "Hoog",
+   "Midden",
+   "Laag"
+  ],
+  "L_Medewerker": [
+   "Yusuf",
+   "Jaap van Eck",
+   "Hans Schouten",
+   "Gertjan de Joode",
+   "Lucas van Eck",
+   "Arnoud",
+   "Extern"
+  ]
+ },
  "_bron": {
   "bestand": "Smarteck_Leadtracker_Databron.xlsx",
-  "gelezen_op": "2026-09-15"
+  "gelezen_op": "2026-09-16"
  }
 };
 /* DATA-END */
@@ -1801,23 +1957,60 @@ const DATA = {
     if (txt !== undefined && txt !== null) n.textContent = txt;
     return n;
   };
-  const kids = (parent, ...nodes) => { nodes.filter(Boolean).forEach(n => parent.appendChild(n)); return parent; };
+  const kids = (p, ...ns) => { ns.filter(Boolean).forEach(n => p.appendChild(n)); return p; };
 
   const nlInt = new Intl.NumberFormat("nl-NL", {maximumFractionDigits:0});
   const nlTwo = new Intl.NumberFormat("nl-NL", {minimumFractionDigits:2, maximumFractionDigits:2});
-  const euro  = v => "€ " + nlInt.format(Math.round(v || 0));
+  const EUR   = "\u20AC\u00A0";
+  const euro  = v => EUR + nlInt.format(Math.round(v || 0));
   const pct   = v => nlInt.format(Math.round((v || 0) * 100)) + "%";
-  const num   = v => (typeof v === "number" ? v : parseFloat(String(v).replace(",", ".")) || 0);
-  const DASH  = "—";
+  const num   = v => (typeof v === "number" ? v : parseFloat(String(v == null ? "" : v).replace(",", ".")) || 0);
+  const DASH  = "\u2014";
+  const MIDDOT = " \u00B7 ";
+  const VANDAAG = new Date().toISOString().slice(0, 10);
 
-  const VANDAAG = "2026-09-15";        /* peildatum van deze uitdraai */
+  /* ---- tekens als SVG -------------------------------------------------
+     Niet als letterteken: een vinkje of kruisje zit niet in elke mono-
+     letterfamilie en valt dan terug op een vervangend blokje. Getekend
+     kan dat niet misgaan.                                              */
+  const NS = "http://www.w3.org/2000/svg";
+  function teken(soort, maat){
+    if (!soort) return null;
+    const svg = document.createElementNS(NS, "svg");
+    const m = maat || 11;
+    svg.setAttribute("viewBox", "0 0 12 12");
+    svg.setAttribute("width", String(m));
+    svg.setAttribute("height", String(m));
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("focusable", "false");
+    const p = document.createElementNS(NS, "path");
+    p.setAttribute("fill", "none");
+    p.setAttribute("stroke", "currentColor");
+    p.setAttribute("stroke-width", "1.9");
+    p.setAttribute("stroke-linecap", "round");
+    p.setAttribute("stroke-linejoin", "round");
+    if (soort === "vink")  p.setAttribute("d", "M2.4 6.3 L4.9 8.9 L9.6 3.3");
+    if (soort === "kruis") p.setAttribute("d", "M3.2 3.2 L8.8 8.8 M8.8 3.2 L3.2 8.8");
+    if (soort === "streep")p.setAttribute("d", "M3 6 L9 6");
+    if (soort === "potlood") p.setAttribute("d", "M2.6 9.4 L2.6 7.6 L8 2.2 L9.8 4 L4.4 9.4 Z");
+    if (soort === "prullenbak") p.setAttribute("d", "M2.6 3.6 H9.4 M4.6 3.6 V2.4 H7.4 V3.6 M3.6 3.6 L4.1 9.6 H7.9 L8.4 3.6");
+    if (soort === "plus")  p.setAttribute("d", "M6 2.6 V9.4 M2.6 6 H9.4");
+    if (soort === "driehoek"){
+      p.setAttribute("fill", "currentColor");
+      p.setAttribute("stroke", "none");
+      p.setAttribute("d", "M4.2 2.6 L9.2 6 L4.2 9.4 Z");
+    }
+    kids(svg, p);
+    return svg;
+  }
 
+  /* ---- statussen ------------------------------------------------------- */
   const STATUS = {
-    "Gereed":             {cls:"s-Gereed",       glyph:"✓", varName:"--st-gereed"},
-    "Loopt":              {cls:"s-Loopt",        glyph:"▸", varName:"--st-loopt"},
-    "Geblokkeerd":        {cls:"s-Geblokkeerd",  glyph:"✕", varName:"--st-geblok"},
-    "Niet gestart":       {cls:"s-Nietgestart",  glyph:"",       varName:"--st-niet"},
-    "Niet van toepassing":{cls:"s-Nvt",          glyph:"–", varName:"--st-nvt"}
+    "Gereed":             {cls:"s-Gereed",      mark:"vink",     varName:"--st-gereed"},
+    "Loopt":              {cls:"s-Loopt",       mark:"driehoek", varName:"--st-loopt"},
+    "Geblokkeerd":        {cls:"s-Geblokkeerd", mark:"kruis",    varName:"--st-geblok"},
+    "Niet gestart":       {cls:"s-Nietgestart", mark:null,       varName:"--st-niet"},
+    "Niet van toepassing":{cls:"s-Nvt",         mark:"streep",   varName:"--st-nvt"}
   };
   const statusOf = s => STATUS[s] || STATUS["Niet gestart"];
   const VOLGORDE = ["Gereed","Loopt","Geblokkeerd","Niet gestart","Niet van toepassing"];
@@ -1826,106 +2019,161 @@ const DATA = {
   const BRON_TE_DOEN   = ["Opgevraagd","Ontvangen","In analyse","Onvolledig"];
 
   const rows = k => Array.isArray(DATA[k]) ? DATA[k] : [];
+  const keuze = k => {
+    const v = (DATA.Keuzelijsten || {})[k];
+    return Array.isArray(v) ? v : [];
+  };
   const aanname = k => {
     const v = (DATA.Aannames || {})[k];
     return Array.isArray(v) ? num(v[v.length - 1]) : 0;
   };
-  const isVoorbeeld = r => /VOORBEELDRIJ/i.test(String(r.Opmerkingen || ""));
-  const minDatum = ds => ds.filter(Boolean).sort()[0] || "";
-  const maxDatum = ds => ds.filter(Boolean).sort().slice(-1)[0] || "";
 
-  /* ---- model ---------------------------------------------------------- */
+  /* ---- feemodel --------------------------------------------------------
+     Gereconstrueerd uit het blad Aannames en getoetst aan beide regels van
+     het werkboek; beide komen exact uit. De initiatiefee is verdiend zodra
+     M1 bereikt is, elk gate-aandeel zodra die gate bereikt is, en wat daarna
+     nog komt telt mee maal de kans op FID van de bereikte gate.          */
+  const GATE_NR = {M1:1, M2:2, M3:3, M4:4};
+  const kansOp  = g => aanname(g + " bereikt");
+
+  function feeSplitsing(fee, gate){
+    const initiatie = aanname("Initiatiefee M1 (vast, EUR)");
+    const ontwikkel = Math.max(num(fee) - initiatie, 0);
+    const bereikt = GATE_NR[gate] || 0;
+    let verdiend = bereikt >= 1 ? initiatie : 0;
+    let resterend = 0;
+    ["M2","M3","M4"].forEach(g => {
+      const deel = ontwikkel * aanname("Aandeel " + g);
+      if (GATE_NR[g] <= bereikt) verdiend += deel; else resterend += deel;
+    });
+    const kans = bereikt ? kansOp(gate) : 0;
+    return {initiatie, ontwikkel, verdiend, resterend, kans, gewogen:verdiend + resterend * kans};
+  }
+
+  /* ---- gegevensopslag --------------------------------------------------
+     Twee standen. Zonder verbinding met de opslag (bijvoorbeeld als dit
+     bestand rechtstreeks van schijf geopend wordt) toont het scherm de
+     momentopname uit het werkboek en is alles alleen-lezen. Zodra de
+     gedeelde opslag beschikbaar is, komen de gegevens daarvandaan en kan
+     iedereen met bewerkrechten toevoegen, wijzigen en verwijderen.     */
+  const COLL = ["leads","contacten","overeenkomsten","bronnen"];
+  const STORE = {
+    modus:"momentopname",
+    db:null,
+    magSchrijven:false,
+    data:{leads:new Map(), contacten:new Map(), overeenkomsten:new Map(), bronnen:new Map()},
+    klaar:{leads:false, contacten:false, overeenkomsten:false, bronnen:false}
+  };
+  const live = () => STORE.modus === "live";
+  const bewerkbaar = () => live() && STORE.magSchrijven;
+
   const stapBib = new Map();
   rows("Ontwikkelstappen").forEach(s => stapBib.set(s.StapID, s));
+  const stappenVoor = doelgroep =>
+    rows("Ontwikkelstappen").filter(s => s.Doelgroep === doelgroep).sort((a,b) => num(a.Nr) - num(b.Nr));
 
-  const LEADS = rows("Leads").map(l => {
-    const id = l.LeadID;
+  /* Momentopname uit het werkboek omzetten naar dezelfde vorm als de
+     gedeelde opslag: stapstatussen hangen aan de lead, niet los. */
+  function momentopname(){
+    const leads = new Map(), contacten = new Map(), overeenkomsten = new Map(), bronnen = new Map();
+    rows("Leads").forEach(l => {
+      const stappen = {};
+      rows("Voortgang").filter(v => v.LeadID === l.LeadID).forEach(v => {
+        stappen[v.StapID] = {status:STATUS[v.Status] ? v.Status : "Niet gestart", wie:v.Verantwoordelijke || ""};
+      });
+      leads.set(l.LeadID, Object.assign({}, l, {stappen}));
+    });
+    rows("Contactpersonen").forEach(c => contacten.set(c.ContactID, Object.assign({}, c, {leadId:c.LeadID})));
+    rows("Overeenkomsten").forEach(o => overeenkomsten.set(o.OvereenkomstID, Object.assign({}, o, {leadId:o.LeadID})));
+    rows("Bronnen").forEach(b => bronnen.set(b.BronID, Object.assign({}, b, {leadId:b.LeadID})));
+    return {leads, contacten, overeenkomsten, bronnen};
+  }
+  STORE.data = momentopname();
 
-    const stappen = rows("Voortgang")
-      .filter(v => v.LeadID === id)
-      .map(v => {
-        const def = stapBib.get(v.StapID) || {};
+  /* ---- afgeleid model --------------------------------------------------- */
+  function bouwLeads(){
+    const alleContacten = [...STORE.data.contacten.entries()];
+    const alleContracten = [...STORE.data.overeenkomsten.entries()];
+    const alleBronnen = [...STORE.data.bronnen.entries()];
+
+    return [...STORE.data.leads.entries()].map(([id, l]) => {
+      const doelgroep = l.Doelgroep || "";
+      const bib = stappenVoor(doelgroep);
+      const opgeslagen = l.stappen || {};
+      const stappen = bib.map(def => {
+        const s = opgeslagen[def.StapID] || {};
         return {
-          stapID:v.StapID,
-          nr:num(v.Stapnr) || num(def.Nr),
-          naam:v.Stap || def.Stap || v.StapID,
-          workstream:v.Workstream || def.Workstream || "Overig",
+          stapID:def.StapID,
+          nr:num(def.Nr),
+          naam:def.Stap || def.StapID,
+          workstream:def.Workstream || "Overig",
           gate:def.Gate || "",
           verplicht:def.Verplicht !== "Nee",
           toelichting:def.Toelichting || "",
-          status:STATUS[v.Status] ? v.Status : "Niet gestart",
-          wie:v.Verantwoordelijke || ""
+          status:STATUS[s.status] ? s.status : "Niet gestart",
+          wie:s.wie || l.Eigenaar || ""
         };
-      })
-      .sort((a, b) => a.nr - b.nr);
+      });
+      const tel = st => stappen.filter(s => s.status === st).length;
+      const gereed = tel("Gereed"), loopt = tel("Loopt"), geblok = tel("Geblokkeerd");
 
-    const tel = st => stappen.filter(s => s.status === st).length;
-    const gereed = tel("Gereed"), loopt = tel("Loopt"), geblok = tel("Geblokkeerd");
+      const contacten  = alleContacten.filter(([,c]) => (c.leadId || c.LeadID) === id).map(([cid,c]) => Object.assign({_id:cid}, c));
+      const contracten = alleContracten.filter(([,o]) => (o.leadId || o.LeadID) === id).map(([oid,o]) => Object.assign({_id:oid}, o));
+      const bronnen    = alleBronnen.filter(([,b]) => (b.leadId || b.LeadID) === id).map(([bid,b]) => Object.assign({_id:bid}, b));
 
-    const contracten = rows("Overeenkomsten").filter(o => o.LeadID === id);
-    const bronnen    = rows("Bronnen").filter(b => b.LeadID === id);
-    const contacten  = rows("Contactpersonen").filter(c => c.LeadID === id);
+      const fee = num(l["Verwachte Smarteck-fee (EUR)"]);
+      const gate = l["Huidige gate"] || "";
+      const split = feeSplitsing(fee, gate);
+      const nda = contracten.find(o => /NDA/i.test(o.Type || "") && o.Status === "Getekend");
+      const datums = arr => arr.filter(Boolean).sort();
 
-    const nda = contracten.find(o => /NDA/i.test(o.Type || "") && o.Status === "Getekend");
+      return {
+        id, ruw:l,
+        doelgroep, hub:/hub/i.test(doelgroep),
+        organisatie:l.Organisatie || id,
+        project:l.Projectnaam || "",
+        plaats:l.Plaats || "", provincie:l.Provincie || "",
+        locatie:[l.Plaats, l.Provincie].filter(Boolean).join(", "),
+        herkomst:l["Herkomst van de lead"] || "",
+        aangebracht:l["Aangebracht door"] || "",
+        eersteContact:l["Datum eerste contact"] || "",
+        leadstatus:l.Leadstatus || "", fase:l.Ontwikkelfase || "", gate,
+        omvang:l["Omvang (woningen of MW)"] || "",
+        capex:num(l["Verwachte CAPEX (EUR)"]),
+        fee, split, slaagkans:split.kans, gewogen:split.gewogen,
+        piek:num(l["Structureel vermeden piek (kW)"]),
+        eigenaar:l.Eigenaar || "", prioriteit:l.Prioriteit || "",
+        actie:l["Volgende actie"] || "", deadline:l["Deadline volgende actie"] || "",
+        opmerkingen:l.Opmerkingen || "",
+        voorbeeld:/VOORBEELDRIJ/i.test(String(l.Opmerkingen || "")),
+        stappen, gereed, loopt, geblok, totaal:stappen.length,
+        pctGereed:stappen.length ? gereed / stappen.length : 0,
+        volgende:stappen.find(s => s.status === "Loopt") || stappen.find(s => s.status === "Niet gestart") || null,
+        contacten, contracten, bronnen,
+        getekend:contracten.filter(o => o.Status === "Getekend").length,
+        openContract:contracten.filter(o => !CONTRACT_KLAAR.includes(o.Status)).length,
+        bronOntvangen:bronnen.filter(b => BRON_BINNEN.includes(b.Status)).length,
+        bronTeVerwerken:bronnen.filter(b => BRON_TE_DOEN.includes(b.Status)).length,
+        mijlpalen:{
+          "Eerste contact":        l["Datum eerste contact"] || "",
+          "Eerste bron ontvangen": datums(bronnen.map(b => b["Datum ontvangen"]))[0] || "",
+          "NDA getekend":          nda ? nda["Datum getekend"] : "",
+          "Overeenkomst verzonden":datums(contracten.map(o => o["Datum verzonden"]))[0] || "",
+          "Laatst getekend":       datums(contracten.map(o => o["Datum getekend"])).slice(-1)[0] || "",
+          "Laatste contactmoment": datums(contacten.map(c => c["Laatste contact"])).slice(-1)[0] || "",
+          "Deadline actie":        l["Deadline volgende actie"] || "",
+          "Einde looptijd":        datums(contracten.map(o => o.Einddatum)).slice(-1)[0] || ""
+        }
+      };
+    }).sort((a,b) => a.id.localeCompare(b.id));
+  }
 
-    /* Mijlpalen: alleen datums die er werkelijk zijn. Het blad Voortgang
-       heeft geen datumkolommen ingevuld, dus daar komt niets uit. */
-    const mijlpalen = {
-      "Eerste contact":        l["Datum eerste contact"] || "",
-      "Eerste bron ontvangen": minDatum(bronnen.map(b => b["Datum ontvangen"])),
-      "NDA getekend":          nda ? nda["Datum getekend"] : "",
-      "Overeenkomst verzonden":minDatum(contracten.map(o => o["Datum verzonden"])),
-      "Laatst getekend":       maxDatum(contracten.map(o => o["Datum getekend"])),
-      "Laatste contactmoment": maxDatum(contacten.map(c => c["Laatste contact"])),
-      "Deadline actie":        l["Deadline volgende actie"] || "",
-      "Einde looptijd":        maxDatum(contracten.map(o => o.Einddatum))
-    };
-
-    return {
-      id,
-      doelgroep:l.Doelgroep || "",
-      hub:/hub/i.test(l.Doelgroep || ""),
-      organisatie:l.Organisatie || id,
-      project:l.Projectnaam || "",
-      plaats:l.Plaats || "",
-      provincie:l.Provincie || "",
-      locatie:[l.Plaats, l.Provincie].filter(Boolean).join(", "),
-      herkomst:l["Herkomst van de lead"] || "",
-      aangebracht:l["Aangebracht door"] || "",
-      eersteContact:l["Datum eerste contact"] || "",
-      leadstatus:l.Leadstatus || "",
-      fase:l.Ontwikkelfase || "",
-      gate:l["Huidige gate"] || "",
-      omvang:l["Omvang (woningen of MW)"] || "",
-      capex:num(l["Verwachte CAPEX (EUR)"]),
-      fee:num(l["Verwachte Smarteck-fee (EUR)"]),
-      slaagkans:num(l.Slaagkans),
-      gewogen:num(l["Gewogen fee (EUR)"]),
-      piek:num(l["Structureel vermeden piek (kW)"]),
-      eigenaar:l.Eigenaar || "",
-      prioriteit:l.Prioriteit || "",
-      actie:l["Volgende actie"] || "",
-      deadline:l["Deadline volgende actie"] || "",
-      opmerkingen:l.Opmerkingen || "",
-      voorbeeld:isVoorbeeld(l),
-      stappen, gereed, loopt, geblok,
-      totaal:stappen.length,
-      pctGereed:stappen.length ? gereed / stappen.length : 0,
-      volgende:stappen.find(s => s.status === "Loopt") || stappen.find(s => s.status === "Niet gestart") || null,
-      contracten, bronnen, contacten, mijlpalen,
-      getekend:contracten.filter(o => o.Status === "Getekend").length,
-      openContract:contracten.filter(o => !CONTRACT_KLAAR.includes(o.Status)).length,
-      bronOntvangen:bronnen.filter(b => BRON_BINNEN.includes(b.Status)).length,
-      bronTeVerwerken:bronnen.filter(b => BRON_TE_DOEN.includes(b.Status)).length
-    };
-  });
-
+  let LEADS = bouwLeads();
   const MIJLPAALNAMEN = ["Eerste contact","Eerste bron ontvangen","NDA getekend","Overeenkomst verzonden",
                          "Laatst getekend","Laatste contactmoment","Deadline actie","Einde looptijd"];
 
-  /* ---- filters --------------------------------------------------------- */
+  /* ---- filters ---------------------------------------------------------- */
   const F = {doelgroep:"", status:"", fase:"", gate:"", eigenaar:"", zoek:""};
-
   function zichtbaar(){
     const q = F.zoek.trim().toLowerCase();
     return LEADS.filter(l => {
@@ -1940,7 +2188,282 @@ const DATA = {
     });
   }
 
-  /* ---- tabelhulp ------------------------------------------------------- */
+  /* ---- melding ---------------------------------------------------------- */
+  let toastTimer = 0;
+  function melding(tekst, fout){
+    const t = $("#toast");
+    t.textContent = tekst;
+    t.classList.toggle("fout", !!fout);
+    t.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { t.hidden = true; }, fout ? 6500 : 3200);
+  }
+
+  /* ---- schrijven -------------------------------------------------------- */
+  function volgendeId(collectie, voorvoegsel){
+    let hoogst = 0;
+    STORE.data[collectie].forEach((_, id) => {
+      const m = /(\d+)\s*$/.exec(id);
+      if (m) hoogst = Math.max(hoogst, parseInt(m[1], 10));
+    });
+    return voorvoegsel + "-" + String(hoogst + 1).padStart(3, "0");
+  }
+
+  async function bewaar(collectie, id, body){
+    if (!bewerkbaar()) { melding("Bewerken kan alleen in de gedeelde versie.", true); return false; }
+    try {
+      await STORE.db.doc(collectie + "/" + id).set(body);
+      return true;
+    } catch (e) {
+      const code = e && e.code;
+      if (code === "invalid_argument"){
+        STORE.magSchrijven = false;
+        tekenAlles();
+        melding("U heeft geen rechten om deze gegevens te wijzigen. Het scherm staat nu op alleen-lezen.", true);
+      } else if (code === "quota_exceeded"){
+        melding("De opslag van dit dashboard zit vol. Verwijder eerst oude regels.", true);
+      } else if (code === "resource_exhausted"){
+        melding("Te veel wijzigingen achter elkaar. Probeer het zo nog eens.", true);
+      } else {
+        melding("Opslaan is niet gelukt. Probeer het nog eens.", true);
+      }
+      return false;
+    }
+  }
+
+  async function verwijder(collectie, id){
+    if (!bewerkbaar()) return false;
+    try { await STORE.db.doc(collectie + "/" + id).delete(); return true; }
+    catch (e) { melding("Verwijderen is niet gelukt.", true); return false; }
+  }
+
+  async function verwijderLead(lead){
+    const kinderen = lead.contacten.length + lead.contracten.length + lead.bronnen.length;
+    const vraag = "Lead " + lead.organisatie + " (" + lead.id + ") verwijderen?" +
+      (kinderen ? "\n\nHiermee verdwijnen ook " + kinderen + " onderliggende regels: " +
+        lead.contacten.length + " contactpersonen, " + lead.contracten.length + " overeenkomsten en " +
+        lead.bronnen.length + " bronnen." : "") +
+      "\n\nDit kan niet ongedaan gemaakt worden.";
+    if (!confirm(vraag)) return;
+    for (const c of lead.contacten)  await verwijder("contacten", c._id);
+    for (const o of lead.contracten) await verwijder("overeenkomsten", o._id);
+    for (const b of lead.bronnen)    await verwijder("bronnen", b._id);
+    if (await verwijder("leads", lead.id)) melding("Lead " + lead.id + " verwijderd.");
+  }
+
+  async function zetStapStatus(lead, stapID, status){
+    if (!bewerkbaar()) return;
+    const body = Object.assign({}, lead.ruw);
+    body.stappen = Object.assign({}, body.stappen || {});
+    body.stappen[stapID] = Object.assign({}, body.stappen[stapID] || {}, {status});
+    if (await bewaar("leads", lead.id, body)) melding(stapID + " staat nu op " + status + ".");
+  }
+
+  /* ---- veldschema's ----------------------------------------------------- */
+  const SCHEMA = {
+    leads:{
+      naam:"Lead", voorvoegsel:"LEAD", idVeld:"LeadID",
+      velden:[
+        {k:"Organisatie", t:"tekst", verplicht:true},
+        {k:"Projectnaam", t:"tekst"},
+        {k:"Doelgroep", t:"keuze", lijst:"L_Doelgroep", verplicht:true,
+         hint:"Bepaalt welk stappenspoor de lead krijgt."},
+        {k:"Huidige gate", t:"keuze", lijst:"L_Gate", verplicht:true,
+         hint:"Bepaalt de slaagkans en de gewogen fee."},
+        {k:"Plaats", t:"tekst"},
+        {k:"Provincie", t:"tekst"},
+        {k:"Herkomst van de lead", t:"keuze", lijst:"L_Herkomst"},
+        {k:"Aangebracht door", t:"keuze", lijst:"L_Medewerker"},
+        {k:"Datum eerste contact", t:"datum"},
+        {k:"Leadstatus", t:"keuze", lijst:"L_Leadstatus"},
+        {k:"Ontwikkelfase", t:"keuze", lijst:"L_Fase"},
+        {k:"Omvang (woningen of MW)", t:"tekst"},
+        {k:"Verwachte CAPEX (EUR)", t:"getal"},
+        {k:"Verwachte Smarteck-fee (EUR)", t:"getal",
+         hint:"Slaagkans en gewogen fee worden hieruit berekend."},
+        {k:"Structureel vermeden piek (kW)", t:"getal"},
+        {k:"Eigenaar", t:"keuze", lijst:"L_Medewerker"},
+        {k:"Prioriteit", t:"keuze", lijst:"L_Prioriteit"},
+        {k:"Volgende actie", t:"tekst", breed:true},
+        {k:"Deadline volgende actie", t:"datum"},
+        {k:"Opmerkingen", t:"lang", breed:true}
+      ]
+    },
+    contacten:{
+      naam:"Contactpersoon", voorvoegsel:"CON", idVeld:"ContactID",
+      velden:[
+        {k:"Naam", t:"tekst", verplicht:true},
+        {k:"Organisatie", t:"tekst"},
+        {k:"Functie", t:"tekst"},
+        {k:"Rol in besluitvorming", t:"keuze", lijst:"L_Rol"},
+        {k:"E-mail", t:"tekst"},
+        {k:"Telefoon", t:"tekst"},
+        {k:"Relatie-eigenaar", t:"keuze", lijst:"L_Medewerker"},
+        {k:"Laatste contact", t:"datum"},
+        {k:"Opmerkingen", t:"lang", breed:true}
+      ]
+    },
+    overeenkomsten:{
+      naam:"Overeenkomst", voorvoegsel:"OVK", idVeld:"OvereenkomstID",
+      velden:[
+        {k:"Type", t:"keuze", lijst:"L_Contracttype", verplicht:true},
+        {k:"Titel", t:"tekst"},
+        {k:"Status", t:"keuze", lijst:"L_Contractstatus", verplicht:true},
+        {k:"Datum verzonden", t:"datum"},
+        {k:"Datum getekend", t:"datum"},
+        {k:"Ingangsdatum", t:"datum"},
+        {k:"Einddatum", t:"datum"},
+        {k:"Looptijd (mnd)", t:"getal"},
+        {k:"Contractwaarde (EUR)", t:"getal"},
+        {k:"Ondertekenaar Smarteck", t:"keuze", lijst:"L_Medewerker"},
+        {k:"Ondertekenaar wederpartij", t:"tekst"},
+        {k:"Documentlocatie", t:"tekst", breed:true},
+        {k:"Actie vereist", t:"keuze", lijst:"L_JaNee"},
+        {k:"Opmerkingen", t:"lang", breed:true}
+      ]
+    },
+    bronnen:{
+      naam:"Bron", voorvoegsel:"BRN", idVeld:"BronID",
+      velden:[
+        {k:"Brontype", t:"keuze", lijst:"L_Brontype", verplicht:true},
+        {k:"Titel of bestandsnaam", t:"tekst"},
+        {k:"Aangeleverd door", t:"tekst"},
+        {k:"Datum ontvangen", t:"datum"},
+        {k:"Formaat", t:"keuze", lijst:"L_Formaat"},
+        {k:"Status", t:"keuze", lijst:"L_Bronstatus", verplicht:true},
+        {k:"Bruikbaarheid", t:"keuze", lijst:"L_Bruikbaarheid"},
+        {k:"Vertrouwelijk", t:"keuze", lijst:"L_JaNee"},
+        {k:"Onder NDA", t:"keuze", lijst:"L_JaNee"},
+        {k:"Gebruikt voor stap", t:"tekst"},
+        {k:"Beoordeeld door", t:"keuze", lijst:"L_Medewerker"},
+        {k:"Bestandslocatie", t:"tekst", breed:true},
+        {k:"Opmerkingen", t:"lang", breed:true}
+      ]
+    }
+  };
+
+  /* ---- formulierdialoog -------------------------------------------------- */
+  const dlg = $("#dlg");
+  let dlgOpslaan = null;
+
+  function openFormulier(collectie, bestaand, leadId, naOpslaan){
+    const schema = SCHEMA[collectie];
+    const nieuw = !bestaand;
+    $("#dlg-titel").textContent = (nieuw ? "Nieuwe " : "") + schema.naam.toLowerCase() +
+      (nieuw ? "" : " " + (bestaand._id || bestaand[schema.idVeld] || ""));
+    $("#dlg-fout").textContent = "";
+
+    const host = $("#dlg-velden");
+    host.replaceChildren();
+    const invoer = {};
+
+    schema.velden.forEach(v => {
+      const wrap = el("div","ff" + (v.breed || v.t === "lang" ? " vol" : ""));
+      const id = "ff-" + v.k.replace(/[^A-Za-z0-9]+/g, "-").toLowerCase();
+      const lab = el("label", null, v.k + (v.verplicht ? " *" : ""));
+      lab.htmlFor = id;
+      let veld;
+      if (v.t === "keuze"){
+        veld = el("select");
+        veld.appendChild(new Option(v.verplicht ? "Kiezen\u2026" : "\u2014", ""));
+        keuze(v.lijst).forEach(o => veld.appendChild(new Option(o, o)));
+      } else if (v.t === "lang"){
+        veld = el("textarea");
+      } else {
+        veld = el("input");
+        veld.type = v.t === "datum" ? "date" : v.t === "getal" ? "number" : "text";
+        if (v.t === "getal") veld.step = "any";
+      }
+      veld.id = id;
+      const huidig = bestaand ? bestaand[v.k] : "";
+      veld.value = huidig === undefined || huidig === null ? "" : String(huidig);
+      invoer[v.k] = {veld, spec:v, wrap};
+      kids(wrap, lab, veld);
+      if (v.hint) kids(wrap, el("span","hint", v.hint));
+      host.appendChild(wrap);
+    });
+
+    dlgOpslaan = async () => {
+      let stuk = null;
+      Object.values(invoer).forEach(({veld, spec, wrap}) => {
+        const leeg = !String(veld.value).trim();
+        wrap.classList.toggle("fout", spec.verplicht && leeg);
+        if (spec.verplicht && leeg && !stuk) stuk = spec.k;
+      });
+      if (stuk){ $("#dlg-fout").textContent = "Vul " + stuk + " in."; return; }
+
+      const body = bestaand ? Object.assign({}, bestaand) : {};
+      delete body._id;
+      Object.entries(invoer).forEach(([k, {veld, spec}]) => {
+        const w = String(veld.value).trim();
+        body[k] = spec.t === "getal" ? (w === "" ? 0 : num(w)) : w;
+      });
+
+      let id = bestaand ? (bestaand._id || bestaand[schema.idVeld]) : volgendeId(collectie, schema.voorvoegsel);
+      body[schema.idVeld] = id;
+      if (collectie !== "leads") body.leadId = leadId || bestaand.leadId;
+      else if (!bestaand) {
+        /* nieuwe lead krijgt meteen het volledige stappenspoor van de doelgroep */
+        const bib = stappenVoor(body.Doelgroep);
+        const stappen = {};
+        bib.forEach(s => { stappen[s.StapID] = {status:"Niet gestart", wie:body.Eigenaar || ""}; });
+        body.stappen = stappen;
+        if (!bib.length) melding("Let op: voor doelgroep " + body.Doelgroep + " staan geen ontwikkelstappen in de bibliotheek.", true);
+      }
+      body._bijgewerkt = new Date().toISOString();
+
+      if (await bewaar(collectie, id, body)){
+        dlg.close();
+        melding(schema.naam + " " + id + " " + (bestaand ? "bijgewerkt" : "toegevoegd") + ".");
+        if (naOpslaan) naOpslaan(id);
+      }
+    };
+
+    if (!dlg.open) dlg.showModal();
+    const eerste = host.querySelector("input,select,textarea");
+    if (eerste) eerste.focus();
+  }
+
+  $("#dlg-bewaar").addEventListener("click", () => { if (dlgOpslaan) dlgOpslaan(); });
+  $("#dlg-annuleer").addEventListener("click", () => dlg.close());
+  $("#dlg-sluit").addEventListener("click", () => dlg.close());
+  $("#dlg-form").addEventListener("submit", e => { e.preventDefault(); if (dlgOpslaan) dlgOpslaan(); });
+
+  /* ---- statuskiezer ------------------------------------------------------ */
+  let menuOpen = null;
+  function sluitMenu(){ if (menuOpen){ menuOpen.remove(); menuOpen = null; } }
+  document.addEventListener("click", e => { if (menuOpen && !menuOpen.contains(e.target)) sluitMenu(); }, true);
+  document.addEventListener("keydown", e => { if (e.key === "Escape") sluitMenu(); });
+
+  function openStatusMenu(knop, lead, stap){
+    sluitMenu();
+    const m = el("div","statusmenu");
+    const kop = el("div","kop");
+    kids(kop, el("div","t", stap.nr + ". " + stap.naam),
+              el("div","m", stap.stapID + MIDDOT + stap.workstream + (stap.gate ? MIDDOT + stap.gate : "")));
+    kids(m, kop);
+    VOLGORDE.forEach(st => {
+      const cfg = statusOf(st);
+      const b = el("button");
+      b.type = "button";
+      b.setAttribute("aria-current", String(st === stap.status));
+      const sw = el("span","sw " + cfg.cls);
+      const mk = teken(cfg.mark, 10);
+      if (mk) kids(sw, mk);
+      kids(b, sw, el("span", null, st));
+      b.addEventListener("click", () => { sluitMenu(); zetStapStatus(lead, stap.stapID, st); });
+      kids(m, b);
+    });
+    document.body.appendChild(m);
+    const r = knop.getBoundingClientRect(), mr = m.getBoundingClientRect();
+    m.style.left = Math.max(8, Math.min(r.left, innerWidth - mr.width - 8)) + "px";
+    m.style.top = (r.bottom + mr.height > innerHeight - 8 ? Math.max(8, r.top - mr.height - 4) : r.bottom + 4) + "px";
+    menuOpen = m;
+    const eerste = m.querySelector("button");
+    if (eerste) eerste.focus();
+  }
+
+  /* ---- gedeelde bouwstenen ---------------------------------------------- */
   function bouwTabel(tabel, kolommen, records, opts){
     opts = opts || {};
     tabel.replaceChildren();
@@ -1948,45 +2471,35 @@ const DATA = {
     kolommen.forEach(k => {
       const th = el("th", k.n ? "n" : null, k.kop);
       th.scope = "col";
-      hr.appendChild(th);
+      kids(hr, th);
     });
     kids(thead, hr);
-    tabel.appendChild(thead);
+    kids(tabel, thead);
 
     const tb = el("tbody");
     if (!records.length){
       const tr = el("tr"), td = el("td", null, opts.leeg || "Geen regels in deze selectie.");
       td.colSpan = kolommen.length;
-      kids(tr, td);
-      tb.appendChild(tr);
+      kids(tb, kids(tr, td));
     } else {
       records.forEach(rec => {
         const tr = el("tr");
         kolommen.forEach(k => {
-          const waarde = k.cel(rec);
-          if (waarde instanceof Node){
-            const td = el("td", k.cls || (k.n ? "n" : null));
-            td.appendChild(waarde);
-            tr.appendChild(td);
-          } else {
-            tr.appendChild(el("td", k.cls || (k.n ? "n" : null), waarde === "" || waarde === undefined ? DASH : waarde));
-          }
+          const w = k.cel(rec);
+          const td = el("td", k.cls || (k.n ? "n" : null));
+          if (w instanceof Node) kids(td, w);
+          else td.textContent = (w === "" || w === undefined || w === null) ? DASH : w;
+          kids(tr, td);
         });
-        tb.appendChild(tr);
+        kids(tb, tr);
       });
       if (opts.totaal){
         const tr = el("tr","total");
-        kolommen.forEach((k, i) => tr.appendChild(el("td", k.n ? "n" : null, opts.totaal(k, i))));
-        tb.appendChild(tr);
+        kolommen.forEach((k, i) => kids(tr, el("td", k.n ? "n" : null, opts.totaal(k, i))));
+        kids(tb, tr);
       }
     }
-    tabel.appendChild(tb);
-  }
-
-  function datumCel(d){
-    if (!d) return el("span","", DASH);
-    const span = el("span", null, d);
-    return span;
+    kids(tabel, tb);
   }
 
   function leadLink(l){
@@ -1996,21 +2509,27 @@ const DATA = {
     return b;
   }
 
-  /* ---- kerncijfers in de kopbalk --------------------------------------- */
+  function iconKnop(soort, titel, cls, fn){
+    const b = el("button","iconbtn" + (cls ? " " + cls : ""));
+    b.type = "button";
+    b.title = titel;
+    b.setAttribute("aria-label", titel);
+    const t = teken(soort, 12);
+    if (t) kids(b, t);
+    b.addEventListener("click", e => { e.stopPropagation(); fn(); });
+    return b;
+  }
+
   function tekenKpiStrip(sel){
     const host = $("#kpistrip");
     host.replaceChildren();
     [["Gewogen fee", euro(sel.reduce((a,l)=>a+l.gewogen,0))],
-     ["Vermeden piek", nlTwo.format(sel.reduce((a,l)=>a+l.piek,0)/1000) + " MW"],
+     ["Vermeden piek", nlTwo.format(sel.reduce((a,l)=>a+l.piek,0)/1000) + "\u00A0MW"],
      ["# Leads", nlInt.format(sel.length)]
-    ].forEach(([k,v]) => {
-      const b = el("div","kpibox");
-      kids(b, el("div","k",k), el("div","v",v));
-      host.appendChild(b);
-    });
+    ].forEach(([k,v]) => kids(host, kids(el("div","kpibox"), el("div","k",k), el("div","v",v))));
   }
 
-  /* ---- pagina: portefeuille -------------------------------------------- */
+  /* ---- portefeuille ------------------------------------------------------ */
   const GATES = [
     {g:"M1", naam:"Origination",    desc:"Gekwalificeerd, bronnen binnen, propositie uit."},
     {g:"M2", naam:"Feasibility",    desc:"Concept, businesscase en structuur staan."},
@@ -2018,26 +2537,54 @@ const DATA = {
     {g:"M4", naam:"Ready-to-Build", desc:"Netcontractering en investeringsbesluit."}
   ];
 
+  function tekenBanner(){
+    const host = $("#home-banner");
+    host.replaceChildren();
+    if (live() && !LEADS.length){
+      const b = el("div","banner");
+      kids(b, el("span", null, "De gedeelde opslag is nog leeg."));
+      if (STORE.magSchrijven){
+        const k = el("button","btn-solid","Werkboekgegevens inladen");
+        k.type = "button";
+        k.addEventListener("click", vulUitWerkboek);
+        kids(b, k);
+      }
+      kids(host, b);
+      return;
+    }
+    if (!live()){
+      const b = el("div","banner");
+      const s = el("span");
+      kids(s, el("b", null, "Momentopname"), document.createTextNode(
+        " \u2014 dit bestand toont de gegevens zoals ze uit het werkboek kwamen en is alleen-lezen. " +
+        "Open de gedeelde versie om te kunnen toevoegen en wijzigen."));
+      kids(b, s);
+      kids(host, b);
+    }
+  }
+
   function tekenHome(sel){
+    tekenBanner();
     const gewogen = sel.reduce((a,l)=>a+l.gewogen,0);
-    const fee     = sel.reduce((a,l)=>a+l.fee,0);
-    const capex   = sel.reduce((a,l)=>a+l.capex,0);
-    const piekKW  = sel.reduce((a,l)=>a+l.piek,0);
-    const stapT   = sel.reduce((a,l)=>a+l.totaal,0);
-    const stapG   = sel.reduce((a,l)=>a+l.gereed,0);
+    const fee = sel.reduce((a,l)=>a+l.fee,0);
+    const capex = sel.reduce((a,l)=>a+l.capex,0);
+    const piekKW = sel.reduce((a,l)=>a+l.piek,0);
+    const verdiend = sel.reduce((a,l)=>a+l.split.verdiend,0);
+    const stapT = sel.reduce((a,l)=>a+l.totaal,0);
+    const stapG = sel.reduce((a,l)=>a+l.gereed,0);
 
     const tegels = [
       {k:"Gewogen pijplijn", v:euro(gewogen),
-       p:"Verwachte fee maal de kans op FID die bij de bereikte gate hoort.",
-       split:[["Verwachte fee", euro(fee)],["CAPEX", euro(capex)]]},
-      {k:"Structureel vermeden piek", v:nlTwo.format(piekKW/1000), u:" MW",
-       p:"Wat deze pijplijn van de netbeheerder afhaalt — niet in nieuwe kabels, in slimmer ontworpen systemen.",
-       split:[["Van 3,2 GW landelijk", nlTwo.format(piekKW/3200000*100) + "%"]]},
+       p:"Wat op de bereikte gates al verdiend is, plus wat daarna komt maal de kans op FID.",
+       split:[["Al verdiend", euro(verdiend)],["Verwachte fee", euro(fee)]]},
+      {k:"Structureel vermeden piek", v:nlTwo.format(piekKW/1000), u:"\u00A0MW",
+       p:"Wat deze pijplijn van de netbeheerder afhaalt \u2014 niet in nieuwe kabels, in slimmer ontworpen systemen.",
+       split:[["Van 3,2 GW landelijk", nlTwo.format(piekKW/3200000*100) + "%"],["CAPEX", euro(capex)]]},
       {k:"Leads in beeld", v:nlInt.format(sel.length),
-       p:"Twee sporen, één systeem: gebiedsontwikkeling en bedrijventerrein.",
+       p:"Twee sporen, \u00E9\u00E9n systeem: gebiedsontwikkeling en bedrijventerrein.",
        split:[["Vastgoed", String(sel.filter(l=>!l.hub).length)],["Hub", String(sel.filter(l=>l.hub).length)]]},
       {k:"Ontwikkelstappen gereed", v:nlInt.format(stapG), u:" / " + nlInt.format(stapT),
-       p:"Afgevinkte stappen over alle zichtbare leads, uit het blad Voortgang.",
+       p:"Afgevinkte stappen over alle zichtbare leads.",
        split:[["Loopt", String(sel.reduce((a,l)=>a+l.loopt,0))],["Geblokkeerd", String(sel.reduce((a,l)=>a+l.geblok,0))]]}
     ];
     const host = $("#home-stats");
@@ -2045,40 +2592,38 @@ const DATA = {
     tegels.forEach(t => {
       const c = el("div","stat");
       const v = el("div","v", t.v);
-      if (t.u) v.appendChild(el("span","u", t.u));
+      if (t.u) kids(v, el("span","u", t.u));
       const sp = el("div","split");
       t.split.forEach(([k,val]) => {
         const s = el("span", null, k + " ");
-        s.appendChild(el("b", null, val));
-        sp.appendChild(s);
+        kids(s, el("b", null, val));
+        kids(sp, s);
       });
-      kids(c, el("div","k",t.k), v, el("p",null,t.p), sp);
-      host.appendChild(c);
+      kids(host, kids(c, el("div","k",t.k), v, el("p",null,t.p), sp));
     });
 
     const gh = $("#home-gates");
     gh.replaceChildren();
     GATES.forEach(gt => {
-      const kans = aanname(gt.g + " bereikt");
+      const kans = kansOp(gt.g);
       const hier = sel.filter(l => l.gate === gt.g);
       const c = el("div","gate");
       const m = el("div","meter"), i = el("i");
       i.style.width = (kans * 100) + "%";
       kids(m, i);
+      const fid = el("div","fid");
+      kids(fid, el("div","lbl","Kans op FID" + MIDDOT + pct(kans)), m);
       const figs = el("div","figs");
       [["Leads op deze gate", nlInt.format(hier.length)],
        ["Gewogen fee", euro(hier.reduce((a,l)=>a+l.gewogen,0))]
       ].forEach(([k,v]) => {
         const r = el("span", null, k + ": ");
-        r.appendChild(el("b", null, v));
-        figs.appendChild(r);
+        kids(r, el("b", null, v));
+        kids(figs, r);
       });
-      kids(c, el("div","g",gt.g), el("h3",null,gt.naam), el("p","desc",gt.desc),
-              el("div","lbl","Kans op FID · " + pct(kans)), m, figs);
-      gh.appendChild(c);
+      kids(gh, kids(c, el("div","g",gt.g), el("h3",null,gt.naam), el("p","desc",gt.desc), fid, figs));
     });
 
-    /* verdelingspanelen */
     const panels = [
       ["Per doelgroep",     l => l.doelgroep || "Onbekend"],
       ["Per leadstatus",    l => l.leadstatus || "Onbekend"],
@@ -2097,13 +2642,12 @@ const DATA = {
       });
       const lijst = [...per.entries()].sort((a,b) => b[1].gewogen - a[1].gewogen || b[1].n - a[1].n);
       const maxG = Math.max(1, ...lijst.map(([,b]) => b.gewogen));
-
       const p = el("div","panel");
       const hd = el("div","panel-hd");
       kids(hd, el("span","t",titel), el("span","s","Gewogen fee"));
       const bd = el("div","panel-bd");
       const bars = el("div","bars");
-      if (!lijst.length) bars.appendChild(el("p","empty","Geen leads in de selectie."));
+      if (!lijst.length) kids(bars, el("p","empty","Geen leads in de selectie."));
       lijst.forEach(([naam, b]) => {
         const row = el("div","barrow");
         const track = el("div","track");
@@ -2112,20 +2656,14 @@ const DATA = {
         fill.style.background = "var(--aqua)";
         fill.dataset.tip = JSON.stringify({boven:titel, titel:naam, tekst:b.n + " leads", status:""});
         kids(track, fill);
-        kids(row, el("div","nm",naam), track, el("div","amt", euro(b.gewogen)));
-        bars.appendChild(row);
+        kids(bars, kids(row, el("div","nm",naam), track, el("div","amt", euro(b.gewogen))));
       });
-      kids(bd, bars);
-      kids(p, hd, bd);
-      ph.appendChild(p);
+      kids(ph, kids(p, hd, kids(bd, bars)));
     });
 
-    /* rechterrail met tellingen */
     const ch = $("#home-counts");
     ch.replaceChildren();
-    const hd = el("div","row head");
-    kids(hd, el("div","k","Aantallen"));
-    ch.appendChild(hd);
+    kids(ch, kids(el("div","row head"), el("div","k","Aantallen")));
     [["Leads", sel.length],
      ["Vastgoedontwikkelaar", sel.filter(l=>!l.hub).length],
      ["Energiehub", sel.filter(l=>l.hub).length],
@@ -2133,42 +2671,46 @@ const DATA = {
      ["Overeenkomsten", sel.flatMap(l=>l.contracten).length],
      ["Bronnen", sel.flatMap(l=>l.bronnen).length],
      ["Stappen geblokkeerd", sel.reduce((a,l)=>a+l.geblok,0)]
-    ].forEach(([k,v]) => {
-      const r = el("div","row");
-      kids(r, el("div","k",k), el("div","v", nlInt.format(v)));
-      ch.appendChild(r);
-    });
+    ].forEach(([k,v]) => kids(ch, kids(el("div","row"), el("div","k",k), el("div","v", nlInt.format(v)))));
   }
 
-  /* ---- pagina: leads / alle -------------------------------------------- */
+  /* ---- leads / alle ------------------------------------------------------ */
   function tekenLeadsTabel(sel){
     $("#leads-alle-n").textContent = sel.length + (sel.length === 1 ? " lead" : " leads");
-    bouwTabel($("#tbl-leads"), [
-      {kop:"LeadID",      cel:l => leadLink(l)},
+    const kolommen = [
+      {kop:"LeadID", cel:l => leadLink(l)},
       {kop:"Organisatie", cel:l => {
         const w = el("div","wrapcell");
         kids(w, el("b", null, l.organisatie));
         if (l.project) kids(w, el("div","id", l.project));
         return w;
       }},
-      {kop:"Doelgroep",   cel:l => el("span","chip dg" + (l.hub ? " hub" : ""), l.hub ? "Energiehub" : "Vastgoed")},
-      {kop:"Plaats",      cel:l => l.locatie},
-      {kop:"Herkomst",    cel:l => l.herkomst},
-      {kop:"Status",      cel:l => l.leadstatus},
-      {kop:"Fase",        cel:l => l.fase},
-      {kop:"Gate",        cel:l => el("span","chip gatepill", l.gate || DASH)},
-      {kop:"Omvang",      cel:l => l.omvang},
-      {kop:"CAPEX",       cel:l => euro(l.capex),    n:true},
-      {kop:"Fee",         cel:l => euro(l.fee),      n:true},
-      {kop:"Kans",        cel:l => pct(l.slaagkans), n:true},
-      {kop:"Gewogen fee", cel:l => euro(l.gewogen),  n:true},
-      {kop:"Piek kW",     cel:l => nlInt.format(l.piek), n:true},
-      {kop:"Voortgang",   cel:l => pct(l.pctGereed), n:true},
-      {kop:"Eigenaar",    cel:l => l.eigenaar},
-      {kop:"Prioriteit",  cel:l => l.prioriteit ? el("span","chip" + (l.prioriteit === "Hoog" ? " hi" : ""), l.prioriteit) : DASH},
-      {kop:"Deadline",    cel:l => l.deadline, cls:"d"}
-    ], sel, {
-      leeg:"Geen leads die aan deze filters voldoen.",
+      {kop:"Doelgroep", cel:l => el("span","chip dg" + (l.hub ? " hub" : ""), l.hub ? "Energiehub" : "Vastgoed")},
+      {kop:"Plaats", cel:l => l.locatie},
+      {kop:"Herkomst", cel:l => l.herkomst},
+      {kop:"Status", cel:l => l.leadstatus},
+      {kop:"Fase", cel:l => l.fase},
+      {kop:"Gate", cel:l => el("span","chip gatepill", l.gate || DASH)},
+      {kop:"Omvang", cel:l => l.omvang},
+      {kop:"CAPEX", cel:l => euro(l.capex), n:true},
+      {kop:"Fee", cel:l => euro(l.fee), n:true},
+      {kop:"Kans", cel:l => pct(l.slaagkans), n:true},
+      {kop:"Gewogen fee", cel:l => euro(l.gewogen), n:true},
+      {kop:"Piek kW", cel:l => nlInt.format(l.piek), n:true},
+      {kop:"Voortgang", cel:l => pct(l.pctGereed), n:true},
+      {kop:"Eigenaar", cel:l => l.eigenaar},
+      {kop:"Prioriteit", cel:l => l.prioriteit ? el("span","chip" + (l.prioriteit === "Hoog" ? " hi" : ""), l.prioriteit) : DASH},
+      {kop:"Deadline", cel:l => l.deadline, cls:"d"}
+    ];
+    if (bewerkbaar()) kolommen.push({kop:"", cls:"n", cel:l => {
+      const w = el("div","rowacts");
+      kids(w, iconKnop("potlood","Lead bewerken", null, () => openFormulier("leads", l.ruw, null, null)),
+              iconKnop("prullenbak","Lead verwijderen","danger", () => verwijderLead(l)));
+      return w;
+    }});
+
+    bouwTabel($("#tbl-leads"), kolommen, sel, {
+      leeg: live() && !LEADS.length ? "Nog geen leads. Voeg er een toe met Nieuwe lead." : "Geen leads die aan deze filters voldoen.",
       totaal:(k, i) => {
         if (i === 0) return "Totaal";
         if (k.kop === "CAPEX")       return euro(sel.reduce((a,l)=>a+l.capex,0));
@@ -2180,37 +2722,28 @@ const DATA = {
     });
   }
 
-  /* ---- pagina: leads / mijlpalen --------------------------------------- */
   function tekenMijlpalen(sel){
     bouwTabel($("#tbl-mijlpalen"), [
-      {kop:"LeadID",      cel:l => leadLink(l)},
+      {kop:"LeadID", cel:l => leadLink(l)},
       {kop:"Organisatie", cel:l => el("b", null, l.organisatie)},
-      {kop:"Gate",        cel:l => el("span","chip gatepill", l.gate || DASH)},
-      ...MIJLPAALNAMEN.map(naam => ({
-        kop:naam,
-        cls:"d",
-        cel:l => {
-          const d = l.mijlpalen[naam];
-          if (!d) { const s = el("span", null, DASH); return s; }
-          return el("span", null, d);
-        }
-      }))
+      {kop:"Gate", cel:l => el("span","chip gatepill", l.gate || DASH)},
+      ...MIJLPAALNAMEN.map(naam => ({kop:naam, cls:"d", cel:l => l.mijlpalen[naam] || DASH}))
     ], sel, {leeg:"Geen leads die aan deze filters voldoen."});
-    /* lege datumcellen grijzer zetten */
     $("#tbl-mijlpalen").querySelectorAll("td.d").forEach(td => {
       if (td.textContent.trim() === DASH) td.classList.add("none");
     });
   }
 
-  /* ---- pagina: leads / voortgang --------------------------------------- */
   function tekenLegenda(){
     const host = $("#legend");
     host.replaceChildren();
     VOLGORDE.forEach(st => {
-      const s = statusOf(st);
+      const cfg = statusOf(st);
       const item = el("span","item");
-      kids(item, el("span","swatch " + s.cls, s.glyph), el("span", null, st));
-      host.appendChild(item);
+      const sw = el("span","swatch " + cfg.cls);
+      const mk = teken(cfg.mark, 10);
+      if (mk) kids(sw, mk);
+      kids(host, kids(item, sw, el("span", null, st)));
     });
   }
 
@@ -2224,72 +2757,76 @@ const DATA = {
     return banden;
   }
 
+  function stappenStrip(l){
+    const wrap = el("div","stripwrap");
+    if (!l.totaal){ kids(wrap, el("p","empty","Geen ontwikkelstappen voor deze doelgroep in de bibliotheek.")); return wrap; }
+    const cols = "repeat(" + l.totaal + ",minmax(0,1fr))";
+
+    const band = el("div","gateband");
+    band.style.gridTemplateColumns = cols;
+    gateBanden(l.stappen).forEach(b => {
+      const sp = el("span", null, b.gate);
+      sp.style.gridColumn = "span " + b.n;
+      kids(band, sp);
+    });
+
+    const strip = el("div","strip");
+    strip.style.gridTemplateColumns = cols;
+    l.stappen.forEach(st => {
+      const cfg = statusOf(st.status);
+      const b = el("button", cfg.cls + (bewerkbaar() ? " kanbewerken" : ""));
+      b.type = "button";
+      const mk = teken(cfg.mark, 11);
+      if (mk) kids(b, mk);
+      b.setAttribute("aria-label", "Stap " + st.nr + ": " + st.naam + " \u2014 " + st.status +
+        (bewerkbaar() ? ". Klik om de status te wijzigen." : ""));
+      b.dataset.tip = JSON.stringify({
+        boven:st.stapID + MIDDOT + st.workstream + (st.gate ? MIDDOT + st.gate : "") + (st.verplicht ? "" : MIDDOT + "optioneel"),
+        titel:st.nr + ". " + st.naam,
+        tekst:st.toelichting,
+        status:st.status
+      });
+      if (bewerkbaar()) b.addEventListener("click", () => openStatusMenu(b, l, st));
+      kids(strip, b);
+    });
+
+    const nrs = el("div","stepnr");
+    nrs.style.gridTemplateColumns = cols;
+    nrs.setAttribute("aria-hidden","true");
+    l.stappen.forEach(st => kids(nrs, el("span", null, st.nr % 5 === 0 || st.nr === 1 ? String(st.nr) : "")));
+    return kids(wrap, band, strip, nrs);
+  }
+
+  function voortgangsBalk(l){
+    const prog = el("div","progress");
+    const bar = el("div","bar");
+    bar.setAttribute("role","img");
+    bar.setAttribute("aria-label", l.gereed + " van " + l.totaal + " stappen gereed, " + l.loopt + " lopend, " + l.geblok + " geblokkeerd");
+    [["--st-gereed", l.gereed],["--st-loopt", l.loopt],["--st-geblok", l.geblok]].forEach(([v,n]) => {
+      if (!n || !l.totaal) return;
+      const i = el("i");
+      i.style.width = (n / l.totaal * 100) + "%";
+      i.style.background = "var(" + v + ")";
+      kids(bar, i);
+    });
+    return kids(prog, bar, el("span","pct", pct(l.pctGereed)));
+  }
+
   function tekenVoortgang(sel){
     const host = $("#voortgang-cards");
     host.replaceChildren();
-    if (!sel.length){ host.appendChild(el("p","empty","Geen leads die aan deze filters voldoen.")); return; }
-
+    if (!sel.length){ kids(host, el("p","empty","Geen leads die aan deze filters voldoen.")); return; }
     sel.forEach(l => {
       const p = el("div","panel");
       const hd = el("div","panel-hd");
-      const t = el("span","t", l.organisatie + " · " + l.id);
-      const s = el("span","s", (l.volgende ? "Volgende: " + l.volgende.nr + ". " + l.volgende.naam : "Alle stappen afgerond"));
-      kids(hd, t, s);
-
+      kids(hd, el("span","t", l.organisatie + MIDDOT + l.id),
+               el("span","s", l.volgende ? "Volgende: " + l.volgende.nr + ". " + l.volgende.naam : "Alle stappen afgerond"));
       const bd = el("div","panel-bd");
-      const prog = el("div","progress");
-      const bar = el("div","bar");
-      bar.setAttribute("role","img");
-      bar.setAttribute("aria-label", l.gereed + " van " + l.totaal + " stappen gereed, " + l.loopt + " lopend, " + l.geblok + " geblokkeerd");
-      [["--st-gereed", l.gereed],["--st-loopt", l.loopt],["--st-geblok", l.geblok]].forEach(([v,n]) => {
-        if (!n) return;
-        const i = el("i");
-        i.style.width = (n / l.totaal * 100) + "%";
-        i.style.background = "var(" + v + ")";
-        bar.appendChild(i);
-      });
-      kids(prog, bar, el("span","pct", pct(l.pctGereed)));
-
-      const wrap = el("div","stripwrap");
-      const cols = "repeat(" + l.totaal + ",minmax(0,1fr))";
-
-      const band = el("div","gateband");
-      band.style.gridTemplateColumns = cols;
-      gateBanden(l.stappen).forEach(b => {
-        const sp = el("span", null, b.gate);
-        sp.style.gridColumn = "span " + b.n;
-        band.appendChild(sp);
-      });
-
-      const strip = el("div","strip");
-      strip.style.gridTemplateColumns = cols;
-      l.stappen.forEach(st => {
-        const cfg = statusOf(st.status);
-        const b = el("button", cfg.cls, cfg.glyph);
-        b.type = "button";
-        b.setAttribute("aria-label", "Stap " + st.nr + ": " + st.naam + " — " + st.status);
-        b.dataset.tip = JSON.stringify({
-          boven:st.stapID + " · " + st.workstream + (st.gate ? " · " + st.gate : "") + (st.verplicht ? "" : " · optioneel"),
-          titel:st.nr + ". " + st.naam,
-          tekst:st.toelichting,
-          status:st.status
-        });
-        strip.appendChild(b);
-      });
-
-      const nrs = el("div","stepnr");
-      nrs.style.gridTemplateColumns = cols;
-      nrs.setAttribute("aria-hidden","true");
-      l.stappen.forEach(st => nrs.appendChild(el("span", null, st.nr % 5 === 0 || st.nr === 1 ? String(st.nr) : "")));
-
-      kids(wrap, band, strip, nrs);
-      kids(bd, prog, wrap);
-      kids(p, hd, bd);
-      host.appendChild(p);
+      kids(bd, voortgangsBalk(l), stappenStrip(l));
+      kids(host, kids(p, hd, bd));
     });
   }
 
-  /* ---- pagina: leads / werkstromen ------------------------------------- */
   function tekenWerkstromen(sel){
     const per = new Map();
     sel.flatMap(l => l.stappen).forEach(s => {
@@ -2299,8 +2836,7 @@ const DATA = {
     });
     const host = $("#ws-bars");
     host.replaceChildren();
-    if (!per.size){ host.appendChild(el("p","empty","Geen stappen in de selectie.")); return; }
-
+    if (!per.size){ kids(host, el("p","empty","Geen stappen in de selectie.")); return; }
     const tot = b => Object.values(b).reduce((a,n)=>a+n,0);
     const max = Math.max(...[...per.values()].map(tot));
     [...per.entries()].sort((a,b) => tot(b[1]) - tot(a[1])).forEach(([naam, blok]) => {
@@ -2316,58 +2852,39 @@ const DATA = {
         i.style.flex = n + " 1 0";
         i.style.background = "var(" + statusOf(st).varName + ")";
         if (st === "Niet gestart" || st === "Niet van toepassing") i.style.boxShadow = "inset 0 0 0 1px var(--st-niet-line)";
-        i.dataset.tip = JSON.stringify({boven:naam, titel:n + " × " + st, tekst:"", status:st});
-        track.appendChild(i);
+        i.dataset.tip = JSON.stringify({boven:naam, titel:n + " \u00D7 " + st, tekst:"", status:st});
+        kids(track, i);
       });
-      kids(row, el("div","nm",naam), track, el("div","amt",(blok["Gereed"] || 0) + "/" + totaal + " gereed"));
-      host.appendChild(row);
+      kids(host, kids(row, el("div","nm",naam), track, el("div","amt",(blok["Gereed"] || 0) + "/" + totaal + " gereed")));
     });
   }
 
-  /* ---- pagina: lead opzoeken ------------------------------------------- */
-  let gekozenLead = LEADS.length ? LEADS[0].id : null;
-
-  /* Mijlpalen op de tijdlijn. Kleuren volgen dezelfde logica als elders:
-     aqua = binnen, koper = in gang, wijnrood = grens of einddatum. */
+  /* ---- lead opzoeken ----------------------------------------------------- */
+  let gekozenLead = null;
   const TL_KLEUR = {
-    "Eerste contact":        "--aqua",
-    "Eerste bron ontvangen": "--aqua",
-    "NDA getekend":          "--aqua",
-    "Overeenkomst verzonden":"--koper",
-    "Laatst getekend":       "--aqua",
-    "Laatste contactmoment": "--koper",
-    "Deadline actie":        "--st-geblok",
-    "Einde looptijd":        "--st-geblok"
+    "Eerste contact":"--aqua", "Eerste bron ontvangen":"--aqua", "NDA getekend":"--aqua",
+    "Overeenkomst verzonden":"--koper", "Laatst getekend":"--aqua", "Laatste contactmoment":"--koper",
+    "Deadline actie":"--st-geblok", "Einde looptijd":"--st-geblok"
   };
-
-  const TL_SOORT = {
-    "--aqua":       "Gehaald",
-    "--koper":      "Verzonden of lopend",
-    "--st-geblok":  "Grens of einddatum"
-  };
+  const TL_SOORT = {"--aqua":"Gehaald", "--koper":"Verzonden of lopend", "--st-geblok":"Grens of einddatum"};
 
   function tekenTijdlijn(l){
-    const punten = MIJLPAALNAMEN
-      .map(naam => ({naam, datum:l.mijlpalen[naam]}))
-      .filter(p => p.datum);
-
-    if (!punten.length) return el("p","empty","Geen datums vastgelegd voor deze lead.");
+    const punten = MIJLPAALNAMEN.map(naam => ({naam, datum:l.mijlpalen[naam]})).filter(p => p.datum);
+    if (!punten.length) return el("p","empty","Nog geen datums vastgelegd voor deze lead.");
 
     const alle = punten.map(p => +new Date(p.datum)).concat([+new Date(VANDAAG)]);
-    let lo = Math.min(...alle), hi = Math.max(...alle);
-    /* altijd hele jaren, en nooit een nulbreedte-schaal */
-    let jaarLo = new Date(lo).getUTCFullYear(), jaarHi = new Date(hi).getUTCFullYear();
+    let jaarLo = new Date(Math.min(...alle)).getUTCFullYear();
+    let jaarHi = new Date(Math.max(...alle)).getUTCFullYear();
     if (jaarHi === jaarLo) jaarHi += 1;
-    lo = Date.UTC(jaarLo, 0, 1); hi = Date.UTC(jaarHi + 1, 0, 1);
+    const lo = Date.UTC(jaarLo, 0, 1), hi = Date.UTC(jaarHi + 1, 0, 1);
     const x = d => (+new Date(d) - lo) / (hi - lo) * 100;
 
     const box = el("div","timeline");
     const rail = el("div","tl-rail");
-
     const nu = el("div","tl-now");
     nu.style.left = x(VANDAAG) + "%";
     kids(nu, el("span", null, "Vandaag"));
-    rail.appendChild(nu);
+    kids(rail, nu);
 
     punten.forEach(p => {
       const dot = el("button","tl-dot");
@@ -2376,43 +2893,58 @@ const DATA = {
       dot.style.background = "var(" + (TL_KLEUR[p.naam] || "--koper") + ")";
       dot.setAttribute("aria-label", p.naam + ": " + p.datum);
       dot.dataset.tip = JSON.stringify({boven:p.datum, titel:p.naam, tekst:"", status:""});
-      rail.appendChild(dot);
+      kids(rail, dot);
     });
 
     const axis = el("div","tl-axis");
     for (let j = jaarLo; j <= jaarHi + 1; j++){
       const t = el("div","tl-tick");
       t.style.left = x(j + "-01-01") + "%";
-      kids(t, el("span", null, String(j)));
-      axis.appendChild(t);
+      kids(axis, kids(t, el("span", null, String(j))));
     }
 
-    /* De kleur codeert de soort mijlpaal, niet welke mijlpaal het is --
-       acht namen op drie kleuren zou een legenda opleveren die niets
-       onderscheidt. Welke mijlpaal een stip is, staat in de tooltip en
-       in het aria-label. */
+    /* De kleur codeert de soort mijlpaal, niet welke het is: acht namen op
+       drie kleuren zou een legenda opleveren die niets onderscheidt. Welke
+       mijlpaal een stip is, staat in de tooltip en het aria-label. */
     const leg = el("div","tl-legend");
     [...new Set(punten.map(p => TL_KLEUR[p.naam] || "--koper"))].forEach(kleur => {
       const item = el("span","item");
       const i = el("i");
       i.style.background = "var(" + kleur + ")";
-      kids(item, i, el("span", null, TL_SOORT[kleur] || "Overig"));
-      leg.appendChild(item);
+      kids(leg, kids(item, i, el("span", null, TL_SOORT[kleur] || "Overig")));
     });
-
-    kids(box, rail, axis, leg);
-    return box;
+    return kids(box, rail, axis, leg);
   }
 
-  function recordLijst(titel, records, leeg){
+  function registerPaneel(titel, collectie, lead, records, leeg, teken1){
     const p = el("div","panel");
     const hd = el("div","panel-hd");
-    kids(hd, el("span","t",titel), el("span","s", String(records.length)));
+    const acts = el("div","acts");
+    if (bewerkbaar()){
+      const k = el("button","btn-lite","Toevoegen");
+      k.type = "button";
+      k.addEventListener("click", () => openFormulier(collectie, null, lead.id, null));
+      kids(acts, k);
+    }
+    kids(hd, el("span","t",titel), kids(el("span","s", String(records.length))), acts);
     const bd = el("div","panel-bd");
-    if (!records.length) bd.appendChild(el("p","empty", leeg));
-    records.forEach(r => bd.appendChild(r));
-    kids(p, hd, bd);
-    return p;
+    if (!records.length) kids(bd, el("p","empty", leeg));
+    records.forEach(r => {
+      const rij = el("div","rec");
+      kids(rij, teken1(r));
+      const acties = el("div","rowacts");
+      if (bewerkbaar()){
+        kids(acties, iconKnop("potlood","Bewerken", null, () => openFormulier(collectie, r, lead.id, null)),
+                     iconKnop("prullenbak","Verwijderen","danger", async () => {
+                       if (confirm("Regel " + r._id + " verwijderen?")) {
+                         if (await verwijder(collectie, r._id)) melding(r._id + " verwijderd.");
+                       }
+                     }));
+      }
+      kids(rij, acties);
+      kids(bd, rij);
+    });
+    return kids(p, hd, bd);
   }
 
   function tekenLookup(sel){
@@ -2428,44 +2960,48 @@ const DATA = {
       b.type = "button";
       b.setAttribute("aria-current", String(l.id === gekozenLead));
       kids(b, el("div","o", l.organisatie),
-              el("div","m", l.id + " · " + (l.hub ? "Hub" : "Vastgoed") + " · " + (l.gate || DASH)));
+              el("div","m", l.id + MIDDOT + (l.hub ? "Hub" : "Vastgoed") + MIDDOT + (l.gate || DASH)));
       b.addEventListener("click", () => { gekozenLead = l.id; tekenLookup(zichtbaar()); });
-      lijst.appendChild(b);
+      kids(lijst, b);
     });
 
     const host = $("#lookup-detail");
     host.replaceChildren();
     const l = LEADS.find(x => x.id === gekozenLead);
-    if (!l){ host.appendChild(el("p","empty","Geen lead geselecteerd.")); return; }
+    if (!l){ kids(host, el("p","empty","Geen lead geselecteerd.")); return; }
 
-    /* kerngegevens */
     const kern = el("div","panel");
     const kernHd = el("div","panel-hd");
-    kids(kernHd, el("span","t", l.organisatie + (l.project ? " · " + l.project : "")),
-                 el("span","s", l.id + (l.voorbeeld ? " · voorbeeldrij" : "")));
+    const acts = el("div","acts");
+    if (bewerkbaar()){
+      const bew = el("button","btn-lite","Bewerken");
+      bew.type = "button";
+      bew.addEventListener("click", () => openFormulier("leads", l.ruw, null, null));
+      const del = el("button","btn-lite btn-danger","Verwijderen");
+      del.type = "button";
+      del.addEventListener("click", () => verwijderLead(l));
+      kids(acts, bew, del);
+    }
+    kids(kernHd, el("span","t", l.organisatie + (l.project ? MIDDOT + l.project : "")),
+                 el("span","s", l.id + (l.voorbeeld ? MIDDOT + "voorbeeldrij" : "")), acts);
+
     const fg = el("div","factgrid");
     [["Doelgroep", l.doelgroep],["Leadstatus", l.leadstatus],["Ontwikkelfase", l.fase],["Huidige gate", l.gate],
      ["Omvang", l.omvang],["Plaats", l.locatie],["Herkomst", l.herkomst],["Aangebracht door", l.aangebracht],
-     ["Eigenaar", l.eigenaar],["Prioriteit", l.prioriteit],["Eerste contact", l.eersteContact]
-    ].forEach(([k,v]) => {
-      const f = el("div","fact");
-      kids(f, el("div","k",k), el("div","v", v || DASH));
-      fg.appendChild(f);
+     ["Eigenaar", l.eigenaar],["Prioriteit", l.prioriteit],["Eerste contact", l.eersteContact],
+     ["Deadline actie", l.deadline]
+    ].forEach(([k,v]) => kids(fg, kids(el("div","fact"), el("div","k",k), el("div","v", v || DASH))));
+    [["Verwachte CAPEX", euro(l.capex), false],["Verwachte fee", euro(l.fee), false],
+     ["Al verdiend", euro(l.split.verdiend), true],["Nog te verdienen", euro(l.split.resterend), true],
+     ["Slaagkans", pct(l.slaagkans), true],["Gewogen fee", euro(l.gewogen), true],
+     ["Vermeden piek", nlInt.format(l.piek) + " kW", false],["Voortgang", pct(l.pctGereed), true]
+    ].forEach(([k,v,afgeleid]) => {
+      const f = el("div","fact" + (afgeleid ? " afgeleid" : ""));
+      kids(f, el("div","k", k + (afgeleid ? " \u00B7 berekend" : "")), el("div","v big", v));
+      kids(fg, f);
     });
-    [["Verwachte CAPEX", euro(l.capex)],["Verwachte fee", euro(l.fee)],["Slaagkans", pct(l.slaagkans)],
-     ["Gewogen fee", euro(l.gewogen)],["Vermeden piek", nlInt.format(l.piek) + " kW"],
-     ["Voortgang", pct(l.pctGereed)]
-    ].forEach(([k,v]) => {
-      const f = el("div","fact");
-      kids(f, el("div","k",k), el("div","v big", v));
-      fg.appendChild(f);
-    });
-    const kernBd = el("div","panel-bd flush");
-    kids(kernBd, fg);
-    kids(kern, kernHd, kernBd);
-    host.appendChild(kern);
+    kids(host, kids(kern, kernHd, kids(el("div","panel-bd flush"), fg)));
 
-    /* volgende actie */
     if (l.actie){
       const a = el("div","panel");
       a.style.marginTop = "14px";
@@ -2473,99 +3009,110 @@ const DATA = {
       kids(ahd, el("span","t","Volgende actie"), el("span","s", l.deadline || "geen deadline"));
       const abd = el("div","panel-bd");
       kids(abd, el("p", null, l.actie));
-      if (l.volgende) kids(abd, el("p","note","Eerstvolgende stap: " + l.volgende.nr + ". " + l.volgende.naam + " · " + l.volgende.workstream));
-      kids(a, ahd, abd);
-      host.appendChild(a);
+      if (l.volgende) kids(abd, el("p","note","Eerstvolgende stap: " + l.volgende.nr + ". " + l.volgende.naam + MIDDOT + l.volgende.workstream));
+      kids(host, kids(a, ahd, abd));
     }
 
-    /* tijdlijn */
+    const sp = el("div","panel");
+    sp.style.marginTop = "14px";
+    const spHd = el("div","panel-hd");
+    kids(spHd, el("span","t","Ontwikkelstappen"),
+               el("span","s", bewerkbaar() ? "Klik op een cel om de status te zetten" : l.gereed + " van " + l.totaal + " gereed"));
+    const spBd = el("div","panel-bd");
+    kids(spBd, voortgangsBalk(l), stappenStrip(l));
+    kids(host, kids(sp, spHd, spBd));
+
     const tl = el("div","panel");
     tl.style.marginTop = "14px";
     const tlHd = el("div","panel-hd");
     kids(tlHd, el("span","t","Tijdlijn"), el("span","s","Vastgelegde datums"));
-    const tlBd = el("div","panel-bd");
-    kids(tlBd, tekenTijdlijn(l));
-    kids(tl, tlHd, tlBd);
-    host.appendChild(tl);
+    kids(host, kids(tl, tlHd, kids(el("div","panel-bd"), tekenTijdlijn(l))));
 
-    /* onderliggende registers */
     const cols = el("div","grid g-2");
     cols.style.marginTop = "14px";
 
-    cols.appendChild(recordLijst("Contactpersonen", l.contacten.map(c => {
-      const r = el("div","rec"), t = el("div","t");
-      kids(t, el("span", null, c.Naam));
+    kids(cols, registerPaneel("Contactpersonen","contacten", l, l.contacten, "Nog geen contactpersonen vastgelegd.", c => {
+      const d = el("div");
+      const t = el("div","t");
+      kids(t, el("span", null, c.Naam || DASH));
       if (c["Rol in besluitvorming"]) kids(t, el("span","chip", c["Rol in besluitvorming"]));
-      kids(r, t);
-      const regels = [c.Functie, c.Organisatie, c["E-mail"], c.Telefoon].filter(Boolean).join(" · ");
-      if (regels) kids(r, el("div","d", regels));
-      if (c["Laatste contact"]) kids(r, el("div","d","Laatst gesproken " + c["Laatste contact"] + (c["Relatie-eigenaar"] ? " · " + c["Relatie-eigenaar"] : "")));
-      kids(r, el("div","id", c.ContactID));
-      return r;
-    }), "Nog geen contactpersonen vastgelegd."));
+      kids(d, t);
+      const regels = [c.Functie, c.Organisatie, c["E-mail"], c.Telefoon].filter(Boolean).join(MIDDOT);
+      if (regels) kids(d, el("div","d", regels));
+      if (c["Laatste contact"]) kids(d, el("div","d","Laatst gesproken " + c["Laatste contact"] + (c["Relatie-eigenaar"] ? MIDDOT + c["Relatie-eigenaar"] : "")));
+      kids(d, el("div","id", c._id));
+      return d;
+    }));
 
-    cols.appendChild(recordLijst("Overeenkomsten", l.contracten.map(o => {
+    kids(cols, registerPaneel("Overeenkomsten","overeenkomsten", l, l.contracten, "Nog geen overeenkomsten vastgelegd.", o => {
+      const d = el("div");
       const klaar = CONTRACT_KLAAR.includes(o.Status);
-      const r = el("div","rec"), t = el("div","t");
-      kids(t, el("span", null, o.Titel || o.Type),
-              el("span","chip " + (o.Status === "Getekend" ? "ok" : klaar ? "" : "open"), o.Status));
-      kids(r, t);
+      const t = el("div","t");
+      kids(t, el("span", null, o.Titel || o.Type || DASH),
+              el("span","chip " + (o.Status === "Getekend" ? "ok" : klaar ? "" : "open"), o.Status || DASH));
+      kids(d, t);
       const regels = [o.Type,
         o["Datum getekend"] ? "getekend " + o["Datum getekend"] : (o["Datum verzonden"] ? "verzonden " + o["Datum verzonden"] : ""),
         o.Einddatum ? "loopt tot " + o.Einddatum : "",
         num(o["Contractwaarde (EUR)"]) ? euro(num(o["Contractwaarde (EUR)"])) : ""
-      ].filter(Boolean).join(" · ");
-      if (regels) kids(r, el("div","d", regels));
-      if (o["Actie vereist"] === "Ja") kids(r, el("div","d","Actie vereist" + (o.Opmerkingen ? ": " + o.Opmerkingen : "")));
-      kids(r, el("div","id", o.OvereenkomstID));
-      return r;
-    }), "Nog geen overeenkomsten vastgelegd."));
+      ].filter(Boolean).join(MIDDOT);
+      if (regels) kids(d, el("div","d", regels));
+      if (o["Actie vereist"] === "Ja") kids(d, el("div","d","Actie vereist" + (o.Opmerkingen ? ": " + o.Opmerkingen : "")));
+      kids(d, el("div","id", o._id));
+      return d;
+    }));
 
-    cols.appendChild(recordLijst("Bronnen", l.bronnen.map(b => {
-      const r = el("div","rec"), t = el("div","t");
-      kids(t, el("span", null, b["Titel of bestandsnaam"] || b.Brontype),
-              el("span","chip " + (b.Status === "Verwerkt" ? "ok" : "open"), b.Status));
+    kids(cols, registerPaneel("Bronnen","bronnen", l, l.bronnen, "Nog geen bronnen ontvangen.", b => {
+      const d = el("div");
+      const t = el("div","t");
+      kids(t, el("span", null, b["Titel of bestandsnaam"] || b.Brontype || DASH),
+              el("span","chip " + (b.Status === "Verwerkt" ? "ok" : "open"), b.Status || DASH));
       if (b["Onder NDA"] === "Ja") kids(t, el("span","chip stop","Onder NDA"));
-      kids(r, t);
+      kids(d, t);
       const regels = [b.Brontype, b.Formaat, b.Bruikbaarheid,
         b["Datum ontvangen"] ? "ontvangen " + b["Datum ontvangen"] : "",
         b["Gebruikt voor stap"] ? "voor " + b["Gebruikt voor stap"] : ""
-      ].filter(Boolean).join(" · ");
-      if (regels) kids(r, el("div","d", regels));
-      kids(r, el("div","id", b.BronID));
-      return r;
-    }), "Nog geen bronnen ontvangen."));
+      ].filter(Boolean).join(MIDDOT);
+      if (regels) kids(d, el("div","d", regels));
+      kids(d, el("div","id", b._id));
+      return d;
+    }));
 
     const open = l.stappen.filter(s => s.status === "Loopt" || s.status === "Geblokkeerd");
-    cols.appendChild(recordLijst("Stappen die lopen of vastzitten", open.map(s => {
-      const r = el("div","rec"), t = el("div","t");
+    const sPanel = el("div","panel");
+    const sHd = el("div","panel-hd");
+    kids(sHd, el("span","t","Stappen die lopen of vastzitten"), el("span","s", String(open.length)));
+    const sBd = el("div","panel-bd");
+    if (!open.length) kids(sBd, el("p","empty","Geen stappen onderhanden."));
+    open.forEach(s => {
+      const rij = el("div","rec");
+      const d = el("div");
+      const t = el("div","t");
       kids(t, el("span", null, s.nr + ". " + s.naam),
               el("span","chip " + (s.status === "Geblokkeerd" ? "stop" : "open"), s.status),
               el("span","chip", s.workstream));
-      kids(r, t);
-      if (s.toelichting) kids(r, el("div","d", s.toelichting));
-      kids(r, el("div","id", s.stapID + (s.wie ? " · " + s.wie : "")));
-      return r;
-    }), "Geen stappen onderhanden."));
-
-    host.appendChild(cols);
+      kids(d, t);
+      if (s.toelichting) kids(d, el("div","d", s.toelichting));
+      kids(d, el("div","id", s.stapID + (s.wie ? MIDDOT + s.wie : "")));
+      kids(rij, d, el("div"));
+      kids(sBd, rij);
+    });
+    kids(cols, kids(sPanel, sHd, sBd));
+    kids(host, cols);
   }
 
-  function openLead(id){
-    gekozenLead = id;
-    gaNaar("lookup");
-  }
+  function openLead(id){ gekozenLead = id; gaNaar("lookup"); }
 
-  /* ---- pagina: acties --------------------------------------------------- */
+  /* ---- acties ------------------------------------------------------------ */
   function tekenActies(sel){
     const items = [];
     sel.forEach(l => {
       if (l.actie) items.push({d:l.deadline, lead:l, wat:l.actie, soort:"Volgende actie", wie:l.eigenaar});
       l.contracten.filter(o => o["Actie vereist"] === "Ja" || !CONTRACT_KLAAR.includes(o.Status))
-        .forEach(o => items.push({d:"", lead:l, wat:(o.Titel || o.Type) + " — " + o.Status,
+        .forEach(o => items.push({d:"", lead:l, wat:(o.Titel || o.Type) + " \u2014 " + o.Status,
                                   soort:"Overeenkomst", wie:o["Ondertekenaar Smarteck"] || l.eigenaar}));
       l.bronnen.filter(b => b.Status !== "Verwerkt")
-        .forEach(b => items.push({d:"", lead:l, wat:(b["Titel of bestandsnaam"] || b.Brontype) + " — " + b.Status,
+        .forEach(b => items.push({d:"", lead:l, wat:(b["Titel of bestandsnaam"] || b.Brontype) + " \u2014 " + b.Status,
                                   soort:b["Onder NDA"] === "Ja" ? "Bron (NDA)" : "Bron",
                                   wie:b["Beoordeeld door"] || l.eigenaar}));
       l.stappen.filter(s => s.status === "Geblokkeerd")
@@ -2576,23 +3123,23 @@ const DATA = {
 
     bouwTabel($("#tbl-acties"), [
       {kop:"Deadline", cls:"d", cel:it => {
-        if (!it.d) return el("span", null, DASH);
+        if (!it.d) return DASH;
         const over = it.d < VANDAAG;
         const dagen = (new Date(it.d) - new Date(VANDAAG)) / 864e5;
         const s = el("span", null, it.d);
-        s.style.color = over ? "var(--bad)" : dagen <= 21 ? "var(--accent-ink)" : "";
-        if (over || dagen <= 21) s.style.fontWeight = "600";
+        if (over){ s.style.color = "var(--bad)"; s.style.fontWeight = "600"; }
+        else if (dagen <= 21){ s.style.color = "var(--accent-ink)"; s.style.fontWeight = "600"; }
         return s;
       }},
-      {kop:"LeadID",      cel:it => leadLink(it.lead)},
+      {kop:"LeadID", cel:it => leadLink(it.lead)},
       {kop:"Organisatie", cel:it => el("b", null, it.lead.organisatie)},
-      {kop:"Wat",         cel:it => el("div","wrapcell", it.wat)},
-      {kop:"Soort",       cel:it => el("span","chip" + (it.soort === "Geblokkeerde stap" ? " stop" : ""), it.soort)},
-      {kop:"Bij wie",     cel:it => it.wie}
+      {kop:"Wat", cel:it => el("div","wrapcell", it.wat)},
+      {kop:"Soort", cel:it => el("span","chip" + (it.soort === "Geblokkeerde stap" ? " stop" : ""), it.soort)},
+      {kop:"Bij wie", cel:it => it.wie}
     ], items, {leeg:"Niets openstaand in deze selectie."});
   }
 
-  /* ---- pagina: datavalidatie ------------------------------------------- */
+  /* ---- datavalidatie ------------------------------------------------------ */
   function tekenValidatie(){
     const controles = [];
     const voeg = (ok, h, p, ref) => controles.push({ok, h, p, ref});
@@ -2600,14 +3147,14 @@ const DATA = {
     const vb = LEADS.filter(l => l.voorbeeld);
     voeg(!vb.length, "Voorbeeldrijen verwijderd",
       vb.length ? "De Leeswijzer vraagt de voorbeeldregels te verwijderen bij ingebruikname. Zolang ze meetellen kleuren ze de pijplijn."
-                : "Geen voorbeeldregels meer in de databron.",
-      vb.map(l => l.id + " · " + l.organisatie).join("  |  "));
+                : "Geen voorbeeldregels meer aanwezig.",
+      vb.map(l => l.id + MIDDOT + l.organisatie).join("  |  "));
 
     const sprongen = [];
     LEADS.forEach(l => {
       let hoogst = 0;
       l.stappen.forEach(s => {
-        const n = parseInt(String(s.gate).replace("M",""), 10);
+        const n = GATE_NR[s.gate] || 0;
         if (!n) return;
         if (n < hoogst) sprongen.push(s.stapID + " (" + s.gate + ", stap " + s.nr + ")");
         hoogst = Math.max(hoogst, n);
@@ -2615,46 +3162,45 @@ const DATA = {
     });
     const uniek = [...new Set(sprongen)];
     voeg(!uniek.length, "Gates lopen oplopend",
-      uniek.length ? "Deze stappen staan op een lagere gate dan een eerdere stap in hetzelfde spoor. De gateband boven de strip laat dat zien als een los segment. Controleer de gate op het blad Ontwikkelstappen."
+      uniek.length ? "Deze stappen staan op een lagere gate dan een eerdere stap in hetzelfde spoor. De gateband boven de strip laat dat zien als een los segment."
                    : "Binnen elk spoor loopt de gate netjes op.",
-      uniek.join(" · "));
+      uniek.join(MIDDOT));
 
     const zonderPlaats = LEADS.filter(l => !l.locatie);
     voeg(!zonderPlaats.length, "Plaats en provincie ingevuld",
-      zonderPlaats.length ? "Zonder plaats is niet te bepalen welke netbeheerder en welk congestiegebied van toepassing zijn — de eerste vraag bij de quickscan netcapaciteit."
+      zonderPlaats.length ? "Zonder plaats is niet te bepalen welke netbeheerder en welk congestiegebied van toepassing zijn."
                           : "Elke lead heeft een plaats of provincie.",
-      zonderPlaats.map(l => l.id).join(" · "));
+      zonderPlaats.map(l => l.id).join(MIDDOT));
 
-    const nda = LEADS.flatMap(l => l.bronnen.filter(b => b["Onder NDA"] === "Ja" && b.Status !== "Verwerkt").map(b => b.BronID + " · " + l.organisatie));
+    const nda = LEADS.flatMap(l => l.bronnen.filter(b => b["Onder NDA"] === "Ja" && b.Status !== "Verwerkt").map(b => b._id + MIDDOT + l.organisatie));
     voeg(!nda.length, "Materiaal onder NDA verwerkt",
-      nda.length ? "Het blad Bronnen is tegelijk het bewijs van wat onder NDA valt. Deze stukken liggen er wel, maar zijn nog niet beoordeeld — tot die tijd blijven cijfers die eruit zouden moeten komen een aanname."
+      nda.length ? "Het bronregister is tegelijk het bewijs van wat onder NDA valt. Deze stukken liggen er wel, maar zijn nog niet beoordeeld."
                  : "Al het materiaal onder NDA is beoordeeld.",
       nda.join("  |  "));
 
     const zonderStappen = LEADS.filter(l => !l.totaal);
-    voeg(!zonderStappen.length, "Elke lead heeft een stappenblok",
-      zonderStappen.length ? "Op het blad Voortgang staat voor deze lead geen enkele regel. Voeg per stap van de doelgroep een regel toe; kopieer een bestaand blok en pas het LeadID aan."
-                           : "Elke lead heeft zijn stappen op het blad Voortgang staan.",
-      zonderStappen.map(l => l.id).join(" · "));
+    voeg(!zonderStappen.length, "Elke lead heeft een stappenspoor",
+      zonderStappen.length ? "Voor deze leads staan geen ontwikkelstappen klaar. Controleer of de doelgroep klopt en in de stappenbibliotheek voorkomt."
+                           : "Elke lead heeft het stappenspoor van zijn doelgroep.",
+      zonderStappen.map(l => l.id + MIDDOT + (l.doelgroep || "geen doelgroep")).join(MIDDOT));
 
     const over = LEADS.filter(l => l.deadline && l.deadline < VANDAAG);
     voeg(!over.length, "Deadlines nog niet verstreken",
-      over.length ? "De deadline van de volgende actie ligt achter de peildatum van deze uitdraai (" + VANDAAG + ")."
+      over.length ? "De deadline van de volgende actie ligt in het verleden (peildatum " + VANDAAG + ")."
                   : "Geen verstreken deadlines.",
-      over.map(l => l.id + " · " + l.deadline).join(" · "));
+      over.map(l => l.id + MIDDOT + l.deadline).join(MIDDOT));
 
-    const geenDatums = rows("Voortgang").every(v => !v.Startdatum && !v["Gepland gereed"] && !v["Werkelijk gereed"]);
-    voeg(!geenDatums, "Voortgang heeft datums",
-      geenDatums ? "Geen enkele regel op het blad Voortgang heeft een startdatum, geplande of werkelijke einddatum. Daardoor is er geen doorlooptijd te berekenen en staan de ontwikkelstappen niet op de tijdlijn."
-                 : "Er staan datums op het blad Voortgang.",
-      geenDatums ? rows("Voortgang").length + " regels zonder datum" : "");
+    const zonderEigenaar = LEADS.filter(l => !l.eigenaar);
+    voeg(!zonderEigenaar.length, "Elke lead heeft een eigenaar",
+      zonderEigenaar.length ? "Zonder eigenaar is niet duidelijk wie de volgende actie oppakt."
+                            : "Elke lead heeft een eigenaar.",
+      zonderEigenaar.map(l => l.id).join(MIDDOT));
 
-    const dubbel = [];
-    const gezien = new Set();
-    LEADS.forEach(l => { if (gezien.has(l.id)) dubbel.push(l.id); gezien.add(l.id); });
-    voeg(!dubbel.length, "LeadID's uniek",
-      dubbel.length ? "Deze LeadID's komen meer dan eens voor op het blad Leads." : "Elk LeadID komt precies één keer voor.",
-      dubbel.join(" · "));
+    const zonderContact = LEADS.filter(l => !l.contacten.length);
+    voeg(!zonderContact.length, "Elke lead heeft een contactpersoon",
+      zonderContact.length ? "Zonder contactpersoon is er geen gesprekspartner vastgelegd \u2014 bij een hub is dat de kartrekker."
+                           : "Elke lead heeft minstens \u00E9\u00E9n contactpersoon.",
+      zonderContact.map(l => l.id + MIDDOT + l.organisatie).join(MIDDOT));
 
     const host = $("#valid-rows");
     host.replaceChildren();
@@ -2663,52 +3209,104 @@ const DATA = {
 
     controles.sort((a,b) => a.ok - b.ok).forEach(c => {
       const row = el("div","sigrow");
-      kids(row, el("span","mark " + (c.ok ? "ok" : "bad"), c.ok ? "✓" : "✕"));
+      const mark = el("span","mark " + (c.ok ? "ok" : "bad"));
+      kids(mark, teken(c.ok ? "vink" : "kruis", 11));
+      kids(row, mark);
       const body = el("div");
       kids(body, el("div","h", c.h), el("p", null, c.p));
       if (!c.ok && c.ref) kids(body, el("span","ref", c.ref));
-      kids(row, body);
-      host.appendChild(row);
+      kids(host, kids(row, body));
     });
 
-    /* volledigheid per blad */
-    const bladen = ["Leads","Contactpersonen","Overeenkomsten","Bronnen","Voortgang","Ontwikkelstappen"];
-    const recs = bladen.map(b => {
-      const rs = rows(b);
-      const velden = rs.length ? Object.keys(rs[0]) : [];
-      const cellen = rs.length * velden.length;
-      const gevuld = rs.reduce((a,r) => a + velden.filter(k => r[k] !== "" && r[k] !== null && r[k] !== undefined).length, 0);
-      return {blad:b, regels:rs.length, velden:velden.length, vulling:cellen ? gevuld / cellen : 0};
-    });
+    const registers = [
+      ["Leads", LEADS.length],
+      ["Contactpersonen", LEADS.reduce((a,l)=>a+l.contacten.length,0)],
+      ["Overeenkomsten", LEADS.reduce((a,l)=>a+l.contracten.length,0)],
+      ["Bronnen", LEADS.reduce((a,l)=>a+l.bronnen.length,0)],
+      ["Ontwikkelstappen belegd", LEADS.reduce((a,l)=>a+l.totaal,0)],
+      ["Stappen in de bibliotheek", rows("Ontwikkelstappen").length]
+    ];
     bouwTabel($("#tbl-volledig"), [
-      {kop:"Blad",    cel:r => el("b", null, r.blad)},
-      {kop:"Regels",  cel:r => nlInt.format(r.regels), n:true},
-      {kop:"Kolommen",cel:r => nlInt.format(r.velden), n:true},
-      {kop:"Gevuld",  cel:r => pct(r.vulling), n:true}
-    ], recs);
+      {kop:"Register", cel:r => el("b", null, r[0])},
+      {kop:"Regels", cel:r => nlInt.format(r[1]), n:true}
+    ], registers);
   }
 
-  /* ---- paginas en tabs -------------------------------------------------- */
+  /* ---- leeswijzer --------------------------------------------------------- */
+  function tekenUitleg(){
+    const host = $("#uitleg-prose");
+    host.replaceChildren();
+    const blok = (kop, ...knopen) => { kids(host, el("h3", null, kop)); knopen.forEach(n => kids(host, n)); };
+
+    blok("Twee standen",
+      el("p", null, "Dit scherm werkt in twee standen. In de gedeelde versie staan de gegevens in de opslag " +
+        "van het dashboard: iedereen met bewerkrechten voegt toe, wijzigt en verwijdert, en ziet elkaars " +
+        "wijzigingen meteen. Wordt het bestand los van schijf geopend, dan is er geen opslag en toont het " +
+        "de momentopname uit het werkboek, alleen-lezen."),
+      el("p", null, "De stand staat linksonder in de zijbalk."));
+
+    blok("Wat u kunt bewerken",
+      (() => {
+        const ul = el("ul");
+        ["Leads toevoegen, wijzigen en verwijderen. Een nieuwe lead krijgt automatisch het volledige stappenspoor van zijn doelgroep.",
+         "Contactpersonen, overeenkomsten en bronnen per lead toevoegen, wijzigen en verwijderen.",
+         "De status van elke ontwikkelstap zetten door op de cel in de strip te klikken.",
+         "Alle keuzemenu's worden gevoed door het blad Keuzelijsten uit het werkboek."
+        ].forEach(t => kids(ul, el("li", null, t)));
+        return ul;
+      })());
+
+    blok("Wat het scherm zelf uitrekent",
+      el("p", null, "Slaagkans en gewogen fee zijn niet in te vullen: ze volgen uit de gate en de verwachte fee. " +
+        "De initiatiefee is verdiend zodra M1 bereikt is en elk gate-aandeel zodra die gate bereikt is; wat " +
+        "daarna nog komt telt mee maal de kans op FID van de bereikte gate. Staffel, verdeling en kansen komen " +
+        "uit het blad Aannames."),
+      (() => {
+        const p = el("p");
+        const i = aanname("Initiatiefee M1 (vast, EUR)");
+        kids(p, document.createTextNode("Nu in gebruik: initiatiefee " + euro(i) + ", verdeling M2/M3/M4 " +
+          [aanname("Aandeel M2"), aanname("Aandeel M3"), aanname("Aandeel M4")].map(pct).join(" / ") +
+          ", kans op FID per gate " + GATES.map(g => g.g + " " + pct(kansOp(g.g))).join(", ") + "."));
+        return p;
+      })(),
+      el("p", null, "Ook afgeleid: de mijlpaaldata, de voortgang per lead, en alle tellingen. Niets daarvan " +
+        "wordt apart opgeslagen, dus het blijft kloppen zodra u iets wijzigt."));
+
+    blok("Werkboek bijwerken",
+      el("p", null, "De momentopname in dit bestand komt uit het werkboek en wordt ververst met:"),
+      (() => { const p = el("p"); kids(p, el("code", null, "python3 dashboard/tools/build_data.py dashboard/data/Smarteck_Leadtracker_Databron.xlsx")); return p; })(),
+      el("p", null, "Koppeling loopt op kolomnaam, niet op kolompositie. Een hernoemde kolom valt om in het " +
+        "script en niet stil in de browser."));
+
+    blok("Spelregels",
+      (() => {
+        const ol = el("ol");
+        ["ID's worden automatisch doorgenummerd: LEAD-001, CON-001, OVK-001, BRN-001.",
+         "Datums als echte datum invoeren; de invoervelden zorgen daarvoor.",
+         "Kolomnamen in het werkboek niet wijzigen.",
+         "De voorbeeldregels verwijderen bij ingebruikname \u2014 Datavalidatie houdt dat bij."
+        ].forEach(t => kids(ol, el("li", null, t)));
+        return ol;
+      })());
+  }
+
+  /* ---- paginas ------------------------------------------------------------ */
   const PAGINAS = [
-    {id:"home",   nav:"Portefeuille",   titel:"Portefeuille",    sub:"Overzicht van de pijplijn", el:"#pg-home",   filters:true},
-    {id:"leads",  nav:"Leads",          titel:"Leads",           sub:"Alle actieve leads",        el:"#pg-leads",  filters:true,
-     tabs:[{id:"alle",       naam:"Alle leads",   el:"#leads-alle"},
-           {id:"mijlpalen",  naam:"Mijlpaaldata", el:"#leads-mijlpalen"},
-           {id:"voortgang",  naam:"Voortgang",    el:"#leads-voortgang"},
-           {id:"werkstromen",naam:"Werkstromen",  el:"#leads-werkstromen"}]},
-    {id:"lookup", nav:"Lead opzoeken",  titel:"Lead opzoeken",   sub:"Alles per lead",            el:"#pg-lookup", filters:true},
-    {id:"acties", nav:"Acties",         titel:"Acties",          sub:"Wat er openstaat",          el:"#pg-acties", filters:true},
-    {id:"valid",  nav:"Datavalidatie",  titel:"Datavalidatie",   sub:"Controle op de spelregels", el:"#pg-valid",  filters:false},
-    {id:"uitleg", nav:"Leeswijzer",     titel:"Leeswijzer",      sub:"Werken met dit scherm",     el:"#pg-uitleg", filters:false}
+    {id:"home",   nav:"Portefeuille",  titel:"Portefeuille",  sub:"Overzicht van de pijplijn",  el:"#pg-home",   filters:true},
+    {id:"leads",  nav:"Leads",         titel:"Leads",         sub:"Alle actieve leads",         el:"#pg-leads",  filters:true,
+     tabs:[{id:"alle", naam:"Alle leads", el:"#leads-alle"},
+           {id:"mijlpalen", naam:"Mijlpaaldata", el:"#leads-mijlpalen"},
+           {id:"voortgang", naam:"Voortgang", el:"#leads-voortgang"},
+           {id:"werkstromen", naam:"Werkstromen", el:"#leads-werkstromen"}]},
+    {id:"lookup", nav:"Lead opzoeken", titel:"Lead opzoeken", sub:"Alles per lead",             el:"#pg-lookup", filters:true},
+    {id:"acties", nav:"Acties",        titel:"Acties",        sub:"Wat er openstaat",           el:"#pg-acties", filters:true},
+    {id:"valid",  nav:"Datavalidatie", titel:"Datavalidatie", sub:"Controle op de spelregels",  el:"#pg-valid",  filters:false},
+    {id:"uitleg", nav:"Leeswijzer",    titel:"Leeswijzer",    sub:"Werken met dit scherm",      el:"#pg-uitleg", filters:false}
   ];
   const tabKeuze = {leads:"alle"};
   let huidige = "home";
 
-  function gaNaar(id){
-    huidige = id;
-    teken();
-    document.querySelector(".pagehead").scrollIntoView({block:"start", behavior:"auto"});
-  }
+  function gaNaar(id){ huidige = id; tekenAlles(); $(".pagehead").scrollIntoView({block:"start", behavior:"auto"}); }
 
   function tekenNav(){
     const host = $("#nav");
@@ -2718,7 +3316,7 @@ const DATA = {
       b.type = "button";
       if (p.id === huidige) b.setAttribute("aria-current","page");
       b.addEventListener("click", () => gaNaar(p.id));
-      host.appendChild(b);
+      kids(host, b);
     });
   }
 
@@ -2731,25 +3329,24 @@ const DATA = {
       b.type = "button";
       b.setAttribute("role","tab");
       b.setAttribute("aria-selected", String(tabKeuze[pagina.id] === t.id));
-      b.addEventListener("click", () => { tabKeuze[pagina.id] = t.id; teken(); });
-      host.appendChild(b);
+      b.addEventListener("click", () => { tabKeuze[pagina.id] = t.id; tekenAlles(); });
+      kids(host, b);
     });
   }
 
-  /* ---- tooltip ---------------------------------------------------------- */
+  /* ---- tooltip ------------------------------------------------------------ */
   const tip = $("#tip");
   function toonTip(host, evt){
     let d;
     try { d = JSON.parse(host.dataset.tip); } catch (e) { return; }
     tip.replaceChildren();
-    if (d.boven) tip.appendChild(el("span","tm", d.boven));
-    if (d.titel) tip.appendChild(el("span","tt", d.titel));
-    if (d.tekst) tip.appendChild(el("span", null, d.tekst));
+    if (d.boven) kids(tip, el("span","tm", d.boven));
+    if (d.titel) kids(tip, el("span","tt", d.titel));
+    if (d.tekst) kids(tip, el("span", null, d.tekst));
     if (d.status){
       const s = el("span","ts"), i = el("i");
       i.style.background = "var(" + statusOf(d.status).varName + ")";
-      kids(s, i, el("span", null, d.status));
-      tip.appendChild(s);
+      kids(tip, kids(s, i, el("span", null, d.status)));
     }
     tip.hidden = false;
     plaatsTip(evt, host);
@@ -2762,28 +3359,28 @@ const DATA = {
     if (left + r.width  > innerWidth  - 10) left = Math.max(10, x - r.width - 14);
     if (top  + r.height > innerHeight - 10) top  = Math.max(10, y - r.height - 14);
     tip.style.left = left + "px";
-    tip.style.top  = top + "px";
+    tip.style.top = top + "px";
   }
   document.addEventListener("pointerover", e => {
-    const host = e.target.closest("[data-tip]");
-    if (host) toonTip(host, e);
+    const h = e.target.closest("[data-tip]");
+    if (h) toonTip(h, e);
   });
   document.addEventListener("pointermove", e => {
-    const host = e.target.closest("[data-tip]");
-    if (host && !tip.hidden) plaatsTip(e, host); else if (!host) tip.hidden = true;
+    const h = e.target.closest("[data-tip]");
+    if (h && !tip.hidden) plaatsTip(e, h); else if (!h) tip.hidden = true;
   });
   document.addEventListener("focusin", e => {
-    const host = e.target.closest("[data-tip]");
-    if (host) toonTip(host, null); else tip.hidden = true;
+    const h = e.target.closest("[data-tip]");
+    if (h) toonTip(h, null); else tip.hidden = true;
   });
   document.addEventListener("keydown", e => { if (e.key === "Escape") tip.hidden = true; });
   addEventListener("scroll", () => { tip.hidden = true; }, {passive:true});
 
-  /* ---- thema ------------------------------------------------------------ */
+  /* ---- thema -------------------------------------------------------------- */
   const themeBtn = $("#theme");
   const donkerNu = () => {
-    const stamp = document.documentElement.getAttribute("data-theme");
-    return stamp ? stamp === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    const s = document.documentElement.getAttribute("data-theme");
+    return s ? s === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
   };
   const zetThemaLabel = () => { themeBtn.textContent = donkerNu() ? "Licht" : "Donker"; };
   themeBtn.addEventListener("click", () => {
@@ -2792,67 +3389,136 @@ const DATA = {
   });
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", zetThemaLabel);
 
-  /* ---- tekenen ---------------------------------------------------------- */
-  function teken(){
+  /* ---- alles tekenen ------------------------------------------------------- */
+  function vulSelect(sel, label, waarden){
+    const vorige = sel.value;
+    sel.replaceChildren();
+    kids(sel, new Option(label, ""));
+    [...new Set(waarden.filter(Boolean))].sort().forEach(v => kids(sel, new Option(v, v)));
+    sel.value = vorige;
+    if (sel.value !== vorige) sel.value = "";
+  }
+
+  function tekenAlles(){
+    LEADS = bouwLeads();
     const pagina = PAGINAS.find(p => p.id === huidige) || PAGINAS[0];
     const sel = zichtbaar();
 
     $("#page-title").textContent = pagina.titel;
-    $("#page-sub").textContent   = pagina.sub;
+    $("#page-sub").textContent = pagina.sub;
     $(".filterstrip").hidden = !pagina.filters;
     $("#stamp-count").textContent = pagina.filters
       ? (sel.length === LEADS.length ? LEADS.length + " leads" : sel.length + " van " + LEADS.length + " leads")
-      : LEADS.length + " leads in de databron";
+      : LEADS.length + " leads";
+
+    vulSelect($("#f-doelgroep"), "Alle", LEADS.map(l => l.doelgroep));
+    vulSelect($("#f-status"), "Alle", LEADS.map(l => l.leadstatus));
+    vulSelect($("#f-fase"), "Alle", LEADS.map(l => l.fase));
+    vulSelect($("#f-gate"), "Alle", LEADS.map(l => l.gate));
+    vulSelect($("#f-eigenaar"), "Alle", LEADS.map(l => l.eigenaar));
 
     tekenNav();
     tekenTabs(pagina);
     tekenKpiStrip(pagina.filters ? sel : LEADS);
 
+    const mo = $("#modus");
+    mo.classList.toggle("live", live());
+    $("#modus-tekst").textContent = live()
+      ? (STORE.magSchrijven ? "Live \u00B7 bewerkbaar" : "Live \u00B7 alleen-lezen")
+      : "Momentopname";
+
+    $("#btn-nieuwe-lead").disabled = !bewerkbaar();
+    $("#leads-bewerkhint").textContent = bewerkbaar()
+      ? "" : live() ? "U kunt meekijken, niet bewerken." : "Alleen-lezen \u2014 open de gedeelde versie om te bewerken.";
+
     PAGINAS.forEach(p => { $(p.el).hidden = p.id !== pagina.id; });
     if (pagina.tabs) pagina.tabs.forEach(t => { $(t.el).hidden = tabKeuze[pagina.id] !== t.id; });
 
-    if (huidige === "home")   tekenHome(sel);
+    if (huidige === "home") tekenHome(sel);
     if (huidige === "leads"){
       const t = tabKeuze.leads;
-      if (t === "alle")        tekenLeadsTabel(sel);
-      if (t === "mijlpalen")   tekenMijlpalen(sel);
-      if (t === "voortgang")   tekenVoortgang(sel);
+      if (t === "alle") tekenLeadsTabel(sel);
+      if (t === "mijlpalen") tekenMijlpalen(sel);
+      if (t === "voortgang") tekenVoortgang(sel);
       if (t === "werkstromen") tekenWerkstromen(sel);
     }
     if (huidige === "lookup") tekenLookup(sel);
     if (huidige === "acties") tekenActies(sel);
-    if (huidige === "valid")  tekenValidatie();
+    if (huidige === "valid") tekenValidatie();
   }
 
-  /* ---- wiring ----------------------------------------------------------- */
-  function vulSelect(sel, label, waarden){
-    sel.replaceChildren();
-    sel.appendChild(new Option(label, ""));
-    [...new Set(waarden.filter(Boolean))].sort().forEach(v => sel.appendChild(new Option(v, v)));
-  }
-  vulSelect($("#f-doelgroep"), "Alle", LEADS.map(l => l.doelgroep));
-  vulSelect($("#f-status"),    "Alle", LEADS.map(l => l.leadstatus));
-  vulSelect($("#f-fase"),      "Alle", LEADS.map(l => l.fase));
-  vulSelect($("#f-gate"),      "Alle", LEADS.map(l => l.gate));
-  vulSelect($("#f-eigenaar"),  "Alle", LEADS.map(l => l.eigenaar));
-
-  const bind = (sel, key) => $(sel).addEventListener("input", e => { F[key] = e.target.value; teken(); });
+  /* ---- bediening ----------------------------------------------------------- */
+  const bind = (s, k) => $(s).addEventListener("input", e => { F[k] = e.target.value; tekenAlles(); });
   bind("#f-doelgroep","doelgroep"); bind("#f-status","status"); bind("#f-fase","fase");
   bind("#f-gate","gate"); bind("#f-eigenaar","eigenaar"); bind("#f-zoek","zoek");
-
   $("#f-reset").addEventListener("click", () => {
     Object.keys(F).forEach(k => { F[k] = ""; });
     ["#f-doelgroep","#f-status","#f-fase","#f-gate","#f-eigenaar","#f-zoek"].forEach(s => { $(s).value = ""; });
-    teken();
+    tekenAlles();
   });
+  $("#btn-nieuwe-lead").addEventListener("click", () => openFormulier("leads", null, null, id => { gekozenLead = id; }));
+
+  /* Eenmalig de momentopname uit het werkboek in een lege gedeelde opslag
+     zetten. Alleen op een klik, nooit vanzelf bij het laden. */
+  async function vulUitWerkboek(){
+    if (!bewerkbaar()) return;
+    if (!confirm("De gegevens uit het werkboek in de gedeelde opslag zetten?")) return;
+    const bron = momentopname();
+    let n = 0;
+    for (const [id, body] of bron.leads)          { if (await bewaar("leads", id, body)) n++; }
+    for (const [id, body] of bron.contacten)      { if (await bewaar("contacten", id, body)) n++; }
+    for (const [id, body] of bron.overeenkomsten) { if (await bewaar("overeenkomsten", id, body)) n++; }
+    for (const [id, body] of bron.bronnen)        { if (await bewaar("bronnen", id, body)) n++; }
+    melding(n + " regels ingeladen.");
+  }
 
   const bron = DATA._bron || {};
-  $("#rail-file").textContent  = bron.bestand || "Databron.xlsx";
-  $("#rail-date").textContent  = bron.gelezen_op ? "Uitgelezen " + bron.gelezen_op : "";
-  $("#stamp-date").textContent = bron.gelezen_op ? "Laatst ververst " + bron.gelezen_op : "";
+  $("#rail-file").textContent = bron.bestand || "Databron.xlsx";
+  $("#rail-date").textContent = bron.gelezen_op ? "Werkboek " + bron.gelezen_op : "";
+  $("#stamp-date").textContent = bron.gelezen_op ? "Werkboek " + bron.gelezen_op : "";
 
   zetThemaLabel();
   tekenLegenda();
-  teken();
+  tekenUitleg();
+  tekenAlles();
+
+  /* ---- verbinden met de gedeelde opslag ------------------------------------
+     Gebeurt na de eerste weergave: de pagina staat er al, en wat de opslag
+     oplevert komt erbij. Blijft die uit, dan blijft de momentopname staan. */
+  (async function verbind(){
+    if (!window.claude || typeof window.claude.use !== "function") return;
+    let db = null;
+    try { db = await window.claude.use("db"); } catch (e) { db = null; }
+    if (!db) return;
+
+    STORE.db = db;
+
+    try {
+      const user = await window.claude.use("user");
+      const mag = user ? await user.can("data.write") : null;
+      STORE.magSchrijven = mag !== false;
+    } catch (e) { STORE.magSchrijven = true; }
+
+    const binnen = new Set();
+    COLL.forEach(naam => {
+      db.collection(naam).onSnapshot(snap => {
+        const kaart = new Map();
+        snap.docs.forEach(d => kaart.set(d.id, d.data() || {}));
+        STORE.data[naam] = kaart;
+        binnen.add(naam);
+        if (binnen.size === COLL.length && !live()){
+          STORE.modus = "live";
+          melding("Verbonden met de gedeelde gegevens.");
+        }
+        if (live()) tekenAlles();
+      }, err => {
+        if (err && err.code === "revoked"){
+          STORE.modus = "momentopname";
+          STORE.data = momentopname();
+          tekenAlles();
+        }
+      });
+    });
+  })();
 })();
 </script>
