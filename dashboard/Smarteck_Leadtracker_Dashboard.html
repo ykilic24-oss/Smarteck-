@@ -109,6 +109,8 @@ svg{display:block}
 .btn-solid{background:var(--koper);border-color:var(--koper);color:#fff}
 .btn-solid:hover{background:var(--koper-dk);border-color:var(--koper-dk)}
 .btn-danger{border-color:var(--bad);color:var(--bad)}
+.btn-solid.btn-gevaar{background:var(--bad);border-color:var(--bad);color:#fff}
+.btn-solid.btn-gevaar:hover{filter:brightness(1.12)}
 .btn-danger:hover{background:var(--bad);color:#fff}
 button[disabled]{opacity:.45;cursor:not-allowed}
 
@@ -303,6 +305,10 @@ dialog::backdrop{background:var(--veil)}
 .ff .hint{font-size:11.5px;color:var(--ink-3)}
 .ff.fout input,.ff.fout select{border-color:var(--bad)}
 .dlg-fout{color:var(--bad);font-size:12.5px;margin-right:auto}
+.vraagtekst{font-size:14px;max-width:62ch}
+.vraagtekst p{margin-bottom:10px}
+.vraagtekst p:last-child{margin-bottom:0}
+.vraagtekst .zwaar{color:var(--bad);font-weight:600}
 
 /* statuskiezer boven een stapcel */
 .statusmenu{position:fixed;z-index:95;background:var(--surface);border:1px solid var(--line-2);box-shadow:0 8px 26px rgba(17,43,59,.26);min-width:196px}
@@ -510,6 +516,15 @@ dialog::backdrop{background:var(--veil)}
       <button class="btn-solid" type="button" id="dlg-bewaar">Bewaren</button>
     </div>
   </form>
+</dialog>
+
+<dialog id="dlg-vraag">
+  <div class="dlg-hd"><h2 id="vraag-titel">Bevestigen</h2></div>
+  <div class="dlg-bd"><div id="vraag-tekst" class="vraagtekst"></div></div>
+  <div class="dlg-ft">
+    <button class="btn-lite" type="button" id="vraag-nee">Annuleren</button>
+    <button class="btn-solid" type="button" id="vraag-ja">Bevestigen</button>
+  </div>
 </dialog>
 
 <div id="tip" hidden></div>
@@ -2428,6 +2443,38 @@ const DATA = {
     toastTimer = setTimeout(() => { t.hidden = true; }, fout ? 6500 : 3200);
   }
 
+  /* ---- bevestigen ------------------------------------------------------
+     Niet window.confirm: de gepubliceerde pagina draait in een sandboxed
+     iframe zonder allow-modals. Een browserdialoog wordt daar genegeerd en
+     geeft meteen false terug; een dialoogelement werkt er wel.              */
+  const vraagDlg = $("#dlg-vraag");
+  let vraagAntwoord = null;
+
+  function bevestig(titel, regels, knoptekst, gevaarlijk){
+    $("#vraag-titel").textContent = titel;
+    const body = $("#vraag-tekst");
+    body.replaceChildren();
+    regels.filter(Boolean).forEach(r => {
+      if (typeof r === "string") kids(body, el("p", null, r));
+      else kids(body, kids(el("p","zwaar"), document.createTextNode(r.zwaar)));
+    });
+    const ja = $("#vraag-ja");
+    ja.textContent = knoptekst || "Bevestigen";
+    ja.className = "btn-solid" + (gevaarlijk ? " btn-gevaar" : "");
+    vraagDlg.showModal();
+    ja.focus();
+    return new Promise(res => { vraagAntwoord = res; });
+  }
+
+  function sluitVraag(antwoord){
+    if (vraagDlg.open) vraagDlg.close();
+    if (vraagAntwoord){ const f = vraagAntwoord; vraagAntwoord = null; f(antwoord); }
+  }
+  $("#vraag-ja").addEventListener("click", () => sluitVraag(true));
+  $("#vraag-nee").addEventListener("click", () => sluitVraag(false));
+  /* Escape sluit het dialoogelement zelf; dan geldt het als annuleren. */
+  vraagDlg.addEventListener("close", () => sluitVraag(false));
+
   /* ---- schrijven -------------------------------------------------------- */
   function volgendeId(collectie, voorvoegsel){
     let hoogst = 0;
@@ -2461,23 +2508,50 @@ const DATA = {
   }
 
   async function verwijder(collectie, id){
-    if (!bewerkbaar()) return false;
-    try { await STORE.db.doc(collectie + "/" + id).delete(); return true; }
-    catch (e) { melding("Verwijderen is niet gelukt.", true); return false; }
+    if (!bewerkbaar()){ melding("Verwijderen kan alleen in de gedeelde versie.", true); return false; }
+    try {
+      await STORE.db.doc(collectie + "/" + id).delete();
+      return true;
+    } catch (e) {
+      const code = e && e.code;
+      if (code === "invalid_argument"){
+        STORE.magSchrijven = false;
+        tekenAlles();
+        melding("U heeft geen rechten om deze gegevens te verwijderen. Het scherm staat nu op alleen-lezen.", true);
+      } else if (code === "resource_exhausted"){
+        melding("Te veel wijzigingen achter elkaar. Probeer het zo nog eens.", true);
+      } else {
+        melding("Verwijderen is niet gelukt.", true);
+      }
+      return false;
+    }
   }
 
   async function verwijderLead(lead){
-    const kinderen = lead.contacten.length + lead.contracten.length + lead.bronnen.length;
-    const vraag = "Lead " + lead.organisatie + " (" + lead.id + ") verwijderen?" +
-      (kinderen ? "\n\nHiermee verdwijnen ook " + kinderen + " onderliggende regels: " +
-        lead.contacten.length + " contactpersonen, " + lead.contracten.length + " overeenkomsten en " +
-        lead.bronnen.length + " bronnen." : "") +
-      "\n\nDit kan niet ongedaan gemaakt worden.";
-    if (!confirm(vraag)) return;
-    for (const c of lead.contacten)  await verwijder("contacten", c._id);
-    for (const o of lead.contracten) await verwijder("overeenkomsten", o._id);
-    for (const b of lead.bronnen)    await verwijder("bronnen", b._id);
-    if (await verwijder("leads", lead.id)) melding("Lead " + lead.id + " verwijderd.");
+    const onder = [
+      [lead.contacten.length, "contactpersoon", "contactpersonen"],
+      [lead.contracten.length, "overeenkomst", "overeenkomsten"],
+      [lead.bronnen.length, "bron", "bronnen"]
+    ].filter(([n]) => n).map(([n, een, meer]) => n + " " + (n === 1 ? een : meer));
+
+    const ja = await bevestig("Lead verwijderen", [
+      lead.organisatie + " (" + lead.id + ") wordt verwijderd.",
+      onder.length ? "Hiermee verdwijnen ook " + onder.join(", ") + "." : null,
+      {zwaar:"Dit kan niet ongedaan gemaakt worden."}
+    ], "Verwijderen", true);
+    if (!ja) return;
+
+    let mislukt = 0;
+    const weg = async (coll, id) => { if (!await verwijder(coll, id)) mislukt += 1; };
+    for (const c of lead.contacten)  await weg("contacten", c._id);
+    for (const o of lead.contracten) await weg("overeenkomsten", o._id);
+    for (const b of lead.bronnen)    await weg("bronnen", b._id);
+
+    if (!await verwijder("leads", lead.id)) return;
+    if (gekozenLead === lead.id) gekozenLead = null;
+    melding(mislukt
+      ? "Lead " + lead.id + " verwijderd, maar " + mislukt + " onderliggende regels bleven staan."
+      : "Lead " + lead.id + " verwijderd.", !!mislukt);
   }
 
   async function zetStap(lead, stapID, wijziging, mededeling){
@@ -3289,9 +3363,12 @@ const DATA = {
       if (bewerkbaar()){
         kids(acties, iconKnop("potlood","Bewerken", null, () => openFormulier(collectie, r, lead.id, null)),
                      iconKnop("prullenbak","Verwijderen","danger", async () => {
-                       if (confirm("Regel " + r._id + " verwijderen?")) {
-                         if (await verwijder(collectie, r._id)) melding(r._id + " verwijderd.");
-                       }
+                       const ja = await bevestig(SCHEMA[collectie].naam + " verwijderen", [
+                         (r.Naam || r.Titel || r["Titel of bestandsnaam"] || r.Type || r.Brontype || r._id) +
+                           " wordt verwijderd bij " + lead.organisatie + ".",
+                         {zwaar:"Dit kan niet ongedaan gemaakt worden."}
+                       ], "Verwijderen", true);
+                       if (ja && await verwijder(collectie, r._id)) melding(r._id + " verwijderd.");
                      }));
       }
       kids(rij, acties);
@@ -3999,7 +4076,11 @@ const DATA = {
      zetten. Alleen op een klik, nooit vanzelf bij het laden. */
   async function vulUitWerkboek(){
     if (!bewerkbaar()) return;
-    if (!confirm("De gegevens uit het werkboek in de gedeelde opslag zetten?")) return;
+    const bevestigd = await bevestig("Werkboekgegevens inladen", [
+      "De momentopname uit het werkboek wordt in de gedeelde opslag gezet.",
+      "Bestaande regels met hetzelfde ID worden overschreven."
+    ], "Inladen", false);
+    if (!bevestigd) return;
     const bron = momentopname();
     let n = 0;
     for (const [id, body] of bron.leads)          { if (await bewaar("leads", id, body)) n++; }

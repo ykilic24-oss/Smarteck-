@@ -59,6 +59,19 @@ onder de mijlpalen: aqua voor werkelijk gehaald, koper voor gepland. Dat zijn
 dezelfde statuskleuren als in de strip, dus er komt geen vierde kleur bij die met
 de bestaande drie zou concurreren.
 
+## Bevestigen zonder browserdialoog
+
+Het dashboard gebruikt nergens `window.confirm`, `alert` of `prompt`. De
+gepubliceerde pagina draait in een sandboxed iframe zonder `allow-modals`: een
+browserdialoog wordt daar genegeerd en geeft meteen `false` terug, zonder dat de
+gebruiker iets ziet. Verwijderen brak daardoor stil af.
+
+Bevestigen loopt nu via `bevestig()` en een eigen `<dialog>`-element, dat in een
+sandbox wel werkt. Let op bij testen: Playwright accepteert een browserdialoog
+automatisch, waardoor een test slaagt terwijl de echte pagina faalt. De test in
+`deltest.mjs` laadt het dashboard daarom in een sandboxed iframe en wijst een
+eventuele browserdialoog juist af.
+
 ## Tekens en codering
 
 Het bestand begint met `<meta charset="utf-8">` en de bron is volledig ASCII:
