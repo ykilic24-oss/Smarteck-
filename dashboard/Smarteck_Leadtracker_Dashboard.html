@@ -367,7 +367,8 @@ dialog::backdrop{background:var(--veil)}
       <span class="modus" id="modus"><i></i><span id="modus-tekst">Momentopname</span></span>
       <span id="rail-file"></span>
       <span id="rail-date"></span>
-      <button class="btn-lite" id="theme" type="button" style="margin-top:4px">Donker</button>
+      <button class="btn-lite" id="btn-export" type="button" style="margin-top:4px">Naar Excel</button>
+      <button class="btn-lite" id="theme" type="button">Donker</button>
     </div>
   </aside>
 
@@ -2004,6 +2005,219 @@ const DATA = {
     return svg;
   }
 
+
+  /* ==================================================================
+     Werkmap schrijven zonder externe bibliotheek.
+
+     Een xlsx is een zipbestand met XML erin. Dat zelf schrijven scheelt
+     een bibliotheek van het internet -- dit bestand blijft daarmee in
+     zijn geheel zelfstandig, ook achter een streng netwerk. Er wordt
+     niet gecomprimeerd (opslagmethode 0); dat mag en Excel opent het
+     zonder mopperen.
+     ================================================================== */
+  const CRC_TABEL = (function(){
+    const t = new Uint32Array(256);
+    for (let n = 0; n < 256; n++){
+      let c = n;
+      for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+      t[n] = c >>> 0;
+    }
+    return t;
+  })();
+  function crc32(u8){
+    let c = 0xFFFFFFFF;
+    for (let i = 0; i < u8.length; i++) c = CRC_TABEL[(c ^ u8[i]) & 0xFF] ^ (c >>> 8);
+    return (c ^ 0xFFFFFFFF) >>> 0;
+  }
+
+  function zipOpslag(bestanden){
+    const enc = new TextEncoder();
+    const delen = [], centraal = [];
+    let offset = 0;
+    const u16 = v => [v & 0xFF, (v >>> 8) & 0xFF];
+    const u32 = v => [v & 0xFF, (v >>> 8) & 0xFF, (v >>> 16) & 0xFF, (v >>> 24) & 0xFF];
+    const metSig = (sig, velden) => new Uint8Array([].concat(u32(sig), velden));
+
+    bestanden.forEach(f => {
+      const naam = enc.encode(f.naam);
+      const data = f.data;
+      const crc = crc32(data);
+      /* versie 20, utf8-vlag, methode 0 (opslaan), tijd en datum op nul */
+      const lokaal = metSig(0x04034b50, [].concat(
+        u16(20), u16(0x0800), u16(0), u16(0), u16(0),
+        u32(crc), u32(data.length), u32(data.length),
+        u16(naam.length), u16(0)));
+      delen.push(lokaal, naam, data);
+      centraal.push({naam, crc, lengte:data.length, offset});
+      offset += lokaal.length + naam.length + data.length;
+    });
+
+    const cdDelen = [];
+    let cdLengte = 0;
+    centraal.forEach(c => {
+      const kop = metSig(0x02014b50, [].concat(
+        u16(20), u16(20), u16(0x0800), u16(0), u16(0), u16(0),
+        u32(c.crc), u32(c.lengte), u32(c.lengte),
+        u16(c.naam.length), u16(0), u16(0), u16(0), u16(0), u32(0), u32(c.offset)));
+      cdDelen.push(kop, c.naam);
+      cdLengte += kop.length + c.naam.length;
+    });
+
+    const eind = metSig(0x06054b50, [].concat(
+      u16(0), u16(0), u16(centraal.length), u16(centraal.length),
+      u32(cdLengte), u32(offset), u16(0)));
+
+    const alles = delen.concat(cdDelen, [eind]);
+    const uit = new Uint8Array(alles.reduce((a, d) => a + d.length, 0));
+    let p = 0;
+    alles.forEach(d => { uit.set(d, p); p += d.length; });
+    return uit;
+  }
+
+  /* Stuurtekens mogen niet in XML staan; die kunnen uit geplakte tekst komen. */
+  /* Stuurtekens mogen niet in XML staan; die kunnen uit geplakte tekst komen.
+     Met de hand gefilterd in plaats van met een regex vol escapes: dat houdt
+     de bron leesbaar en kan onderweg niet verminkt raken. */
+  function xmlVeilig(waarde){
+    const t = String(waarde == null ? "" : waarde);
+    let uit = "";
+    for (let i = 0; i < t.length; i++){
+      const code = t.charCodeAt(i);
+      if (code < 32 && code !== 9 && code !== 10 && code !== 13) continue;
+      const teken = t.charAt(i);
+      uit += teken === "&" ? "&amp;"
+           : teken === "<" ? "&lt;"
+           : teken === ">" ? "&gt;"
+           : teken === '"' ? "&quot;"
+           : teken === "'" ? "&apos;"
+           : teken;
+    }
+    return uit;
+  }
+
+  const kolomLetter = n => {
+    let s = "";
+    n += 1;
+    while (n > 0){ const r = (n - 1) % 26; s = String.fromCharCode(65 + r) + s; n = Math.floor((n - 1) / 26); }
+    return s;
+  };
+
+  /* Een echte datum, geen tekst: spelregel 3 uit de Leeswijzer. */
+  const datumNaarSerie = iso => {
+    const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(iso || ""));
+    if (!m) return null;
+    return Math.round((Date.UTC(+m[1], +m[2] - 1, +m[3]) - Date.UTC(1899, 11, 30)) / 86400000);
+  };
+
+  function bladXml(blad){
+    const kolommen = blad.kolommen;
+    const laatste = kolomLetter(kolommen.length - 1);
+    const rijen = [];
+
+    rijen.push('<row r="1">' + kolommen.map((k, i) =>
+      '<c r="' + kolomLetter(i) + '1" s="1" t="inlineStr"><is><t xml:space="preserve">' +
+      xmlVeilig(k.kop) + "</t></is></c>").join("") + "</row>");
+
+    blad.rijen.forEach((rij, ri) => {
+      const r = ri + 2;
+      const cellen = rij.map((waarde, i) => {
+        const soort = (kolommen[i] && kolommen[i].soort) || "tekst";
+        const ref = kolomLetter(i) + r;
+        if (waarde === "" || waarde === null || waarde === undefined) return "";
+        if (soort === "datum"){
+          const serie = datumNaarSerie(waarde);
+          if (serie === null) return '<c r="' + ref + '" t="inlineStr"><is><t>' + xmlVeilig(waarde) + "</t></is></c>";
+          return '<c r="' + ref + '" s="2"><v>' + serie + "</v></c>";
+        }
+        if (soort === "getal" || soort === "breuk"){
+          const n = typeof waarde === "number" ? waarde : parseFloat(String(waarde).replace(",", "."));
+          if (!isFinite(n)) return "";
+          return '<c r="' + ref + '"' + (soort === "getal" ? ' s="3"' : "") + "><v>" + n + "</v></c>";
+        }
+        return '<c r="' + ref + '" t="inlineStr"><is><t xml:space="preserve">' + xmlVeilig(waarde) + "</t></is></c>";
+      }).join("");
+      rijen.push('<row r="' + r + '">' + cellen + "</row>");
+    });
+
+    const n = blad.rijen.length + 1;
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">' +
+      '<dimension ref="A1:' + laatste + n + '"/>' +
+      '<sheetViews><sheetView workbookViewId="0">' +
+      '<pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/>' +
+      "</sheetView></sheetViews>" +
+      '<sheetFormatPr defaultRowHeight="15"/>' +
+      "<cols>" + kolommen.map((k, i) =>
+        '<col min="' + (i + 1) + '" max="' + (i + 1) + '" width="' +
+        Math.min(46, Math.max(11, String(k.kop).length + 4)) + '" customWidth="1"/>').join("") + "</cols>" +
+      "<sheetData>" + rijen.join("") + "</sheetData>" +
+      '<autoFilter ref="A1:' + laatste + n + '"/>' +
+      "</worksheet>";
+  }
+
+  const STYLES_XML = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+    '<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">' +
+    '<numFmts count="1"><numFmt numFmtId="164" formatCode="yyyy\\-mm\\-dd"/></numFmts>' +
+    '<fonts count="2"><font><sz val="11"/><name val="Calibri"/></font>' +
+    "<font><b/><sz val=\"11\"/><name val=\"Calibri\"/></font></fonts>" +
+    '<fills count="2"><fill><patternFill patternType="none"/></fill>' +
+    '<fill><patternFill patternType="gray125"/></fill></fills>' +
+    '<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>' +
+    '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>' +
+    '<cellXfs count="4">' +
+    '<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>' +
+    '<xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/>' +
+    '<xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>' +
+    '<xf numFmtId="3" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>' +
+    "</cellXfs>" +
+    '<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>' +
+    "</styleSheet>";
+
+  function werkmapBytes(bladen){
+    const enc = new TextEncoder();
+    const bestanden = [];
+    const veiligeNaam = n => String(n).replace(/[\[\]:*?\/\\]/g, " ").slice(0, 31);
+
+    bestanden.push({naam:"[Content_Types].xml", data:enc.encode(
+      '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' +
+      '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>' +
+      '<Default Extension="xml" ContentType="application/xml"/>' +
+      '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' +
+      bladen.map((b, i) => '<Override PartName="/xl/worksheets/sheet' + (i + 1) +
+        '.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>').join("") +
+      '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>' +
+      "</Types>")});
+
+    bestanden.push({naam:"_rels/.rels", data:enc.encode(
+      '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+      '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>' +
+      "</Relationships>")});
+
+    bestanden.push({naam:"xl/workbook.xml", data:enc.encode(
+      '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" ' +
+      'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>' +
+      bladen.map((b, i) => '<sheet name="' + xmlVeilig(veiligeNaam(b.naam)) + '" sheetId="' + (i + 1) +
+        '" r:id="rId' + (i + 1) + '"/>').join("") +
+      "</sheets></workbook>")});
+
+    bestanden.push({naam:"xl/_rels/workbook.xml.rels", data:enc.encode(
+      '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+      bladen.map((b, i) => '<Relationship Id="rId' + (i + 1) +
+        '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet' +
+        (i + 1) + '.xml"/>').join("") +
+      '<Relationship Id="rId' + (bladen.length + 1) +
+      '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>' +
+      "</Relationships>")});
+
+    bestanden.push({naam:"xl/styles.xml", data:enc.encode(STYLES_XML)});
+    bladen.forEach((b, i) => bestanden.push({naam:"xl/worksheets/sheet" + (i + 1) + ".xml", data:enc.encode(bladXml(b))}));
+    return zipOpslag(bestanden);
+  }
+
   /* ---- statussen ------------------------------------------------------- */
   const STATUS = {
     "Gereed":             {cls:"s-Gereed",      mark:"vink",     varName:"--st-gereed"},
@@ -2079,7 +2293,14 @@ const DATA = {
     rows("Leads").forEach(l => {
       const stappen = {};
       rows("Voortgang").filter(v => v.LeadID === l.LeadID).forEach(v => {
-        stappen[v.StapID] = {status:STATUS[v.Status] ? v.Status : "Niet gestart", wie:v.Verantwoordelijke || ""};
+        stappen[v.StapID] = {
+          status:STATUS[v.Status] ? v.Status : "Niet gestart",
+          wie:v.Verantwoordelijke || "",
+          start:v.Startdatum || "",
+          gepland:v["Gepland gereed"] || "",
+          werkelijk:v["Werkelijk gereed"] || "",
+          opmerking:v.Opmerkingen || ""
+        };
       });
       leads.set(l.LeadID, Object.assign({}, l, {stappen}));
     });
@@ -2111,7 +2332,11 @@ const DATA = {
           verplicht:def.Verplicht !== "Nee",
           toelichting:def.Toelichting || "",
           status:STATUS[s.status] ? s.status : "Niet gestart",
-          wie:s.wie || l.Eigenaar || ""
+          wie:s.wie || l.Eigenaar || "",
+          start:s.start || "",
+          gepland:s.gepland || "",
+          werkelijk:s.werkelijk || "",
+          opmerking:s.opmerking || ""
         };
       });
       const tel = st => stappen.filter(s => s.status === st).length;
@@ -2149,6 +2374,10 @@ const DATA = {
         stappen, gereed, loopt, geblok, totaal:stappen.length,
         pctGereed:stappen.length ? gereed / stappen.length : 0,
         volgende:stappen.find(s => s.status === "Loopt") || stappen.find(s => s.status === "Niet gestart") || null,
+        stapLaatstGereed:stappen.filter(s => s.status === "Gereed" && s.werkelijk)
+          .map(s => s.werkelijk).sort().slice(-1)[0] || "",
+        stapVolgendGepland:stappen.filter(s => s.status !== "Gereed" && s.gepland)
+          .map(s => s.gepland).sort()[0] || "",
         contacten, contracten, bronnen,
         getekend:contracten.filter(o => o.Status === "Getekend").length,
         openContract:contracten.filter(o => !CONTRACT_KLAAR.includes(o.Status)).length,
@@ -2251,12 +2480,92 @@ const DATA = {
     if (await verwijder("leads", lead.id)) melding("Lead " + lead.id + " verwijderd.");
   }
 
-  async function zetStapStatus(lead, stapID, status){
-    if (!bewerkbaar()) return;
+  async function zetStap(lead, stapID, wijziging, mededeling){
+    if (!bewerkbaar()) return false;
     const body = Object.assign({}, lead.ruw);
     body.stappen = Object.assign({}, body.stappen || {});
-    body.stappen[stapID] = Object.assign({}, body.stappen[stapID] || {}, {status});
-    if (await bewaar("leads", lead.id, body)) melding(stapID + " staat nu op " + status + ".");
+    body.stappen[stapID] = Object.assign({}, body.stappen[stapID] || {}, wijziging);
+    body._bijgewerkt = new Date().toISOString();
+    const ok = await bewaar("leads", lead.id, body);
+    if (ok && mededeling) melding(mededeling);
+    return ok;
+  }
+
+  async function zetStapStatus(lead, stapID, status){
+    /* Op Gereed zetten zonder werkelijke datum: vul de peildatum in, anders
+       blijft de voortgang ondateerbaar -- precies het gat dat het werkboek had. */
+    const huidig = (lead.ruw.stappen || {})[stapID] || {};
+    const wijziging = {status};
+    if (status === "Gereed" && !huidig.werkelijk) wijziging.werkelijk = VANDAAG;
+    if (status !== "Gereed" && huidig.werkelijk) wijziging.werkelijk = "";
+    await zetStap(lead, stapID, wijziging, stapID + " staat nu op " + status + ".");
+  }
+
+  const STAPVELDEN = [
+    {k:"status",     kop:"Status",            t:"keuze", lijst:"L_Stapstatus", verplicht:true},
+    {k:"wie",        kop:"Verantwoordelijke", t:"keuze", lijst:"L_Medewerker"},
+    {k:"start",      kop:"Startdatum",        t:"datum"},
+    {k:"gepland",    kop:"Gepland gereed",    t:"datum"},
+    {k:"werkelijk",  kop:"Werkelijk gereed",  t:"datum", hint:"Vullen zodra de stap af is."},
+    {k:"opmerking",  kop:"Opmerkingen",       t:"lang",  breed:true}
+  ];
+
+  function openStapFormulier(lead, stap){
+    $("#dlg-titel").textContent = stap.nr + ". " + stap.naam;
+    $("#dlg-fout").textContent = "";
+    const host = $("#dlg-velden");
+    host.replaceChildren();
+
+    const uitleg = el("div","ff vol");
+    kids(uitleg, el("span","hint", stap.stapID + MIDDOT + stap.workstream +
+      (stap.gate ? MIDDOT + stap.gate : "") + (stap.verplicht ? "" : MIDDOT + "optioneel") +
+      (stap.toelichting ? MIDDOT + stap.toelichting : "")));
+    kids(host, uitleg);
+
+    const invoer = {};
+    STAPVELDEN.forEach(v => {
+      const wrap = el("div","ff" + (v.breed ? " vol" : ""));
+      const id = "sf-" + v.k;
+      const lab = el("label", null, v.kop + (v.verplicht ? " *" : ""));
+      lab.htmlFor = id;
+      let veld;
+      if (v.t === "keuze"){
+        veld = el("select");
+        kids(veld, new Option(v.verplicht ? "Kiezen..." : DASH, ""));
+        keuze(v.lijst).forEach(o => kids(veld, new Option(o, o)));
+      } else if (v.t === "lang"){
+        veld = el("textarea");
+      } else {
+        veld = el("input");
+        veld.type = "date";
+      }
+      veld.id = id;
+      veld.value = stap[v.k] || "";
+      invoer[v.k] = {veld, spec:v, wrap};
+      kids(wrap, lab, veld);
+      if (v.hint) kids(wrap, el("span","hint", v.hint));
+      kids(host, wrap);
+    });
+
+    dlgOpslaan = async () => {
+      const wijziging = {};
+      let stuk = null;
+      Object.entries(invoer).forEach(([k, {veld, spec, wrap}]) => {
+        const w = String(veld.value).trim();
+        wrap.classList.toggle("fout", spec.verplicht && !w);
+        if (spec.verplicht && !w && !stuk) stuk = spec.kop;
+        wijziging[k] = w;
+      });
+      if (stuk){ $("#dlg-fout").textContent = "Vul " + stuk + " in."; return; }
+      if (wijziging.werkelijk && wijziging.status !== "Gereed"){
+        $("#dlg-fout").textContent = "Een werkelijke einddatum hoort bij status Gereed.";
+        return;
+      }
+      if (await zetStap(lead, stap.stapID, wijziging, "Stap " + stap.stapID + " bijgewerkt.")) dlg.close();
+    };
+    if (!dlg.open) dlg.showModal();
+    const eerste = host.querySelector("select,input,textarea");
+    if (eerste) eerste.focus();
   }
 
   /* ---- veldschema's ----------------------------------------------------- */
@@ -2454,6 +2763,11 @@ const DATA = {
       b.addEventListener("click", () => { sluitMenu(); zetStapStatus(lead, stap.stapID, st); });
       kids(m, b);
     });
+    const meer = el("button");
+    meer.type = "button";
+    kids(meer, el("span","sw"), el("span", null, "Datums en toelichting..."));
+    meer.addEventListener("click", () => { sluitMenu(); openStapFormulier(lead, stap); });
+    kids(m, meer);
     document.body.appendChild(m);
     const r = knop.getBoundingClientRect(), mr = m.getBoundingClientRect();
     m.style.left = Math.max(8, Math.min(r.left, innerWidth - mr.width - 8)) + "px";
@@ -2727,7 +3041,9 @@ const DATA = {
       {kop:"LeadID", cel:l => leadLink(l)},
       {kop:"Organisatie", cel:l => el("b", null, l.organisatie)},
       {kop:"Gate", cel:l => el("span","chip gatepill", l.gate || DASH)},
-      ...MIJLPAALNAMEN.map(naam => ({kop:naam, cls:"d", cel:l => l.mijlpalen[naam] || DASH}))
+      ...MIJLPAALNAMEN.map(naam => ({kop:naam, cls:"d", cel:l => l.mijlpalen[naam] || DASH})),
+      {kop:"Laatste stap gereed", cls:"d", cel:l => l.stapLaatstGereed || DASH},
+      {kop:"Volgende stap gepland", cls:"d", cel:l => l.stapVolgendGepland || DASH}
     ], sel, {leeg:"Geen leads die aan deze filters voldoen."});
     $("#tbl-mijlpalen").querySelectorAll("td.d").forEach(td => {
       if (td.textContent.trim() === DASH) td.classList.add("none");
@@ -2870,9 +3186,12 @@ const DATA = {
 
   function tekenTijdlijn(l){
     const punten = MIJLPAALNAMEN.map(naam => ({naam, datum:l.mijlpalen[naam]})).filter(p => p.datum);
-    if (!punten.length) return el("p","empty","Nog geen datums vastgelegd voor deze lead.");
+    const stapDatums = l.stappen.flatMap(s => [s.werkelijk, s.gepland].filter(Boolean));
+    if (!punten.length && !stapDatums.length) return el("p","empty","Nog geen datums vastgelegd voor deze lead.");
 
-    const alle = punten.map(p => +new Date(p.datum)).concat([+new Date(VANDAAG)]);
+    const alle = punten.map(p => +new Date(p.datum))
+      .concat(stapDatums.map(d => +new Date(d)))
+      .concat([+new Date(VANDAAG)]);
     let jaarLo = new Date(Math.min(...alle)).getUTCFullYear();
     let jaarHi = new Date(Math.max(...alle)).getUTCFullYear();
     if (jaarHi === jaarLo) jaarHi += 1;
@@ -2896,6 +3215,31 @@ const DATA = {
       kids(rail, dot);
     });
 
+    /* Tweede baan: de ontwikkelstappen zelf. Aqua voor werkelijk gehaald,
+       koper voor gepland -- dezelfde statuskleuren als in de strip, dus geen
+       vierde kleur nodig die met de bestaande drie zou concurreren. */
+    const stapPunten = [];
+    l.stappen.forEach(s => {
+      if (s.werkelijk) stapPunten.push({datum:s.werkelijk, kleur:"--st-gereed", tekst:"gehaald", stap:s});
+      else if (s.gepland) stapPunten.push({datum:s.gepland, kleur:"--st-loopt", tekst:"gepland", stap:s});
+    });
+    let stapRail = null;
+    if (stapPunten.length){
+      stapRail = el("div","tl-rail");
+      stapRail.style.marginTop = "26px";
+      stapPunten.forEach(sp => {
+        const dot = el("button","tl-dot");
+        dot.type = "button";
+        dot.style.left = x(sp.datum) + "%";
+        dot.style.background = "var(" + sp.kleur + ")";
+        dot.setAttribute("aria-label", "Stap " + sp.stap.nr + ": " + sp.stap.naam + " " + sp.tekst + " " + sp.datum);
+        dot.dataset.tip = JSON.stringify({
+          boven:sp.stap.stapID + MIDDOT + sp.datum + MIDDOT + sp.tekst,
+          titel:sp.stap.nr + ". " + sp.stap.naam, tekst:"", status:sp.stap.status});
+        kids(stapRail, dot);
+      });
+    }
+
     const axis = el("div","tl-axis");
     for (let j = jaarLo; j <= jaarHi + 1; j++){
       const t = el("div","tl-tick");
@@ -2913,7 +3257,16 @@ const DATA = {
       i.style.background = "var(" + kleur + ")";
       kids(leg, kids(item, i, el("span", null, TL_SOORT[kleur] || "Overig")));
     });
-    return kids(box, rail, axis, leg);
+    if (stapPunten.length){
+      [["--st-gereed","Ontwikkelstap gehaald"],["--st-loopt","Ontwikkelstap gepland"]].forEach(([kleur, tekst]) => {
+        if (!stapPunten.some(sp => sp.kleur === kleur)) return;
+        const item = el("span","item");
+        const i = el("i");
+        i.style.background = "var(" + kleur + ")";
+        kids(leg, kids(item, i, el("span", null, tekst)));
+      });
+    }
+    return kids(box, rail, stapRail, axis, leg);
   }
 
   function registerPaneel(titel, collectie, lead, records, leeg, teken1){
@@ -3196,6 +3549,14 @@ const DATA = {
                             : "Elke lead heeft een eigenaar.",
       zonderEigenaar.map(l => l.id).join(MIDDOT));
 
+    const zonderDatum = LEADS.flatMap(l => l.stappen
+      .filter(s => s.status === "Gereed" && !s.werkelijk)
+      .map(s => l.id + MIDDOT + s.stapID));
+    voeg(!zonderDatum.length, "Gereedmeldingen hebben een datum",
+      zonderDatum.length ? "Deze stappen staan op Gereed maar hebben geen werkelijke einddatum. Zonder die datum is er geen doorlooptijd te berekenen en staat de stap niet op de tijdlijn."
+                         : "Elke stap die op Gereed staat heeft een werkelijke einddatum.",
+      zonderDatum.join(MIDDOT));
+
     const zonderContact = LEADS.filter(l => !l.contacten.length);
     voeg(!zonderContact.length, "Elke lead heeft een contactpersoon",
       zonderContact.length ? "Zonder contactpersoon is er geen gesprekspartner vastgelegd \u2014 bij een hub is dat de kartrekker."
@@ -3251,6 +3612,7 @@ const DATA = {
         ["Leads toevoegen, wijzigen en verwijderen. Een nieuwe lead krijgt automatisch het volledige stappenspoor van zijn doelgroep.",
          "Contactpersonen, overeenkomsten en bronnen per lead toevoegen, wijzigen en verwijderen.",
          "De status van elke ontwikkelstap zetten door op de cel in de strip te klikken.",
+         "Per ontwikkelstap de startdatum, de geplande en de werkelijke einddatum en een toelichting, via Datums en toelichting in hetzelfde menu.",
          "Alle keuzemenu's worden gevoed door het blad Keuzelijsten uit het werkboek."
         ].forEach(t => kids(ul, el("li", null, t)));
         return ul;
@@ -3272,6 +3634,15 @@ const DATA = {
       el("p", null, "Ook afgeleid: de mijlpaaldata, de voortgang per lead, en alle tellingen. Niets daarvan " +
         "wordt apart opgeslagen, dus het blijft kloppen zodra u iets wijzigt."));
 
+    blok("Terug naar Excel",
+      el("p", null, "De knop Naar Excel in de zijbalk schrijft een werkmap met de bladen Leads, " +
+        "Contactpersonen, Overeenkomsten, Bronnen, Voortgang en Ontwikkelstappen, met dezelfde " +
+        "kolomnamen en volgorde als de databron. Datums komen als echte datum in de cellen, niet als tekst."),
+      el("p", null, "De kopregel staat in de export op regel 1 en in de databron op regel 4: plak het blok " +
+        "onder de kopregel van het bijbehorende blad. Slaagkans en gewogen fee gaan berekend mee."),
+      el("p", null, "De export volgt de filters niet: er gaan altijd alle leads in, zodat u nooit per ongeluk " +
+        "een halve set terugplaatst."));
+
     blok("Werkboek bijwerken",
       el("p", null, "De momentopname in dit bestand komt uit het werkboek en wordt ververst met:"),
       (() => { const p = el("p"); kids(p, el("code", null, "python3 dashboard/tools/build_data.py dashboard/data/Smarteck_Leadtracker_Databron.xlsx")); return p; })(),
@@ -3288,6 +3659,171 @@ const DATA = {
         ].forEach(t => kids(ol, el("li", null, t)));
         return ol;
       })());
+  }
+
+
+  /* ==================================================================
+     Terug naar Excel.
+
+     De bladen krijgen dezelfde kolomnamen en volgorde als het werkboek,
+     zodat het blok onder de kopregel van de databron geplakt kan worden.
+     Kopregel staat hier op regel 1; in de databron zelf op regel 4.
+     ================================================================== */
+  const KOL = (kop, soort) => ({kop, soort:soort || "tekst"});
+
+  function exportBladen(){
+    const nu = new Date().toISOString().slice(0, 10);
+    const leads = LEADS.slice().sort((a, b) => a.id.localeCompare(b.id));
+
+    const bladLeads = {
+      naam:"Leads",
+      kolommen:[
+        KOL("LeadID"), KOL("Doelgroep"), KOL("Organisatie"), KOL("Projectnaam"),
+        KOL("Plaats"), KOL("Provincie"), KOL("Herkomst van de lead"), KOL("Aangebracht door"),
+        KOL("Datum eerste contact","datum"), KOL("Leadstatus"), KOL("Ontwikkelfase"),
+        KOL("Huidige gate"), KOL("Omvang (woningen of MW)"),
+        KOL("Verwachte CAPEX (EUR)","getal"), KOL("Verwachte Smarteck-fee (EUR)","getal"),
+        KOL("Slaagkans","breuk"), KOL("Gewogen fee (EUR)","getal"),
+        KOL("Eigenaar"), KOL("Prioriteit"), KOL("Volgende actie"),
+        KOL("Deadline volgende actie","datum"), KOL("Opmerkingen"),
+        KOL("Structureel vermeden piek (kW)","getal")
+      ],
+      rijen:leads.map(l => [
+        l.id, l.doelgroep, l.organisatie, l.project, l.plaats, l.provincie,
+        l.herkomst, l.aangebracht, l.eersteContact, l.leadstatus, l.fase, l.gate,
+        l.omvang, l.capex, l.fee, l.slaagkans, Math.round(l.gewogen),
+        l.eigenaar, l.prioriteit, l.actie, l.deadline, l.opmerkingen, l.piek
+      ])
+    };
+
+    const bladContacten = {
+      naam:"Contactpersonen",
+      kolommen:[KOL("ContactID"), KOL("LeadID"), KOL("Naam"), KOL("Organisatie"), KOL("Functie"),
+                KOL("Rol in besluitvorming"), KOL("E-mail"), KOL("Telefoon"),
+                KOL("Relatie-eigenaar"), KOL("Laatste contact","datum"), KOL("Opmerkingen")],
+      rijen:leads.flatMap(l => l.contacten.map(c => [
+        c._id, l.id, c.Naam, c.Organisatie, c.Functie, c["Rol in besluitvorming"],
+        c["E-mail"], c.Telefoon, c["Relatie-eigenaar"], c["Laatste contact"], c.Opmerkingen]))
+    };
+
+    const bladOvereenkomsten = {
+      naam:"Overeenkomsten",
+      kolommen:[KOL("OvereenkomstID"), KOL("LeadID"), KOL("Type"), KOL("Titel"), KOL("Status"),
+                KOL("Datum verzonden","datum"), KOL("Datum getekend","datum"),
+                KOL("Ingangsdatum","datum"), KOL("Einddatum","datum"),
+                KOL("Looptijd (mnd)","getal"), KOL("Contractwaarde (EUR)","getal"),
+                KOL("Ondertekenaar Smarteck"), KOL("Ondertekenaar wederpartij"),
+                KOL("Documentlocatie"), KOL("Actie vereist"), KOL("Opmerkingen")],
+      rijen:leads.flatMap(l => l.contracten.map(o => [
+        o._id, l.id, o.Type, o.Titel, o.Status, o["Datum verzonden"], o["Datum getekend"],
+        o.Ingangsdatum, o.Einddatum, o["Looptijd (mnd)"], o["Contractwaarde (EUR)"],
+        o["Ondertekenaar Smarteck"], o["Ondertekenaar wederpartij"], o.Documentlocatie,
+        o["Actie vereist"], o.Opmerkingen]))
+    };
+
+    const bladBronnen = {
+      naam:"Bronnen",
+      kolommen:[KOL("BronID"), KOL("LeadID"), KOL("Brontype"), KOL("Titel of bestandsnaam"),
+                KOL("Aangeleverd door"), KOL("Datum ontvangen","datum"), KOL("Formaat"),
+                KOL("Status"), KOL("Bruikbaarheid"), KOL("Vertrouwelijk"), KOL("Onder NDA"),
+                KOL("Bestandslocatie"), KOL("Gebruikt voor stap"), KOL("Beoordeeld door"),
+                KOL("Opmerkingen")],
+      rijen:leads.flatMap(l => l.bronnen.map(b => [
+        b._id, l.id, b.Brontype, b["Titel of bestandsnaam"], b["Aangeleverd door"],
+        b["Datum ontvangen"], b.Formaat, b.Status, b.Bruikbaarheid, b.Vertrouwelijk,
+        b["Onder NDA"], b.Bestandslocatie, b["Gebruikt voor stap"], b["Beoordeeld door"],
+        b.Opmerkingen]))
+    };
+
+    /* Voortgang krijgt ook de afgeleide kolommen die het werkboek zelf berekent,
+       zodat de regels een-op-een terug te plaatsen zijn. */
+    let vtg = 0;
+    const bladVoortgang = {
+      naam:"Voortgang",
+      kolommen:[KOL("VoortgangID"), KOL("LeadID"), KOL("StapID"), KOL("Stapnr","getal"),
+                KOL("Stap"), KOL("Workstream"), KOL("Status"),
+                KOL("Startdatum","datum"), KOL("Gepland gereed","datum"), KOL("Werkelijk gereed","datum"),
+                KOL("Verantwoordelijke"), KOL("Openstaand nr","getal"), KOL("Sleutel"), KOL("Opmerkingen")],
+      rijen:leads.flatMap(l => l.stappen.map(s => {
+        vtg += 1;
+        return ["VTG-" + String(vtg).padStart(3, "0"), l.id, s.stapID, s.nr, s.naam, s.workstream,
+                s.status, s.start, s.gepland, s.werkelijk, s.wie,
+                s.status === "Gereed" ? 9999 : s.nr,
+                l.id + "|" + String(s.nr).padStart(2, "0"), s.opmerking];
+      }))
+    };
+
+    const bladStappen = {
+      naam:"Ontwikkelstappen",
+      kolommen:[KOL("StapID"), KOL("Doelgroep"), KOL("Nr","getal"), KOL("Stap"), KOL("Workstream"),
+                KOL("Gate"), KOL("Verplicht"), KOL("Doorlooptijd (weken)","getal"), KOL("Toelichting")],
+      rijen:rows("Ontwikkelstappen").map(s => [s.StapID, s.Doelgroep, s.Nr, s.Stap, s.Workstream,
+                                               s.Gate, s.Verplicht, s["Doorlooptijd (weken)"], s.Toelichting])
+    };
+
+    const bladInfo = {
+      naam:"Export",
+      kolommen:[KOL("Veld"), KOL("Waarde")],
+      rijen:[
+        ["Geexporteerd op", nu],
+        ["Stand", live() ? "Live \u2014 gedeelde gegevens" : "Momentopname uit het werkboek"],
+        ["Leads", leads.length],
+        ["Contactpersonen", bladContacten.rijen.length],
+        ["Overeenkomsten", bladOvereenkomsten.rijen.length],
+        ["Bronnen", bladBronnen.rijen.length],
+        ["Voortgangsregels", bladVoortgang.rijen.length],
+        ["Gewogen fee (EUR)", Math.round(leads.reduce((a, l) => a + l.gewogen, 0))],
+        ["Let op", "Kopregel staat hier op regel 1; in de databron op regel 4."],
+        ["Let op", "Slaagkans en Gewogen fee zijn berekend uit gate en fee."]
+      ]
+    };
+
+    return [bladLeads, bladContacten, bladOvereenkomsten, bladBronnen,
+            bladVoortgang, bladStappen, bladInfo];
+  }
+
+  async function exporteerNaarExcel(){
+    const knop = $("#btn-export");
+    const oud = knop.textContent;
+    knop.disabled = true;
+    knop.textContent = "Bezig\u2026";
+    try {
+      const bytes = werkmapBytes(exportBladen());
+      const naam = "Smarteck_Leadtracker_" + new Date().toISOString().slice(0, 10) + ".xlsx";
+      const blob = new Blob([bytes], {type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+
+      let downloads = null;
+      if (window.claude && typeof window.claude.use === "function"){
+        try { downloads = await window.claude.use("downloads"); } catch (e) { downloads = null; }
+      }
+
+      if (downloads){
+        await downloads.save({filename:naam, data:blob});
+        melding("Werkmap opgeslagen.");
+      } else {
+        /* Losse pagina: gewone browserdownload. */
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = naam;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 4000);
+        melding("Werkmap gedownload.");
+      }
+    } catch (e) {
+      const code = e && e.code;
+      if (code === "declined") melding("Opslaan afgebroken.");
+      else if (code === "rate_limited") melding("Er staat al een download open. Probeer het zo nog eens.", true);
+      else if (code === "too_large") melding("De werkmap is te groot voor deze bestemming.", true);
+      else if (code === "rejected_extension" || code === "extension_not_enabled")
+        melding("Excel-bestanden opslaan kan hier niet.", true);
+      else melding("Exporteren is niet gelukt.", true);
+    } finally {
+      knop.disabled = false;
+      knop.textContent = oud;
+    }
   }
 
   /* ---- paginas ------------------------------------------------------------ */
@@ -3456,6 +3992,7 @@ const DATA = {
     ["#f-doelgroep","#f-status","#f-fase","#f-gate","#f-eigenaar","#f-zoek"].forEach(s => { $(s).value = ""; });
     tekenAlles();
   });
+  $("#btn-export").addEventListener("click", exporteerNaarExcel);
   $("#btn-nieuwe-lead").addEventListener("click", () => openFormulier("leads", null, null, id => { gekozenLead = id; }));
 
   /* Eenmalig de momentopname uit het werkboek in een lege gedeelde opslag

@@ -20,6 +20,45 @@ stappenspoor van zijn doelgroep), contactpersonen, overeenkomsten, bronnen, en d
 status van elke ontwikkelstap via een klik op de cel in de strip. Alle
 keuzemenu's worden gevoed door het blad Keuzelijsten.
 
+## Terug naar Excel
+
+De knop **Naar Excel** in de zijbalk schrijft een werkmap met zeven bladen:
+Leads, Contactpersonen, Overeenkomsten, Bronnen, Voortgang, Ontwikkelstappen en
+een blad Export met de telling en de peildatum. Kolomnamen en volgorde zijn
+gelijk aan de databron, datums staan als echte datum in de cel (spelregel 3), en
+elk blad heeft een vastgezette kopregel plus autofilter.
+
+De kopregel staat in de export op regel 1 en in de databron op regel 4: plak het
+blok onder de kopregel van het bijbehorende blad. De export volgt de filters
+niet — er gaan altijd alle leads in, zodat er nooit per ongeluk een halve set
+teruggeplaatst wordt.
+
+Het xlsx-bestand wordt in de browser zelf geschreven: `zipOpslag` en
+`werkmapBytes` bouwen het zipbestand en de XML met de hand. Dat scheelt een
+bibliotheek van een CDN, waardoor het dashboard ook achter een streng netwerk
+blijft werken en het bestand zelfstandig blijft. Er wordt niet gecomprimeerd
+(zip-methode 0); dat is geldig en Excel opent het zonder klagen.
+
+In de gepubliceerde versie loopt het opslaan via de downloadfunctie van het
+platform, die de gebruiker om bevestiging vraagt. Los geopend valt het terug op
+een gewone browserdownload.
+
+## Voortgang met datums
+
+De stappenstrip zet niet alleen de status. Via **Datums en toelichting** in
+hetzelfde menu horen bij elke ontwikkelstap ook een startdatum, een geplande en
+een werkelijke einddatum, een verantwoordelijke en een toelichting — de kolommen
+die het blad Voortgang wel had maar die nooit gevuld waren.
+
+Een stap op Gereed zetten vult de werkelijke einddatum met de dag van vandaag als
+die nog leeg is; terugzetten maakt hem weer leeg. Datavalidatie controleert of
+elke gereedmelding een datum heeft.
+
+Daardoor staan de ontwikkelstappen nu ook op de tijdlijn, in een tweede baan
+onder de mijlpalen: aqua voor werkelijk gehaald, koper voor gepland. Dat zijn
+dezelfde statuskleuren als in de strip, dus er komt geen vierde kleur bij die met
+de bestaande drie zou concurreren.
+
 ## Tekens en codering
 
 Het bestand begint met `<meta charset="utf-8">` en de bron is volledig ASCII:
@@ -82,7 +121,9 @@ berekend uit de invoerbladen, zodat ze meebewegen met de filters.
 | Volgende stap | eerste stap op *Loopt*, anders de eerste op *Niet gestart* |
 | Signalen | de spelregels uit de Leeswijzer, per regel nagelopen |
 | Mijlpaaldata | Leads, Overeenkomsten, Bronnen en Contactpersonen |
-| Tijdlijn per lead | dezelfde mijlpaaldata, op een jaarschaal |
+| Tijdlijn per lead | mijlpaaldata plus de stapdatums, op een jaarschaal |
+| Laatste stap gereed | hoogste werkelijke einddatum van een gereede stap |
+| Volgende stap gepland | laagste geplande datum van een niet-gereede stap |
 
 De peildatum voor verstreken deadlines is de dag van openen.
 
