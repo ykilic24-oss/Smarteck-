@@ -2266,8 +2266,12 @@ const DATA = {
   const kansOp  = g => aanname(g + " bereikt");
 
   function feeSplitsing(fee, gate){
-    const initiatie = aanname("Initiatiefee M1 (vast, EUR)");
-    const ontwikkel = Math.max(num(fee) - initiatie, 0);
+    /* De initiatiefee kan nooit meer zijn dan de fee zelf: bij een lead waar
+       de fee nog niet bekend is (0) moet de gewogen fee ook 0 zijn, niet de
+       volle initiatiefee. */
+    const totaal = Math.max(num(fee), 0);
+    const initiatie = Math.min(aanname("Initiatiefee M1 (vast, EUR)"), totaal);
+    const ontwikkel = Math.max(totaal - initiatie, 0);
     const bereikt = GATE_NR[gate] || 0;
     let verdiend = bereikt >= 1 ? initiatie : 0;
     let resterend = 0;
