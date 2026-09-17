@@ -20,6 +20,40 @@ stappenspoor van zijn doelgroep), contactpersonen, overeenkomsten, bronnen, en d
 status van elke ontwikkelstap via een klik op de cel in de strip. Alle
 keuzemenu's worden gevoed door het blad Keuzelijsten.
 
+## Team
+
+Tab **Team**: leden toevoegen, wijzigen, verwijderen en aan leads toewijzen met een rol
+(Eigenaar, Commercieel, Techniek, Net en congestie, Juridisch, Financieel, Vergunningen,
+Governance). Wie actief staat verschijnt in de keuzelijsten voor eigenaar en
+verantwoordelijke, aangevuld met de namen uit `L_Medewerker` die nog geen teamlid zijn.
+Een teamlid verwijderen haalt eerst zijn toewijzingen weg; de leads blijven staan.
+
+De toewijzing staat op de lead (`team: {TEAM-001: "Techniek"}`), niet op het teamlid —
+zo verdwijnt hij vanzelf mee als de lead weggaat. Het blad Team gaat mee in de export.
+
+## Aanmeldingen
+
+Tab **Aanmeldingen** volgt het proces dat anders per mail loopt:
+
+1. **Aangemeld** — plak de doorgestuurde mail (afzender, onderwerp, tekst).
+2. **Beoordeeld** — Claude toetst de mail aan de criteria en levert advies
+   (Kansrijk / Twijfel / Niet kansrijk), motivering, de velden die hij uit de mail kon
+   halen, wat er nog ontbreekt, en een concept-antwoord.
+3. **Antwoord** — het concept staat in een tekstvak, aan te passen en te kopieren.
+4. **Afgerond** — Afwijzen zet de aanmelding op afgewezen; Toevoegen aan tracker maakt de
+   lead aan met het volledige stappenspoor van de doelgroep en koppelt de aanmelding eraan.
+
+De beoordeling draait op de `sample`-capability: de vraag gaat naar Claude op het account
+van degene die het dashboard open heeft, die daar de eerste keer toestemming voor geeft.
+Zonder die toestemming blijft de tab werken, alleen zonder automatische beoordeling.
+
+**Twee dingen blijven met opzet handwerk**: het antwoord versturen en het besluit om toe te
+voegen. Een automatisch verstuurd "niet interessant" namens Smarteck is niet terug te nemen,
+en de beoordeling is een voorstel op basis van wat er in de mail staat.
+
+De criteria staan in `instellingen/beoordeling` en zijn aan te passen met de knop
+Beoordelingscriteria; ze gelden voor iedereen die het dashboard gebruikt.
+
 ## Terug naar Excel
 
 De knop **Naar Excel** in de zijbalk schrijft een werkmap met zeven bladen:
