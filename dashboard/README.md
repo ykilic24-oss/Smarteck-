@@ -54,6 +54,57 @@ en de beoordeling is een voorstel op basis van wat er in de mail staat.
 De criteria staan in `instellingen/beoordeling` en zijn aan te passen met de knop
 Beoordelingscriteria; ze gelden voor iedereen die het dashboard gebruikt.
 
+## Acties toewijzen
+
+De kolom **Bij wie** op de tab Acties is een keuzevak. Elke actiesoort schrijft naar zijn
+eigen houderveld terug:
+
+| Soort | Veld dat wordt bijgewerkt |
+| --- | --- |
+| Volgende actie | `Actiehouder` op de lead (leeg = de eigenaar) |
+| Overeenkomst | `Ondertekenaar Smarteck` |
+| Bron | `Beoordeeld door` |
+| Geblokkeerde stap | `Verantwoordelijke` van die stap |
+
+`Actiehouder` is een nieuw leadveld, zodat een losse actie belegd kan worden zonder de
+eigenaar van de lead te wijzigen. In de export staat de kolom achter de laatste
+werkboekkolom, zodat A:W blijft passen bij de databron.
+
+De keuzelijst komt uit het team (actieve leden eerst), aangevuld met de namen uit
+`L_Medewerker`. Dat geldt ook voor Eigenaar, Aangebracht door, Relatie-eigenaar,
+Ondertekenaar Smarteck, Beoordeeld door en Verantwoordelijke.
+
+## Geplande taak: mail ophalen
+
+Routine **Smarteck Leadtracker - mail ophalen**, werkdagen om 08:00, 13:00 en 17:00
+(Nederlandse tijd; cron `0 6,11,15 * * 1-5` in UTC). Per ronde start een verse
+Claude-sessie die:
+
+1. de instellingen leest uit `instellingen/intake` (Gmail-zoekopdracht, wel of niet alvast
+   beoordelen) en de criteria uit `instellingen/beoordeling`;
+2. de bestaande aanmeldingen leest om `GmailBericht`/`GmailThread` te ontdubbelen;
+3. Gmail doorzoekt met die zoekopdracht;
+4. nieuwe threads als `intake`-document wegschrijft, desgewenst meteen beoordeeld.
+
+De taak **verstuurt nooit mail, maakt nooit een lead aan en raakt de mailbox niet aan**.
+Die grenzen staan als harde regels in de prompt van de routine.
+
+De zoekopdracht stelt u in het dashboard in (knop **Mail ophalen**), niet in de routine;
+zo is hij aan te passen zonder de routine te wijzigen. Let op: `label:` in Gmail-syntax
+verwacht een label-ID, geen weergavenaam — de routine zoekt dat ID zelf op.
+
+### Voorwaarde: Gmail-rechten
+
+De routine kan pas werken als de fired sessies de Gmail-connector hebben en die
+leesrechten heeft. Bij het aanmaken gold geen van beide:
+
+- de Gmail-koppeling van dit account mist de leesscopes
+  (`gmail.readonly` / `gmail.modify`);
+- routines die via deze weg zijn aangemaakt dragen geen connectors mee.
+
+Zolang dat zo is haalt de routine niets op. Zie de beschrijving bij het aanmaken voor de
+te nemen stappen.
+
 ## Terug naar Excel
 
 De knop **Naar Excel** in de zijbalk schrijft een werkmap met zeven bladen:

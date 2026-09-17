@@ -274,6 +274,9 @@ td .rowacts{display:flex;gap:6px;justify-content:flex-end}
 .counts .k{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
 .counts .v{font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-0.02em;font-variant-numeric:tabular-nums;margin-top:1px}
 
+.houderkeuze{font-family:var(--body);font-size:12.5px;color:var(--ink);background:var(--ground);
+  border:1px solid var(--line-2);padding:4px 6px;max-width:170px;width:100%}
+.houderkeuze:disabled{background:transparent;border-color:transparent;padding-left:0}
 .masterdetail{display:grid;grid-template-columns:262px minmax(0,1fr);gap:14px;align-items:start}
 .ledenlijst{max-height:520px;overflow:auto}
 .ledenlijst button{display:block;width:100%;text-align:left;background:transparent;border:none;border-bottom:1px solid var(--line);padding:10px 14px;cursor:pointer;color:var(--ink);font-family:var(--body);font-size:13px;min-height:56px}
@@ -542,6 +545,7 @@ dialog::backdrop{background:var(--veil)}
       <div class="toolbar">
         <button class="btn-solid" id="btn-nieuwe-intake" type="button">Lead aanmelden</button>
         <button class="btn-lite" id="btn-criteria" type="button">Beoordelingscriteria</button>
+        <button class="btn-lite" id="btn-ophalen" type="button">Mail ophalen</button>
         <span class="spacer"></span>
         <span class="lbl" id="intake-hint"></span>
       </div>
@@ -2469,7 +2473,7 @@ const DATA = {
         capex:num(l["Verwachte CAPEX (EUR)"]),
         fee, split, slaagkans:split.kans, gewogen:split.gewogen,
         piek:num(l["Structureel vermeden piek (kW)"]),
-        eigenaar:l.Eigenaar || "", prioriteit:l.Prioriteit || "",
+        eigenaar:l.Eigenaar || "", actiehouder:l.Actiehouder || "", prioriteit:l.Prioriteit || "",
         actie:l["Volgende actie"] || "", deadline:l["Deadline volgende actie"] || "",
         opmerkingen:l.Opmerkingen || "",
         voorbeeld:/VOORBEELDRIJ/i.test(String(l.Opmerkingen || "")),
@@ -2777,6 +2781,8 @@ const DATA = {
          hint:"Slaagkans en gewogen fee worden hieruit berekend."},
         {k:"Structureel vermeden piek (kW)", t:"getal"},
         {k:"Eigenaar", t:"keuze", lijst:"L_Medewerker"},
+        {k:"Actiehouder", t:"keuze", lijst:"L_Medewerker",
+         hint:"Wie de volgende actie oppakt. Leeg betekent: de eigenaar."},
         {k:"Prioriteit", t:"keuze", lijst:"L_Prioriteit"},
         {k:"Volgende actie", t:"tekst", breed:true},
         {k:"Deadline volgende actie", t:"datum"},
@@ -3700,19 +3706,61 @@ const DATA = {
   function openLead(id){ gekozenLead = id; gaNaar("lookup"); }
 
   /* ---- acties ------------------------------------------------------------ */
+  /* Elke actiesoort heeft zijn eigen houderveld; het keuzevak op de
+     actielijst schrijft naar het juiste veld terug. */
+  async function zetActiehouder(item, naam){
+    const d = item.doel;
+    if (d.type === "lead"){
+      const body = Object.assign({}, item.lead.ruw, {Actiehouder:naam, _bijgewerkt:new Date().toISOString()});
+      return bewaar("leads", item.lead.id, body);
+    }
+    if (d.type === "overeenkomst"){
+      const body = Object.assign({}, d.rec, {"Ondertekenaar Smarteck":naam});
+      delete body._id;
+      return bewaar("overeenkomsten", d.rec._id, body);
+    }
+    if (d.type === "bron"){
+      const body = Object.assign({}, d.rec, {"Beoordeeld door":naam});
+      delete body._id;
+      return bewaar("bronnen", d.rec._id, body);
+    }
+    if (d.type === "stap") return zetStap(item.lead, d.stapID, {wie:naam}, null);
+    return false;
+  }
+
+  function houderKeuze(item){
+    const sel = el("select","houderkeuze");
+    sel.setAttribute("aria-label", "Wie pakt op: " + item.wat);
+    kids(sel, new Option(item.doel.type === "lead" ? "Eigenaar (" + (item.lead.eigenaar || DASH) + ")" : DASH, ""));
+    const lijst = medewerkers();
+    lijst.forEach(n => kids(sel, new Option(n, n)));
+    if (item.houder && !lijst.includes(item.houder)) kids(sel, new Option(item.houder, item.houder));
+    sel.value = item.houder || "";
+    sel.disabled = !bewerkbaar();
+    sel.addEventListener("change", async () => {
+      if (await zetActiehouder(item, sel.value))
+        melding(sel.value ? "Toegewezen aan " + sel.value + "." : "Toewijzing losgelaten.");
+    });
+    return sel;
+  }
+
   function tekenActies(sel){
     const items = [];
     sel.forEach(l => {
-      if (l.actie) items.push({d:l.deadline, lead:l, wat:l.actie, soort:"Volgende actie", wie:l.eigenaar});
+      if (l.actie) items.push({d:l.deadline, lead:l, wat:l.actie, soort:"Volgende actie",
+                               houder:l.actiehouder, doel:{type:"lead"}});
       l.contracten.filter(o => o["Actie vereist"] === "Ja" || !CONTRACT_KLAAR.includes(o.Status))
         .forEach(o => items.push({d:"", lead:l, wat:(o.Titel || o.Type) + " \u2014 " + o.Status,
-                                  soort:"Overeenkomst", wie:o["Ondertekenaar Smarteck"] || l.eigenaar}));
+                                  soort:"Overeenkomst", houder:o["Ondertekenaar Smarteck"] || "",
+                                  doel:{type:"overeenkomst", rec:o}}));
       l.bronnen.filter(b => b.Status !== "Verwerkt")
         .forEach(b => items.push({d:"", lead:l, wat:(b["Titel of bestandsnaam"] || b.Brontype) + " \u2014 " + b.Status,
                                   soort:b["Onder NDA"] === "Ja" ? "Bron (NDA)" : "Bron",
-                                  wie:b["Beoordeeld door"] || l.eigenaar}));
+                                  houder:b["Beoordeeld door"] || "",
+                                  doel:{type:"bron", rec:b}}));
       l.stappen.filter(s => s.status === "Geblokkeerd")
-        .forEach(s => items.push({d:"", lead:l, wat:s.nr + ". " + s.naam, soort:"Geblokkeerde stap", wie:s.wie || l.eigenaar}));
+        .forEach(s => items.push({d:"", lead:l, wat:s.nr + ". " + s.naam, soort:"Geblokkeerde stap",
+                                  houder:s.wie || "", doel:{type:"stap", stapID:s.stapID}}));
     });
     items.sort((a,b) => (a.d ? 0 : 1) - (b.d ? 0 : 1) || String(a.d).localeCompare(String(b.d)));
     $("#acties-n").textContent = items.length + (items.length === 1 ? " regel" : " regels");
@@ -3731,7 +3779,7 @@ const DATA = {
       {kop:"Organisatie", cel:it => el("b", null, it.lead.organisatie)},
       {kop:"Wat", cel:it => el("div","wrapcell", it.wat)},
       {kop:"Soort", cel:it => el("span","chip" + (it.soort === "Geblokkeerde stap" ? " stop" : ""), it.soort)},
-      {kop:"Bij wie", cel:it => it.wie}
+      {kop:"Bij wie", cel:it => houderKeuze(it)}
     ], items, {leeg:"Niets openstaand in deze selectie."});
   }
 
@@ -3887,6 +3935,15 @@ const DATA = {
       el("p", null, "De criteria zijn aan te passen met de knop Beoordelingscriteria en gelden voor "
         + "iedereen die het dashboard gebruikt."));
 
+    blok("Mail automatisch ophalen",
+      el("p", null, "Een geplande taak van Claude kan de mailbox een paar keer per dag uitlezen en "
+        + "nieuwe berichten hier als aanmelding klaarzetten, alvast beoordeeld. De zoekopdracht stelt "
+        + "u in met de knop Mail ophalen; berichten die al eens zijn opgehaald worden overgeslagen."),
+      el("p", null, "De taak verstuurt nooit iets en voegt nooit zelf een lead toe: zij vult alleen de "
+        + "lijst met aanmeldingen. Het antwoord en het besluit blijven bij u."),
+      el("p", null, "Werkt het niet, dan heeft de Gmail-koppeling meestal geen leesrechten. Dat zet u "
+        + "recht bij de connectors in de instellingen van claude.ai."));
+
     blok("Team",
       el("p", null, "Teamleden beheert u op de tab Team. Wie daar actief staat, verschijnt in de "
         + "keuzelijsten voor eigenaar en verantwoordelijke. Toewijzen aan een lead gaat per teamlid, "
@@ -3944,13 +4001,15 @@ const DATA = {
         KOL("Slaagkans","breuk"), KOL("Gewogen fee (EUR)","getal"),
         KOL("Eigenaar"), KOL("Prioriteit"), KOL("Volgende actie"),
         KOL("Deadline volgende actie","datum"), KOL("Opmerkingen"),
-        KOL("Structureel vermeden piek (kW)","getal")
+        KOL("Structureel vermeden piek (kW)","getal"),
+        KOL("Actiehouder")
       ],
       rijen:leads.map(l => [
         l.id, l.doelgroep, l.organisatie, l.project, l.plaats, l.provincie,
         l.herkomst, l.aangebracht, l.eersteContact, l.leadstatus, l.fase, l.gate,
         l.omvang, l.capex, l.fee, l.slaagkans, Math.round(l.gewogen),
-        l.eigenaar, l.prioriteit, l.actie, l.deadline, l.opmerkingen, l.piek
+        l.eigenaar, l.prioriteit, l.actie, l.deadline, l.opmerkingen, l.piek,
+        l.actiehouder
       ])
     };
 
@@ -4044,6 +4103,7 @@ const DATA = {
         ["Teamleden", bladTeam.rijen.length],
         ["Gewogen fee (EUR)", Math.round(leads.reduce((a, l) => a + l.gewogen, 0))],
         ["Let op", "Kopregel staat hier op regel 1; in de databron op regel 4."],
+        ["Let op", "Actiehouder staat achter de laatste werkboekkolom, zodat A:W blijft passen."],
         ["Let op", "Slaagkans en Gewogen fee zijn berekend uit gate en fee."]
       ]
     };
@@ -4275,6 +4335,8 @@ const DATA = {
   ].join("\n");
 
   const criteriaTekst = () => (STORE.criteria && STORE.criteria.tekst) || STANDAARDCRITERIA;
+  const STANDAARDZOEKOPDRACHT = "label:Leads newer_than:30d";
+  const zoekopdracht = () => (STORE.intakeInstel && STORE.intakeInstel.gmailQuery) || STANDAARDZOEKOPDRACHT;
 
   let gekozenIntake = null;
 
@@ -4414,6 +4476,7 @@ const DATA = {
   function tekenIntake(){
     $("#btn-nieuwe-intake").disabled = !bewerkbaar();
     $("#btn-criteria").disabled = !bewerkbaar();
+    $("#btn-ophalen").disabled = !bewerkbaar();
     $("#intake-hint").textContent = bewerkbaar()
       ? (sampleFn ? "" : "Beoordelen door Claude is hier niet beschikbaar.")
       : live() ? "U kunt meekijken, niet bewerken." : "Aanmeldingen leven alleen in de gedeelde versie.";
@@ -4432,6 +4495,7 @@ const DATA = {
         i.Status === "Afgewezen" ? "stop" : i.Status === "Beoordeeld" ? "open" : ""), i.Status || "Nieuw");
       const meta = el("div","m");
       kids(meta, status, el("span", null, i.Ontvangen || ""));
+      if (i.Herkomst === "Gmail") kids(meta, el("span","chip","Gmail"));
       kids(b, el("div","o", i.Onderwerp || i.Afzender || i._id), meta);
       b.addEventListener("click", () => { gekozenIntake = i._id; tekenIntake(); });
       kids(lijst, b);
@@ -4490,7 +4554,8 @@ const DATA = {
       kids(mailActs, bew, del);
     }
     kids(mailHd, el("span","t", item.Onderwerp || "Aanmelding"),
-                 el("span","s", item._id + (item.Afzender ? MIDDOT + item.Afzender : "")), mailActs);
+                 el("span","s", [item._id, item.Afzender, item.Herkomst === "Gmail" ? "opgehaald uit Gmail" : ""]
+                     .filter(Boolean).join(MIDDOT)), mailActs);
     const mailBd = el("div","panel-bd");
     kids(mailBd, el("div","mailtekst", item.Tekst || "(geen tekst)"));
     kids(host, kids(mail, mailHd, mailBd));
@@ -4600,6 +4665,52 @@ const DATA = {
       kids(antBd, rij);
       kids(host, kids(ant, antHd, antBd));
     }
+  }
+
+  function openOphalen(){
+    $("#dlg-titel").textContent = "Mail automatisch ophalen";
+    $("#dlg-fout").textContent = "";
+    const host = $("#dlg-velden");
+    host.replaceChildren();
+
+    const uitleg = el("div","ff vol");
+    kids(uitleg, el("span","hint",
+      "Een geplande taak van Claude leest de mailbox met deze zoekopdracht, zet nieuwe berichten "
+      + "hier als aanmelding klaar en beoordeelt ze alvast. Verzenden en toevoegen blijft handwerk. "
+      + "De zoekopdracht is Gmail-syntax; label: verwacht een label-ID, niet de weergavenaam."));
+    kids(host, uitleg);
+
+    const wrap = el("div","ff vol");
+    const lab = el("label", null, "Gmail-zoekopdracht");
+    lab.htmlFor = "oph-query";
+    const veld = el("input");
+    veld.id = "oph-query";
+    veld.type = "text";
+    veld.value = zoekopdracht();
+    kids(wrap, lab, veld, el("span","hint","Standaard: " + STANDAARDZOEKOPDRACHT));
+    kids(host, wrap);
+
+    const aanWrap = el("div","ff");
+    const aanLab = el("label", null, "Alvast laten beoordelen");
+    aanLab.htmlFor = "oph-beoordeel";
+    const aanVeld = el("select");
+    aanVeld.id = "oph-beoordeel";
+    kids(aanVeld, new Option("Ja", "Ja"), new Option("Nee", "Nee"));
+    aanVeld.value = (STORE.intakeInstel && STORE.intakeInstel.beoordelen) === "Nee" ? "Nee" : "Ja";
+    kids(aanWrap, aanLab, aanVeld);
+    kids(host, aanWrap);
+
+    dlgOpslaan = async () => {
+      const body = {gmailQuery:veld.value.trim() || STANDAARDZOEKOPDRACHT,
+                    beoordelen:aanVeld.value, _bijgewerkt:new Date().toISOString()};
+      if (await bewaar("instellingen", "intake", body)){
+        STORE.intakeInstel = body;
+        dlg.close();
+        melding("Instellingen bewaard. De geplande taak gebruikt ze bij de volgende ronde.");
+      }
+    };
+    if (!dlg.open) dlg.showModal();
+    veld.focus();
   }
 
   function openCriteria(){
@@ -4806,6 +4917,7 @@ const DATA = {
   $("#btn-nieuwe-intake").addEventListener("click", () =>
     openFormulier("intake", null, null, id => { gekozenIntake = id; }, {Ontvangen:VANDAAG}));
   $("#btn-criteria").addEventListener("click", openCriteria);
+  $("#btn-ophalen").addEventListener("click", openOphalen);
   $("#btn-nieuwe-lead").addEventListener("click", () => openFormulier("leads", null, null, id => { gekozenLead = id; }));
 
   /* Eenmalig de momentopname uit het werkboek in een lege gedeelde opslag
@@ -4864,7 +4976,9 @@ const DATA = {
     try {
       const snap = await db.doc("instellingen/beoordeling").get();
       if (snap && snap.exists) STORE.criteria = snap.data();
-    } catch (e) { /* criteria blijven de standaard */ }
+      const snap2 = await db.doc("instellingen/intake").get();
+      if (snap2 && snap2.exists) STORE.intakeInstel = snap2.data();
+    } catch (e) { /* instellingen blijven de standaard */ }
 
     const binnen = new Set();
     COLL.forEach(naam => {
