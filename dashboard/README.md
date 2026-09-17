@@ -169,7 +169,7 @@ terug op een vervangend blokje.
 
 ## Indeling
 
-Zes pagina's achter een vaste zijbalk:
+Acht pagina's achter een vaste zijbalk:
 
 | Pagina | Wat erop staat |
 | --- | --- |
@@ -177,17 +177,55 @@ Zes pagina's achter een vaste zijbalk:
 | Leads | Vier tabbladen: alle leads, mijlpaaldata, voortgang per stap, werkstromen |
 | Lead opzoeken | Eén lead voluit: kerngegevens, tijdlijn, contacten, overeenkomsten, bronnen |
 | Acties | Alles wat nog een handeling vraagt, op deadline |
+| Aanmeldingen | Binnengekomen leadmail, de beoordeling en het conceptantwoord |
+| Team | Teamleden beheren en aan leads toewijzen |
 | Datavalidatie | De spelregels uit de Leeswijzer, regel voor regel afgevinkt |
 | Leeswijzer | Werken met dit scherm |
 
 De opzet volgt het patroon van een portefeuilledashboard: vaste zijbalk,
 paginakop met een filterstrook en een verversingsstempel, een tabrij met de
 kerncijfers ernaast, dichte tabellen met een totaalregel, en panelen met een
-kopbalk. De filters gelden voor de vier eerste pagina's tegelijk; Datavalidatie
-kijkt bewust naar de hele databron en verbergt de filterstrook.
+kopbalk. De filters gelden voor de vier eerste pagina's tegelijk; Aanmeldingen, Team en
+Datavalidatie kijken bewust naar de hele databron en verbergen de filterstrook.
 
 Het visuele idioom blijft van Smarteck: geen border-radius, Space Grotesk voor
 display, IBM Plex voor tekst en cijfers.
+
+### Smalle schermen en schermstand
+
+De `<head>` bevat een viewport-verklaring:
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1">
+```
+
+Die regel is niet optioneel. Zonder die regel legt een mobiele browser de
+pagina op een virtueel scherm van 980px en verkleint het geheel om dat te
+laten passen. Staand op een telefoon van 390px is dat een factor 0,40: tekst
+van 12,5px komt op 5px uit en lijnen en balkjes van 1px op 0,4px — die
+verdwijnen. Liggend is dezelfde telefoon 844px breed en is de factor 0,86,
+waardoor het nauwelijks opvalt. Dat is geen fout in de schermstand maar een
+verschil in krimpfactor. Bijkomend gevolg: geen van de mediavragen hieronder
+kwam ooit aan bod, in welke stand dan ook.
+
+Er zijn geen mediavragen op `orientation`; staand en liggend verschillen
+alleen in breedte en hoogte, en daar wordt op gemeten:
+
+| Grens | Wat er verandert |
+| --- | --- |
+| `max-width:1180px` | Kerncijfers naar twee kolommen, hoofdkolom onder elkaar, gates twee op een rij |
+| `max-width:900px` | Zijbalk wordt een tabrij bovenaan, opzoeken en team eenkolommig, lijsthoogtes in `vh` in plaats van pixels, aanraakdoelen naar 34–44px |
+| `max-width:640px` | Titel boven de filters, filters in twee kolommen, kerncijfers in twee kolommen zonder schuifvak, procesbalk en toewijsrijen onder elkaar |
+| `max-height:560px` en liggend | Lijsten en dialoog mogen meer van de lage schermhoogte gebruiken |
+
+Twee dingen die makkelijk terugkomen bij verder bouwen:
+
+- Een paneel in een raster- of flexvak heeft `min-width:0` nodig. De
+  stappenstrip eist 560px; zonder die regel duwt die eis het hele paneel het
+  scherm uit in plaats van binnen `.stripwrap` te schuiven.
+- De stappenstrip blijft bewust zijwaarts schuiven. Twintig stappen passen
+  niet leesbaar op een telefoon; de vakjes worden daar wel hoger (34px) zodat
+  ze met een vinger te raken zijn.
 
 ## Bijwerken
 

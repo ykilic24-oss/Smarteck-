@@ -1,4 +1,5 @@
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Smarteck Leadtracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -94,6 +95,7 @@ svg{display:block}
 /* ---------- paginakop ---------- */
 .pagehead{background:var(--surface);border-bottom:1px solid var(--line);padding:16px 22px 0}
 .headrow{display:flex;gap:26px;align-items:flex-start;flex-wrap:wrap}
+.filterstrip{order:2}
 .ident{flex:0 0 auto;padding-right:26px;border-right:1px solid var(--line);min-width:180px}
 .ident h1{font-size:19px}
 .ident .sub{font-size:12.5px;color:var(--ink-2);margin-top:2px}
@@ -126,6 +128,7 @@ button[disabled]{opacity:.45;cursor:not-allowed}
 /* ---------- pagina ---------- */
 .page{padding:20px 22px 44px}
 .grid{display:grid;gap:14px}
+.grid>*{min-width:0}
 .g-kpi{grid-template-columns:repeat(4,1fr)}
 .g-2{grid-template-columns:repeat(2,minmax(0,1fr))}
 .g-main{grid-template-columns:minmax(0,1fr) 210px;align-items:start}
@@ -147,16 +150,16 @@ button[disabled]{opacity:.45;cursor:not-allowed}
 .stat .split b{color:#fff;font-weight:600}
 
 /* panelen zijn flexkolommen, zodat ze in een rij even hoog uitkomen */
-.panel{background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column}
-.panel-hd{background:var(--surface-2);border-bottom:1px solid var(--line);padding:8px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:37px}
+.panel{background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;min-width:0}
+.panel-hd{background:var(--surface-2);border-bottom:1px solid var(--line);padding:8px 14px;display:flex;justify-content:space-between;align-items:center;gap:8px 12px;min-height:37px;flex-wrap:wrap}
 .panel-hd .t{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-2)}
 .panel-hd .s{font-family:var(--mono);font-size:10px;color:var(--ink-3)}
-.panel-hd .acts{display:flex;gap:7px}
+.panel-hd .acts{display:flex;gap:7px;flex-wrap:wrap}
 .panel-bd{padding:14px;flex:1}
 .panel-bd.flush{padding:0}
 
 /* ---------- tabellen ---------- */
-.tablewrap{overflow-x:auto;max-width:100%}
+.tablewrap{overflow-x:auto;max-width:100%;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
 table{border-collapse:collapse;width:100%;font-size:12.5px}
 th{text-align:left;font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--link);padding:9px 12px;border-bottom:1px solid var(--line-2);white-space:nowrap;background:var(--surface);position:sticky;top:0;z-index:2}
 td{padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
@@ -200,7 +203,7 @@ td .rowacts{display:flex;gap:6px;justify-content:flex-end}
 .legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
 .legend .item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2)}
 .swatch{width:16px;height:16px;display:grid;place-items:center;flex:none;border:1px solid transparent}
-.stripwrap{overflow-x:auto}
+.stripwrap{overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
 .gateband,.strip,.stepnr{display:grid;gap:2px;min-width:560px}
 .gateband span{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.09em;color:var(--ink-3);border-top:2px solid var(--line-2);padding-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .strip{margin-top:3px}
@@ -248,6 +251,7 @@ td .rowacts{display:flex;gap:6px;justify-content:flex-end}
 
 /* ---------- opzoeken ---------- */
 .lookup-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:14px;align-items:start}
+.lookup-grid>*{min-width:0}
 .leadlist{max-height:520px;overflow:auto}
 .leadlist button{display:block;width:100%;text-align:left;background:transparent;border:none;border-bottom:1px solid var(--line);padding:10px 14px;cursor:pointer;color:var(--ink);font-family:var(--body);font-size:13px;min-height:54px}
 .leadlist button:hover{background:var(--surface-2)}
@@ -278,6 +282,7 @@ td .rowacts{display:flex;gap:6px;justify-content:flex-end}
   border:1px solid var(--line-2);padding:4px 6px;max-width:170px;width:100%}
 .houderkeuze:disabled{background:transparent;border-color:transparent;padding-left:0}
 .masterdetail{display:grid;grid-template-columns:262px minmax(0,1fr);gap:14px;align-items:start}
+.masterdetail>*{min-width:0}
 .ledenlijst{max-height:520px;overflow:auto}
 .ledenlijst button{display:block;width:100%;text-align:left;background:transparent;border:none;border-bottom:1px solid var(--line);padding:10px 14px;cursor:pointer;color:var(--ink);font-family:var(--body);font-size:13px;min-height:56px}
 .ledenlijst button:hover{background:var(--surface-2)}
@@ -305,7 +310,7 @@ td .rowacts{display:flex;gap:6px;justify-content:flex-end}
 .stap-blok.klaar .n{color:var(--aqua-ink)}
 .stap-blok .t{font-size:13px;font-weight:600;margin-top:3px}
 .stap-blok .d{font-size:12px;color:var(--ink-2);margin-top:2px}
-.mailtekst{font-family:var(--mono);font-size:12px;line-height:1.55;white-space:pre-wrap;max-height:260px;overflow:auto;background:var(--ground);border:1px solid var(--line);padding:12px}
+.mailtekst{font-family:var(--mono);font-size:12px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere;max-height:260px;overflow:auto;background:var(--ground);border:1px solid var(--line);padding:12px}
 .antwoordvak{width:100%;min-height:150px;font-family:var(--body);font-size:13.5px;line-height:1.5;color:var(--ink);background:var(--ground);border:1px solid var(--line-2);padding:11px;resize:vertical}
 .advies{display:inline-flex;align-items:center;gap:7px;font-weight:600;font-size:14px}
 .advies .bol{width:11px;height:11px;flex:none}
@@ -325,7 +330,7 @@ td .rowacts{display:flex;gap:6px;justify-content:flex-end}
 .prose p{margin-bottom:9px;color:var(--ink-2)}
 .prose ol,.prose ul{margin:0 0 9px 20px;color:var(--ink-2)}
 .prose li{margin-bottom:5px}
-.prose code{font-family:var(--mono);font-size:12.5px;background:var(--surface-2);padding:1px 5px}
+.prose code{font-family:var(--mono);font-size:12.5px;background:var(--surface-2);padding:1px 5px;overflow-wrap:anywhere}
 
 /* ---------- formulier in een dialoog ---------- */
 dialog{padding:0;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);max-width:min(760px,94vw);width:100%}
@@ -379,23 +384,64 @@ dialog::backdrop{background:var(--veil)}
   .app{grid-template-columns:minmax(0,1fr)}
   .rail{position:static;height:auto}
   .rail nav{display:flex;flex-wrap:wrap;padding:6px}
-  .rail nav button{width:auto;border-left:none;border-bottom:3px solid transparent;padding:9px 13px}
+  .rail nav button{width:auto;border-left:none;border-bottom:3px solid transparent;padding:11px 13px;min-height:44px}
   .rail nav button[aria-current="page"]{border-left-color:transparent;border-bottom-color:var(--koper)}
   .ident{border-right:none;padding-right:0}
   .lookup-grid{grid-template-columns:minmax(0,1fr)}
-  .leadlist{max-height:240px}
+  .masterdetail{grid-template-columns:minmax(0,1fr)}
   .factgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  /* Vaste hoogtes in pixels laten staand te weinig over en liggend te veel.
+     Een deel van de schermhoogte werkt in beide standen. */
+  .leadlist{max-height:44vh}
+  .ledenlijst,.intakelijst{max-height:44vh}
+  .mailtekst{max-height:40vh}
+  /* Aanraakdoelen: een knop van 26px is met een vinger niet te raken. */
+  .iconbtn{width:34px;height:34px}
+  .tl-dot{width:17px;height:17px;margin:-8.5px 0 0 -8.5px}
+  /* De stappenstrip blijft zijwaarts schuiven -- twintig stappen passen
+     niet op een telefoon -- maar de vakjes worden hoger zodat ze met
+     een vinger te raken zijn. */
+  .strip button{height:34px}
 }
 @media (max-width:640px){
   .pagehead,.page{padding-inline:16px}
   .g-kpi,.g-2,.gates,.formgrid{grid-template-columns:minmax(0,1fr)}
   .factgrid{grid-template-columns:minmax(0,1fr)}
-  .stamp{margin-left:0;align-items:flex-start;text-align:left}
-  .kpistrip{margin-left:0;width:100%;overflow-x:auto}
-  .kpibox{flex:none}
+  /* Het stempel stond als derde kolom naast de filters en nam de halve
+     breedte af; staand hoort het op een eigen regel. */
+  .stamp{margin-left:0;align-items:flex-start;text-align:left;flex:1 0 100%;flex-direction:row;flex-wrap:wrap;gap:4px 14px;order:3}
+  /* De kengetallen stonden in een zijwaarts schuifvak; wat rechts buiten
+     beeld viel zag niemand. Ze passen naast elkaar in twee kolommen. */
+  .kpistrip{margin-left:0;width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .kpibox{width:auto;flex:none;padding:7px 11px}
   .barrow{grid-template-columns:minmax(0,1fr);gap:4px;align-items:start}
   .barrow .amt{text-align:left}
   .stat p,.gate .desc{min-height:0}
+  .tab{padding:9px 13px}
+  .toolbar .spacer{flex:1 0 100%}
+  .stap-rij{display:grid;grid-template-columns:minmax(0,1fr);gap:0}
+  .stap-blok{padding:10px 0 0}
+  .toewijsrij,.toevoegrij{grid-template-columns:minmax(0,1fr);align-items:stretch}
+  .toewijsrij{gap:6px;padding:11px 0}
+  .sigrow{grid-template-columns:minmax(0,1fr)}
+  .dlg-ft{justify-content:stretch}
+  .dlg-ft .spacer{flex:1 0 100%}
+  .field input,.field select,.field textarea{min-width:0;width:100%}
+  /* De paginakop nam staand het hele scherm in beslag: titel links, zes
+     filters op een smalle kolom rechts. Titel erboven, filters in twee
+     kolommen, zoekveld en wisknop over de volle breedte. */
+  .ident{flex:1 0 100%;border-right:none;padding-right:0;min-width:0}
+  .filterstrip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 12px;align-items:end}
+  .field{min-width:0}
+  .filterstrip .field:last-of-type{grid-column:1 / -1}
+  .filterstrip>button{grid-column:1 / -1;justify-self:start}
+}
+/* Liggend op een telefoon is het scherm laag: dan mogen de lijsten niet
+   het halve beeld opeisen en hoeft de dialoog niet zo hoog te zijn. */
+@media (max-height:560px) and (orientation:landscape){
+  .leadlist,.ledenlijst,.intakelijst{max-height:58vh}
+  .mailtekst{max-height:50vh}
+  .dlg-bd{max-height:74vh}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
 </style>
