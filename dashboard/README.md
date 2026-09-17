@@ -93,17 +93,15 @@ De zoekopdracht stelt u in het dashboard in (knop **Mail ophalen**), niet in de 
 zo is hij aan te passen zonder de routine te wijzigen. Let op: `label:` in Gmail-syntax
 verwacht een label-ID, geen weergavenaam — de routine zoekt dat ID zelf op.
 
-### Voorwaarde: Gmail-rechten
+### Aanmaken: via claude.ai Routines, niet vanuit een sessie
 
-De routine kan pas werken als de fired sessies de Gmail-connector hebben en die
-leesrechten heeft. Bij het aanmaken gold geen van beide:
+De leesrechten op Gmail zijn inmiddels in orde. Wat niet lukt, is de routine vanuit een
+Claude Code-sessie aanmaken: zo'n routine draagt geen connectors mee, en de sessies die
+zij start hebben dan geen enkele `mcp__Gmail__*`-tool. Tweemaal gemeten, met dezelfde
+uitkomst: de ronde loopt, vindt geen Gmail-tools en schrijft niets weg.
 
-- de Gmail-koppeling van dit account mist de leesscopes
-  (`gmail.readonly` / `gmail.modify`);
-- routines die via deze weg zijn aangemaakt dragen geen connectors mee.
-
-Zolang dat zo is haalt de routine niets op. Zie de beschrijving bij het aanmaken voor de
-te nemen stappen.
+Maak de routine daarom aan via **claude.ai, Routines**, en koppel daar de Gmail-connector.
+Prompt en instellingen staan klaar in `dashboard/automatisering/routine-mail-ophalen.md`.
 
 ## Terug naar Excel
 
